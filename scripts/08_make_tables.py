@@ -60,8 +60,9 @@ def table_validity_cityscapes(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "In-distribution region-level risk control on Cityscapes. "
-        "Mean region FNR and marked-area fraction over 100 calibration draws; "
-        "the guarantee requires FNR $\\le \\alpha$." + _rho_note(df),
+        "Mean region FNR and marked-area fraction over 100 calibration draws. "
+        "Each cell averages the three critical classes; the guarantee is per "
+        "class, and Section~\\ref{sec:exp_indist} reports the per-class cells." + _rho_note(df),
         "tab:validity_cityscapes", "l" + "cc" * len(ALPHAS), header)
 
 
@@ -128,7 +129,8 @@ def table_baselines(df: pd.DataFrame) -> str:
         "calibration list and reused across the draws; refitting it on each "
         "draw's own list moves every tempered cell by at most $0.0006$ "
         "(Section~\\ref{sec:exp_indist}). FNR is the "
-        "mean region-miss loss over test images containing the class; Area is "
+        "mean region-miss loss over test images containing the class, "
+        "averaged over the three critical classes; Area is "
         "the mean marked fraction over all test images.",
         "tab:baselines", "llcccc", header, size="scriptsize", colsep="2.5pt")
 
@@ -160,7 +162,9 @@ def table_breakdown(df: pd.DataFrame) -> str:
         body,
         "Region FNR on ACDC conditions under source (Cityscapes) calibration. "
         "Bold entries violate the nominal level: the in-distribution "
-        "guarantee does not survive the shift." + _rho_note(df),
+        "guarantee does not survive the shift. "
+        "Each cell averages the three critical classes; the guarantee is per "
+        "class, and Section~\\ref{sec:exp_indist} reports the per-class cells." + _rho_note(df),
         "tab:breakdown", "l" + "cccc" * len(ALPHAS), header, star=True)
 
 
@@ -234,7 +238,9 @@ def table_loveda(df: pd.DataFrame) -> str:
         body,
         "LoveDA: in-domain validity and cross-domain breakdown under source "
         "calibration. Bold entries violate the nominal level; the shift is "
-        "strongly directional." + _rho_note(df),
+        "strongly directional. Each cell averages the two critical classes; "
+        "Section~\\ref{sec:exp_loveda} resolves the in-domain cells per "
+        "class." + _rho_note(df),
         "tab:loveda", "l" + "cc" * len(ALPHAS), header)
 
 

@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Method comparison at $\alpha=0.2$ on Cityscapes (in-distribution), at both capture levels. LAC denotes a single global threshold tuned to an all-class pixel-coverage target, the marginal variant of the least-ambiguous set-valued classifier; the temperature-scaled rows use one scalar fitted by negative log-likelihood on the seed-0 calibration list and reused across the draws; refitting it on each draw's own list moves every tempered cell by at most $0.0006$ (Section~\ref{sec:exp_indist}). FNR is the mean region-miss loss over test images containing the class; Area is the mean marked fraction over all test images.}
+\caption{Method comparison at $\alpha=0.2$ on Cityscapes (in-distribution), at both capture levels. LAC denotes a single global threshold tuned to an all-class pixel-coverage target, the marginal variant of the least-ambiguous set-valued classifier; the temperature-scaled rows use one scalar fitted by negative log-likelihood on the seed-0 calibration list and reused across the draws; refitting it on each draw's own list moves every tempered cell by at most $0.0006$ (Section~\ref{sec:exp_indist}). FNR is the mean region-miss loss over test images containing the class, averaged over the three critical classes; Area is the mean marked fraction over all test images.}
 \label{tab:baselines}
 \scriptsize
 \setlength{\tabcolsep}{2.5pt}
