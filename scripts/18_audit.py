@@ -189,7 +189,7 @@ def section_indist():
           str(sorted(e1.class_name.unique())))
     note(29, "n (calibration images containing the class), Cityscapes",
          f"{int(e1.n_cal_images.min())}-{int(e1.n_cal_images.max())} "
-         "(82-440 across all three benchmarks)")
+         "(26-440 across all three benchmarks)")
     truth(30, "lambda grid has 1001 points",
           int(e1.lam_index.max()) == 1000, f"max lam_index={int(e1.lam_index.max())}")
 
@@ -1522,12 +1522,102 @@ def section_revision():
                    "separably above the level", lo <= alpha, f"lower end {lo:.4f}")
 
 
+
+def section_review():
+    """Quantities added by the 2026-08-23 consistency review: the per-class
+    LoveDA in-domain cells, the MARIDA official cells above the diagonal, the
+    macro-versus-pooled spring rates, the estimator-dependent weight collapse,
+    and the measured mask union against the sum of the class masks."""
+    head("S  Consistency-review quantities")
+
+    # Figure 4 and Section V-G report per-class cells, as Cityscapes does.
+    lov = sel(load("l1_indist__*"), method="region_crc")
+    if "feasible" in lov.columns:
+        lov = lov[lov["feasible"].astype(bool)]
+    g = lov.groupby(["model", "class_name", "alpha", "rho"])["region_fnr"]
+    cells = g.mean().reset_index()
+    spread = g.agg(["std", "size"]).reset_index()
+    cells = cells.merge(spread, on=["model", "class_name", "alpha", "rho"])
+    over = cells[cells.region_fnr > cells.alpha]
+    truth(920, "three of the 24 LoveDA in-domain per-class cells exceed the "
+               "level", len(cells) == 24 and len(over) == 3,
+          f"{len(over)} of {len(cells)}")
+    truth(921, "every LoveDA exceedance is water at alpha=0.2",
+          bool((over.class_name == "water").all()
+               and np.allclose(over.alpha, 0.2)),
+          str(sorted(zip(over.class_name, over.alpha))))
+    near(922, "the largest LoveDA in-domain exceedance is 0.003",
+         0.003, float((over.region_fnr - over.alpha).max()), 0.0005)
+    hi = over.region_fnr + 1.96 * over["std"] / np.sqrt(over["size"])
+    lo = over.region_fnr - 1.96 * over["std"] / np.sqrt(over["size"])
+    truth(923, "the level is inside the draw interval for all three",
+          bool(((lo <= over.alpha) & (over.alpha <= hi)).all()),
+          f"lower ends {sorted(lo.round(4))}")
+    truth(924, "one of the three sits at rho=0.5, so the in-domain claim is "
+               "not scoped to rho=0.1 alone",
+          bool(np.isclose(over.rho, 0.5).any()), str(sorted(over.rho)))
+
+    off = sel(load("h1_official__*"), method="region_crc")
+    ocells = off.groupby(["experiment", "class_name", "alpha", "rho"])[
+        "region_fnr"].mean().reset_index()
+    o_over = ocells[ocells.region_fnr > ocells.alpha]
+    truth(925, "nine of the twelve MARIDA official cells lie above the level",
+          len(ocells) == 12 and len(o_over) == 9,
+          f"{len(o_over)} of {len(ocells)}")
+
+    # Section V-H: the spring numbers quoted per image and per component.
+    spring = sel(load("h3_season__spring*"), rho=0.5, alpha=0.2)
+    arg = spring[spring.method == "argmax"]
+    crc = spring[spring.method == "region_crc"]
+    near(926, "argmax misses 45% of spring images' components on average",
+         0.45, float(arg.region_fnr.mean()), 0.005)
+    near(927, "the calibrated mask misses 43% on the same average",
+         0.43, float(crc.region_fnr.mean()), 0.005)
+    near(928, "pooling the components gives 32% for argmax",
+         0.32, float(arg.region_fnr_component_avg.mean()), 0.005)
+    near(929, "pooling the components gives 30% for region CRC",
+         0.30, float(crc.region_fnr_component_avg.mean()), 0.005)
+
+    # The abstract scopes the weight collapse to the logistic estimator.
+    tb = sel(load("e4_tierB__*"), rho=0.5)
+    knn = sel(load("e4_tierB_knn__*"), rho=0.5)
+    for cid, name, frame, want_floor in ((930, "logistic", tb, True),
+                                         (931, "kNN", knn, False)):
+        ess = (frame.weight_ess / frame.n_cal_images).dropna()
+        at_floor = bool(np.allclose(ess, 1.0, atol=1e-3))
+        truth(cid, f"the {name} estimator's ESS/n is "
+                   + ("exactly 1 (weights at the floor)" if want_floor
+                      else "well below 1 (weights concentrated, not at floor)"),
+              at_floor == want_floor,
+              f"ESS/n in [{ess.min():.4f}, {ess.max():.4f}]")
+
+    # Section V-A: the union of the three critical masks against their sum.
+    exp_dir = results_dir("experiments")
+    paths = sorted(glob.glob(str(exp_dir / "x7_union_area__*.csv")))
+    if not paths:
+        note(932, "union-area runs absent; skipping the union checks")
+        return
+    ratios_mean, ratios_sum = [], []
+    for p in paths:
+        u = pd.read_csv(p)
+        keep = u[~u["degenerate"].astype(bool)] if "degenerate" in u else u
+        cls = [c for c in u.columns if c.startswith("area__")]
+        per = keep[cls].to_numpy()
+        ratios_mean.append(float(keep.union_area.mean()
+                                 / per.mean(axis=1).mean()))
+        ratios_sum.append(float(keep.union_area.mean()
+                                / per.sum(axis=1).mean()))
+    rng_claim(933, "the union is 2.0-2.5x the class mean",
+              2.01, 2.45, ratios_mean, 0.01)
+    rng_claim(934, "the union is 67-82% of the sum of the three masks",
+              0.669, 0.816, ratios_sum, 0.005)
+
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,
     "F2": section_lac_detail,
     "H": section_breakdown, "I": section_tier_a, "J": section_tier_b,
     "K": section_loveda, "L": section_marida, "M": section_triage,
-    "N": section_holdout, "R": section_revision, "X": section_cross,
+    "N": section_holdout, "R": section_revision, "S": section_review, "X": section_cross,
 }
 
 

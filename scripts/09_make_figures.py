@@ -9,6 +9,7 @@ colorblind-safe palette; sizes target a single IEEE column.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from datetime import datetime, timezone
 
@@ -50,7 +51,10 @@ def fig_validity(df: pd.DataFrame, path) -> None:
     for (block, label, marker), color in zip(axes_spec, PALETTE):
         sub = df[(df.block == block) & (df.method == "region_crc")]
         cells = cell_means(sub, ["model", "class_name", "alpha", "rho"])
-        jitter = (hash(block) % 100 / 100 - 0.5) * 0.004
+        # A deterministic offset: Python's hash() is salted per process, so a
+        # hash-derived jitter would move the points between runs.
+        digest = hashlib.sha256(block.encode()).digest()
+        jitter = (digest[0] / 255.0 - 0.5) * 0.004
         ax.scatter(cells.alpha + jitter, cells.region_fnr, s=12,
                    marker=marker, color=color, label=label, alpha=0.8,
                    linewidths=0)
@@ -138,31 +142,6 @@ def fig_tier_a(df: pd.DataFrame, path) -> None:
     axes[1].set_xlabel(r"labeled target images $n_t$")
     axes[1].set_ylabel(r"infeasible-draw rate ($\alpha=0.1$)")
     axes[1].legend(frameon=False)
-    fig.savefig(path); plt.close(fig)
-
-
-def fig_vacuity(df: pd.DataFrame, path) -> None:
-    """Measured conservative test mass vs clip, with the collapse-form curve."""
-    sub = df[(df.block == "c1") & (df.method == "weighted_crc")]
-    cells = sub.groupby("clip_max").agg(
-        ptest=("weight_p_test", "mean"),
-        n_cal=("n_cal_images", "mean")).reset_index()
-    n = float(cells.n_cal.mean())
-    floor = 0.05  # lower clip of the weight interval (stage-5 constant)
-    fig, ax = plt.subplots(figsize=(COLUMN_W, 2.6))
-    kappa = np.linspace(1.5, 22, 200)
-    ax.plot(kappa, kappa / (floor * n + kappa), color=PALETTE[1], lw=1.2,
-            label=rf"collapse form $\kappa/(cn+\kappa)$, $c={floor}$, $n={n:.0f}$")
-    ax.scatter(cells.clip_max, cells.ptest, s=22, color=PALETTE[0],
-               zorder=3, label="measured")
-    for alpha, ls in zip(ALPHAS, (":", "-.", "--")):
-        ax.axhline(alpha, color="gray", lw=0.7, ls=ls)
-        ax.text(21.3, alpha, rf"$\alpha={alpha:g}$", fontsize=6,
-                va="center", color="gray")
-    ax.set_xlabel(r"weight clip $\kappa$")
-    ax.set_ylabel(r"conservative test mass $\hat{p}_{n+1}$")
-    ax.set_xlim(0, 25)
-    ax.legend(frameon=False, loc="center right")
     fig.savefig(path); plt.close(fig)
 
 
@@ -264,12 +243,15 @@ def fig_triage_baselines(df: pd.DataFrame, path) -> None:
     unreviewed images divided by the full test-set size, a uniformly random
     order includes each image with probability beta, so
 
-        E[residual(beta)] = (1 - floor(beta n)/n) * residual(0),
+        E[residual(beta)] = (1 - beta) * residual(0),
 
-    exactly. The single sampled permutation stored in the CSVs is one draw
-    around that line and deviates from it by up to 29% of the no-review rate on
-    the fixed MARIDA partitions, which is why the exact expectation is used
-    here instead. Plotting the difference rather than the two rates puts every
+    up to the integer rounding of the reviewed count (the review model takes
+    floor(beta n) images, so the two agree whenever beta n is an integer and
+    differ by less than 1/n otherwise; measured over the six settings the gap
+    is at most 0.7% of the no-review rate). The single sampled permutation
+    stored in the CSVs is one draw around that line and deviates from it by up
+    to 29% of the no-review rate on the fixed MARIDA partitions, which is why
+    the closed form is used here instead. Plotting the difference rather than the two rates puts every
     deployment setting on one axis: negative means the score orders images
     better than chance.
     """

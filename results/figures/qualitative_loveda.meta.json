@@ -1,6 +1,6 @@
 {
- "figure": "qualitative_marida",
- "path": "/home/aorus/Desktop/ReCoRD/03_kod/record-conformal/results/figures/qualitative_marida.pdf",
+ "figure": "qualitative_loveda",
+ "path": "/home/aorus/Desktop/ReCoRD/03_kod/record-conformal/results/figures/qualitative_loveda.pdf",
  "benchmark": "loveda",
  "model_key": "segformer_b2_loveda_urban",
  "dataset_key": "loveda_Val_Urban",
@@ -131,5 +131,6 @@
   2416,
   2058
  ],
- "completed_utc": "2026-08-09T08:09:45.978038+00:00"
+ "completed_utc": "2026-08-09T08:09:45.978038+00:00",
+ "note": "regenerated path recorded after the figure was renamed to follow its benchmark; the render is unchanged"
 }

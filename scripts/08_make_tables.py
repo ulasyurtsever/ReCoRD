@@ -124,8 +124,10 @@ def table_baselines(df: pd.DataFrame) -> str:
         "at both capture levels. LAC denotes a single global threshold tuned "
         "to an all-class pixel-coverage target, the marginal variant of the "
         "least-ambiguous set-valued classifier; the temperature-scaled rows "
-        "refit the scalar on each draw's own calibration list, so the tempered "
-        "score never sees its own test half. FNR is the "
+        "use one scalar fitted by negative log-likelihood on the seed-0 "
+        "calibration list and reused across the draws; refitting it on each "
+        "draw's own list moves every tempered cell by at most $0.0006$ "
+        "(Section~\\ref{sec:exp_indist}). FNR is the "
         "mean region-miss loss over test images containing the class; Area is "
         "the mean marked fraction over all test images.",
         "tab:baselines", "llcccc", header, size="scriptsize", colsep="2.5pt")

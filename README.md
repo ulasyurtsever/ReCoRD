@@ -134,6 +134,7 @@ restarts from scratch and overwrites its checkpoints.
 | 20 | `20_temperature_seed_spread.py` | CPU | Refits the temperature on each seeded calibration draw and reports the spread, bounding how much the fitted scalar can depend on its own test half |
 | 21 | `21_temperature_leakfree.py` | CPU | Leak-free temperature scaling: refits the scalar on each draw's own calibration list and recalibrates that draw against tables built from its own temperature, so the tempered baseline never sees its test half |
 | 22 | `22_union_marked_area.py` | CPU | Marked area of the union of the critical-class masks at the selected thresholds, measuring the cost of monitoring several classes at once |
+| 23 | `23_tierb_target_pool.py` | CPU | Refits the tier-B density ratio with the target side restricted to class-bearing target images, so the conditioning of the two populations matches the weighted statement, and reports both fits side by side |
 
 Orchestrators: `run_all.sh` (every phase in dependency order; this is the
 only script a reproducer needs to run),

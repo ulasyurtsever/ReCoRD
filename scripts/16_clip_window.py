@@ -45,8 +45,8 @@ plt.rcParams.update({
 })
 
 
-def collect(rho: float, cond: str) -> pd.DataFrame:
-    """One row per (clip ratio, alpha): test mass, informativeness, risk."""
+def _clip_frame(rho: float, cond: str) -> pd.DataFrame:
+    """Every tier-B clip run for one condition, with c_low and kappa columns."""
     frames = []
     for pattern, fixed_c in (("p3_lo*", None), ("c1_clip*", 0.05)):
         try:
@@ -69,9 +69,20 @@ def collect(rho: float, cond: str) -> pd.DataFrame:
         frames.append(f)
     if not frames:
         raise FileNotFoundError("no tier-B clip runs found")
-
     grid = pd.concat(frames, ignore_index=True)
+    # The c1_clip* runs repeat the lo=0.05 arm of p3_lo005_clip* verbatim;
+    # keyed on the clip interval rather than the file name, the repeat drops
+    # out instead of being averaged with itself.
+    grid = grid.drop_duplicates(
+        subset=["c_low", "kappa", "seed", "class_name", "alpha", "rho",
+                "method"])
     grid["ratio"] = grid["kappa"] / grid["c_low"]
+    return grid
+
+
+def collect(rho: float, cond: str) -> pd.DataFrame:
+    """One row per (clip ratio, alpha): test mass, informativeness, risk."""
+    grid = _clip_frame(rho, cond)
     rows = []
     for (ratio, alpha), sub in grid.groupby(["ratio", "alpha"]):
         # The theorem bounds the expectation over ALL draws; an infeasible
@@ -90,6 +101,26 @@ def collect(rho: float, cond: str) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values(["alpha", "ratio"])
 
 
+def collect_pairs(rho: float, cond: str) -> pd.DataFrame:
+    """One row per (lower clip, upper clip): the conservative test mass.
+
+    ``collect`` keys on the ratio, which is what panels (b) and (c) sweep. The
+    invariance claim of panel (a) is that two clip intervals sharing a ratio
+    give the same test mass, so that panel has to keep the pairs apart: three
+    ratios in the released grid are reached by two distinct intervals each
+    (40, 20 and 200), and collapsing them first would hide exactly the
+    agreement the panel is there to show.
+    """
+    grid = _clip_frame(rho, cond)
+    rows = []
+    for (c_low, kappa), sub in grid.groupby(["c_low", "kappa"]):
+        rows.append(dict(c_low=float(c_low), kappa=float(kappa),
+                         ratio=float(kappa) / float(c_low),
+                         p_test=float(sub["weight_p_test"].mean()),
+                         n=len(sub)))
+    return pd.DataFrame(rows).sort_values(["ratio", "c_low"])
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rho", type=float, default=0.5)
@@ -100,8 +131,11 @@ def main() -> int:
     fig, axes = plt.subplots(1, 3, figsize=(COLUMN_W * 2.05, 2.2))
 
     ax = axes[0]
-    one = t.drop_duplicates("ratio").sort_values("ratio")
-    ax.plot(one["ratio"], one["p_test"], "o-", color="0.25", ms=3, lw=1.2)
+    pairs = collect_pairs(args.rho, args.condition)
+    ax.plot(pairs["ratio"], pairs["p_test"], "-", color="0.25", lw=1.2,
+            zorder=1)
+    ax.plot(pairs["ratio"], pairs["p_test"], "o", color="0.25", ms=3.4,
+            mfc="none", zorder=2)
     for a, col in PALETTE.items():
         ax.axhline(a, ls=":", lw=0.9, color=col)
         # Anchored inside the axes: at the right-hand data edge the label lands

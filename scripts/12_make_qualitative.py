@@ -14,16 +14,18 @@ its debris components span one to eight pixels on the official test split,
 which no rendering makes visible at scene scale.
 
 Patch selection is deterministic and stated in the output manifest. The
-figure has to make the mechanism visible, so candidates are restricted to
-official test patches that contain at least two debris regions and at
-least one region large enough to be legible in print; among those, the
+figure has to make the mechanism visible, so candidates are restricted to the
+patches of the benchmark's evaluation pool -- the official test split on
+MARIDA, the labeled Val/Urban split on LoveDA, since LoveDA's own test split
+carries no labels -- that contain at least two regions of the critical class
+and at least one region large enough to be legible in print; among those, the
 patch chosen is the one where the calibrated threshold recovers the most
 regions that argmax misses, with ties broken by region count and then by
 patch identifier. The full ranking is printed with ``--report``.
 The panel illustrates the mechanism; aggregate performance is reported in the
 tables.
 
-Writes ``results/figures/qualitative_marida.pdf``.
+Writes ``results/figures/qualitative_<benchmark>.pdf``.
 
 Example
 -------
@@ -256,8 +258,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--min-regions", type=int, default=2)
     parser.add_argument("--min-visible-px", type=int, default=None,
                         help="smallest largest-region size for a legible panel")
-    parser.add_argument("--out-name", default="qualitative_marida",
-                        help="output stem under results/figures")
+    parser.add_argument("--out-name", default=None,
+                        help="output stem under results/figures; "
+                             "defaults to qualitative_<benchmark>")
     parser.add_argument("--report", type=int, default=10,
                         help="print this many ranked candidates")
     return parser.parse_args()
@@ -298,10 +301,11 @@ def main() -> None:
                 print(f"{row['patch_id']:<26}{row['n_regions']:>8}"
                       f"{row['recovered']:>11}{row['missed_argmax']:>13}"
                       f"{row['missed_crc']:>10}{row['largest_region_px']:>12}")
-    path = render(stats, spec, args.rho, args.out_name)
+    out_name = args.out_name or f"qualitative_{args.benchmark}"
+    path = render(stats, spec, args.rho, out_name)
 
     manifest = {
-        "figure": args.out_name,
+        "figure": out_name,
         "path": path,
         "benchmark": args.benchmark,
         "model_key": model,
@@ -309,7 +313,7 @@ def main() -> None:
         "class_name": spec["class_name"],
         "patch_id": stats["patch_id"],
         "selection_rule": ("most regions recovered by the calibrated threshold "
-                           "among test scenes with at least "
+                           f"among {spec['dataset_key']} scenes with at least "
                            f"{args.min_regions} regions and a region of "
                            f"at least {min_visible} px; ties by region "
                            "count then patch id")
@@ -329,7 +333,7 @@ def main() -> None:
         "region_sizes_px": [r["size_px"] for r in stats["regions"]],
         "completed_utc": datetime.now(timezone.utc).isoformat(),
     }
-    with open(results_dir("figures") / f"{args.out_name}.meta.json", "w") as f:
+    with open(results_dir("figures") / f"{out_name}.meta.json", "w") as f:
         json.dump(manifest, f, indent=1)
     print(f"scene {stats['patch_id']}: {stats['n_regions']} regions, "
           f"argmax misses {stats['missed_argmax']}, "
