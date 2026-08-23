@@ -32,7 +32,27 @@ for KEY in segformer_b2_cityscapes segformer_b5_cityscapes \
 done
 
 echo ">>> stage 5: in-distribution runs (the only ones that reported the column)"
-bash scripts/run_stage5_baselines.sh
+# e1_indist is where the false-positive column was read. Nothing else in the
+# rebuilt tables changes: stage 4 is deterministic, and the densified subgrid
+# only alters fp_component_counts, so the coverage curves, marked-area curves
+# and component tables come back byte-identical. Rerunning e1 is therefore
+# enough to refresh the column, and every other stage-5 CSV stays valid.
+for KEY in segformer_b2_cityscapes segformer_b5_cityscapes \
+           mask2former_swinb_cityscapes segformer_b2_cityscapes_mcdrop8; do
+  python scripts/05_run_experiments.py --name "e1_indist__${KEY}" \
+      --model "$KEY" --scheme cityscapes_val_half \
+      --cal-datasets cityscapes_val --test-datasets cityscapes_val \
+      --methods region_crc pixel_crc heuristic argmax
+done
 
 echo ">>> audit"
 python scripts/18_audit.py
+
+cat <<'NOTE'
+
+NOTE. Every stage-5 CSV other than e1_indist still carries a
+fp_components_per_image column computed against the OLD 41-point subgrid.
+Those values were never quoted in the article and the audit only reports them
+as a note, but they are not comparable with the rebuilt e1 column. Treat the
+column as void outside e1 until its run is repeated.
+NOTE
