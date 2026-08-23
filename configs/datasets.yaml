@@ -1,0 +1,58 @@
+# Dataset locations, expected inventories, and split-generation parameters.
+#
+# All datasets are publicly available from their original providers:
+#   Cityscapes:  https://www.cityscapes-dataset.com   (registration required)
+#   ACDC:        https://acdc.vision.ee.ethz.ch       (registration required)
+#   LoveDA:      https://zenodo.org/records/5706578
+#   MARIDA:      https://zenodo.org/records/5151941
+#
+# The data root defaults to ../../00_datasets relative to the repository root
+# and can be overridden with the RECORD_DATA_ROOT environment variable.
+
+datasets:
+  cityscapes:
+    relpath: cityscapes
+    images_dir: leftImg8bit
+    labels_dir: gtFine
+    label_suffix: _gtFine_labelIds.png
+    critical_classes: [person, rider, bicycle]
+    expected:
+      train_images: 2975
+      val_images: 500
+
+  acdc:
+    relpath: acdc
+    images_dir: rgb_anon
+    labels_dir: gt
+    label_suffix: _gt_labelIds.png
+    conditions: [fog, night, rain, snow]
+    critical_classes: [person, rider, bicycle]
+    expected:
+      train_images_per_condition: 400
+      val_images: { fog: 100, night: 106, rain: 100, snow: 100 }
+
+  loveda:
+    relpath: loveda
+    domains: [Urban, Rural]
+    critical_classes: [building, water]
+    expected:
+      Train: { Urban: 1156, Rural: 1366 }
+      Val: { Urban: 677, Rural: 992 }
+      Test: { Urban: 820, Rural: 976 }   # unlabeled; not used for evaluation
+
+  marida:
+    relpath: marida
+    patches_dir: patches
+    splits_dir: splits
+    critical_classes: [marine_debris]
+    expected:
+      patch_tifs: 4143
+      official_splits: { train: 694, val: 328, test: 359 }
+
+splits:
+  base_seed: 20260806
+  n_seeds: 100
+  lambda_grid_points: 1001
+  target_cal_sizes: [25, 50, 100]
+  cityscapes_val_cal_size: 250
+  loveda_val_cal_fraction: 0.5

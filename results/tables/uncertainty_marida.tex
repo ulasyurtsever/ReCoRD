@@ -1,0 +1,46 @@
+\begin{table}[t]
+\centering
+\caption{MARIDA region FNR at $\rho=0.5$ with 95\% scene-level bootstrap intervals. These partitions are fixed, so the uncertainty is not seed variance. The resampling unit is the acquisition scene: the patches of one scene share illumination, sea state and annotator, and a held-out tile can hold as few as three scenes, so resampling patches would report a precision the design does not carry; intervals are 95\% percentile intervals over 4000 cluster resamples. Bold marks the cells whose whole interval lies above the level. \#\,comp.\ is the number of ground-truth components in the test group, missed is how many of them fall below the capture level at the selected threshold, and pooled is their ratio. The FNR column is the controlled quantity and weights images equally; the pooled column weights components equally and is not the quantity the guarantee bounds. The two differ whenever images carry unequal component counts.}
+\label{tab:uncertainty_marida}
+\footnotesize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{lcccccc}
+\toprule
+Axis & $\alpha$ & FNR & 95\% CI & \#\,cmp. & miss & pooled \\
+\midrule
+Official split, single & 0.05 & \underline{0.066} & [0.000, 0.212] & 223 & 15 & 0.067 \\
+Official split, single & 0.10 & 0.095 & [0.009, 0.260] & 223 & 18 & 0.081 \\
+Official split, single & 0.20 & 0.200 & [0.084, 0.390] & 223 & 37 & 0.166 \\
+Official split, ensemble-5 & 0.05 & \underline{0.069} & [0.000, 0.205] & 223 & 14 & 0.063 \\
+Official split, ensemble-5 & 0.10 & 0.098 & [0.009, 0.265] & 223 & 21 & 0.094 \\
+Official split, ensemble-5 & 0.20 & \underline{0.265} & [0.150, 0.429] & 223 & 50 & 0.224 \\
+Held-out tile 16PCC & 0.05 & 0.000 & [0.000, 0.000] & 605 & 0 & 0.000 \\
+Held-out tile 16PCC & 0.10 & 0.027 & [0.007, 0.055] & 605 & 17 & 0.028 \\
+Held-out tile 16PCC & 0.20 & 0.094 & [0.050, 0.156] & 605 & 55 & 0.091 \\
+Held-out tile 16PDC & 0.05 & 0.009 & [0.000, 0.028] & 99 & 1 & 0.010 \\
+Held-out tile 16PDC & 0.10 & 0.027 & [0.000, 0.083] & 99 & 3 & 0.030 \\
+Held-out tile 16PDC & 0.20 & 0.142 & [0.000, 0.422] & 99 & 12 & 0.121 \\
+Held-out tile 16PEC & 0.05 & 0.000 & [0.000, 0.000] & 68 & 0 & 0.000 \\
+Held-out tile 16PEC & 0.10 & \underline{0.159} & [0.054, 0.327] & 68 & 8 & 0.118 \\
+Held-out tile 16PEC & 0.20 & \underline{0.333} & [0.129, 0.696] & 68 & 22 & 0.324 \\
+Held-out tile 18QYF & 0.05 & 0.001 & [0.000, 0.005] & 343 & 1 & 0.003 \\
+Held-out tile 18QYF & 0.10 & 0.096 & [0.031, 0.190] & 343 & 23 & 0.067 \\
+Held-out tile 18QYF & 0.20 & \underline{0.267} & [0.172, 0.378] & 343 & 102 & 0.297 \\
+Held-out tile 48PZC & 0.05 & 0.000 & [0.000, 0.000] & 13 & 0 & 0.000 \\
+Held-out tile 48PZC & 0.10 & \underline{0.250} & [0.000, 0.500] & 13 & 3 & 0.231 \\
+Held-out tile 48PZC & 0.20 & \underline{0.375} & [0.000, 0.750] & 13 & 5 & 0.385 \\
+Held-out season (winter) & 0.05 & 0.030 & [0.000, 0.083] & 363 & 10 & 0.028 \\
+Held-out season (winter) & 0.10 & 0.041 & [0.000, 0.094] & 363 & 12 & 0.033 \\
+Held-out season (winter) & 0.20 & 0.108 & [0.035, 0.189] & 363 & 31 & 0.085 \\
+Held-out season (spring) & 0.05 & \textbf{0.217} & [0.063, 0.444] & 200 & 31 & 0.155 \\
+Held-out season (spring) & 0.10 & \textbf{0.357} & [0.165, 0.654] & 200 & 50 & 0.250 \\
+Held-out season (spring) & 0.20 & \textbf{0.430} & [0.231, 0.693] & 200 & 60 & 0.300 \\
+Held-out season (summer) & 0.05 & 0.000 & [0.000, 0.000] & 94 & 0 & 0.000 \\
+Held-out season (summer) & 0.10 & 0.005 & [0.000, 0.012] & 94 & 1 & 0.011 \\
+Held-out season (summer) & 0.20 & 0.044 & [0.018, 0.134] & 94 & 9 & 0.096 \\
+Held-out season (autumn) & 0.05 & 0.000 & [0.000, 0.000] & 673 & 0 & 0.000 \\
+Held-out season (autumn) & 0.10 & 0.002 & [0.000, 0.007] & 673 & 2 & 0.003 \\
+Held-out season (autumn) & 0.20 & 0.054 & [0.023, 0.098] & 673 & 28 & 0.042 \\
+\bottomrule
+\end{tabular}
+\end{table}

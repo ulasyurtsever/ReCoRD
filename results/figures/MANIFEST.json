@@ -1,0 +1,16 @@
+{
+ "figures": [
+  "validity_scatter.pdf",
+  "area_tradeoff.pdf",
+  "breakdown_heatmap.pdf",
+  "tier_a.pdf",
+  "triage_baselines.pdf",
+  "loveda_asymmetry.pdf",
+  "marida_axes.pdf",
+  "triage_curves.pdf"
+ ],
+ "rho": 0.5,
+ "n_experiment_rows": 723420,
+ "n_rows_at_rho": 361710,
+ "completed_utc": "2026-08-17T22:36:40.657392+00:00"
+}

@@ -1,0 +1,61 @@
+\begin{table}[t]
+\centering
+\caption{Region FNR on ACDC at $\rho=0.5$ under source calibration, with standard errors over seeded draws. Bold and underline as in the previous table.}
+\label{tab:uncertainty_breakdown}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccc}
+\toprule
+model & condition & $\alpha$ & FNR & 95\% CI \\
+\midrule
+Mask2Former & fog & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & fog & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & fog & 0.20 & 0.000 & [0.000, 0.000] \\
+Mask2Former & night & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & night & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & night & 0.20 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rain & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rain & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rain & 0.20 & 0.000 & [0.000, 0.000] \\
+Mask2Former & snow & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & snow & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & snow & 0.20 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 & fog & 0.05 & 0.007 & [0.003, 0.011] \\
+SegFormer-B2 & fog & 0.10 & 0.066 & [0.056, 0.075] \\
+SegFormer-B2 & fog & 0.20 & \textbf{0.325} & [0.318, 0.332] \\
+SegFormer-B2 & night & 0.05 & 0.003 & [0.001, 0.004] \\
+SegFormer-B2 & night & 0.10 & 0.036 & [0.030, 0.042] \\
+SegFormer-B2 & night & 0.20 & \textbf{0.298} & [0.288, 0.308] \\
+SegFormer-B2 & rain & 0.05 & 0.003 & [0.002, 0.005] \\
+SegFormer-B2 & rain & 0.10 & 0.051 & [0.043, 0.060] \\
+SegFormer-B2 & rain & 0.20 & \textbf{0.387} & [0.374, 0.399] \\
+SegFormer-B2 & snow & 0.05 & 0.004 & [0.002, 0.005] \\
+SegFormer-B2 & snow & 0.10 & 0.057 & [0.047, 0.066] \\
+SegFormer-B2 & snow & 0.20 & \textbf{0.345} & [0.338, 0.352] \\
+SegFormer-B2 (MC-dropout) & fog & 0.05 & 0.025 & [0.019, 0.030] \\
+SegFormer-B2 (MC-dropout) & fog & 0.10 & \underline{0.104} & [0.095, 0.113] \\
+SegFormer-B2 (MC-dropout) & fog & 0.20 & \textbf{0.320} & [0.313, 0.326] \\
+SegFormer-B2 (MC-dropout) & night & 0.05 & 0.008 & [0.006, 0.010] \\
+SegFormer-B2 (MC-dropout) & night & 0.10 & 0.065 & [0.059, 0.072] \\
+SegFormer-B2 (MC-dropout) & night & 0.20 & \textbf{0.291} & [0.283, 0.298] \\
+SegFormer-B2 (MC-dropout) & rain & 0.05 & 0.012 & [0.009, 0.015] \\
+SegFormer-B2 (MC-dropout) & rain & 0.10 & \textbf{0.119} & [0.107, 0.130] \\
+SegFormer-B2 (MC-dropout) & rain & 0.20 & \textbf{0.388} & [0.377, 0.399] \\
+SegFormer-B2 (MC-dropout) & snow & 0.05 & 0.011 & [0.007, 0.014] \\
+SegFormer-B2 (MC-dropout) & snow & 0.10 & \textbf{0.134} & [0.121, 0.147] \\
+SegFormer-B2 (MC-dropout) & snow & 0.20 & \textbf{0.333} & [0.329, 0.338] \\
+SegFormer-B5 & fog & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & fog & 0.10 & 0.062 & [0.055, 0.069] \\
+SegFormer-B5 & fog & 0.20 & \underline{0.200} & [0.191, 0.209] \\
+SegFormer-B5 & night & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & night & 0.10 & \textbf{0.148} & [0.132, 0.163] \\
+SegFormer-B5 & night & 0.20 & \textbf{0.406} & [0.391, 0.420] \\
+SegFormer-B5 & rain & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & rain & 0.10 & 0.081 & [0.073, 0.089] \\
+SegFormer-B5 & rain & 0.20 & \textbf{0.309} & [0.297, 0.322] \\
+SegFormer-B5 & snow & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & snow & 0.10 & 0.087 & [0.078, 0.096] \\
+SegFormer-B5 & snow & 0.20 & \textbf{0.225} & [0.215, 0.235] \\
+\bottomrule
+\end{tabular}
+\end{table}

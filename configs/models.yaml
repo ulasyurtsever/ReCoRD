@@ -1,0 +1,112 @@
+# Model and embedding registry.
+#
+# Checkpoint identifiers refer to the Hugging Face Hub. Availability is
+# validated by the stage-3 smoke run before any full caching pass.
+
+segmentation_models:
+  segformer_b2_cityscapes:
+    framework: segformer
+    checkpoint: nvidia/segformer-b2-finetuned-cityscapes-1024-1024
+    family: cityscapes
+    n_classes: 19
+  segformer_b5_cityscapes:
+    framework: segformer
+    checkpoint: nvidia/segformer-b5-finetuned-cityscapes-1024-1024
+    family: cityscapes
+    n_classes: 19
+  mask2former_swinb_cityscapes:
+    framework: mask2former
+    checkpoint: facebook/mask2former-swin-base-IN21k-cityscapes-semantic
+    family: cityscapes
+    n_classes: 19
+  # Locally trained checkpoints (paths relative to the repository root;
+  # produced by scripts/06_train_loveda.py and scripts/07_train_marida_unet.py).
+  segformer_b2_loveda_urban:
+    framework: segformer
+    checkpoint: checkpoints/loveda_segformer_b2_urban
+    family: loveda
+    n_classes: 7
+  segformer_b2_loveda_rural:
+    framework: segformer
+    checkpoint: checkpoints/loveda_segformer_b2_rural
+    family: loveda
+    n_classes: 7
+
+  # One model per held-out MARIDA axis, produced by
+  # scripts/07_train_marida_unet.py --scheme marida_holdout_<axis>.
+  # Each is fitted without any patch of its own test region or season and
+  # without that scheme's calibration group, so the corresponding
+  # evaluation is held out at every stage of model fitting.
+  marida_unet_holdout_region_16PCC:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_region_16PCC
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_region_16PDC:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_region_16PDC
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_region_16PEC:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_region_16PEC
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_region_18QYF:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_region_18QYF
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_region_48PZC:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_region_48PZC
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_season_winter:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_season_winter
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_season_spring:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_season_spring
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_season_summer:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_season_summer
+    family: marida
+    n_classes: 15
+  marida_unet_holdout_season_autumn:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_holdout_season_autumn
+    family: marida
+    n_classes: 15
+  marida_unet_official_holdout_ens5:
+    framework: unet
+    members:
+      - checkpoints/marida_unet_official_holdout
+      - checkpoints/marida_unet_official_holdout_s1
+      - checkpoints/marida_unet_official_holdout_s2
+      - checkpoints/marida_unet_official_holdout_s3
+      - checkpoints/marida_unet_official_holdout_s4
+    family: marida
+    n_classes: 15
+  marida_unet_official_holdout:
+    framework: unet
+    checkpoint: checkpoints/marida_unet_official_holdout
+    family: marida
+    n_classes: 15
+
+embedding_models:
+  dinov2_vitb14:
+    framework: timm
+    checkpoint: vit_base_patch14_dinov2.lvd142m
+  clip_vitb16:
+    framework: open_clip
+    checkpoint: ViT-B-16
+    pretrained: laion2b_s34b_b88k
+
+cache:
+  probs_dtype: float16
+  strided_probs_stride: 4

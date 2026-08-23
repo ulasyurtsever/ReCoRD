@@ -1,0 +1,43 @@
+{
+ "name": "p4_tierB_cv__night__segformer_b2_cityscapes__dinov2_vitb14",
+ "argv": {
+  "name": "p4_tierB_cv__night__segformer_b2_cityscapes__dinov2_vitb14",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "test_datasets": [
+   "acdc_night_train",
+   "acdc_night_val"
+  ],
+  "methods": [
+   "weighted_crc"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": "dinov2_vitb14",
+  "weight_estimator": "logistic_cv",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "cityscapes_val_half.json",
+ "n_records": 1800,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T16:51:23.931744+00:00"
+}

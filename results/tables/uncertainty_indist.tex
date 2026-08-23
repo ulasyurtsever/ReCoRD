@@ -1,0 +1,49 @@
+\begin{table}[t]
+\centering
+\caption{In-distribution region FNR at $\rho=0.5$ with standard errors over 100 seeded calibration draws. Bold marks cells whose whole 95\% interval lies above the nominal level; underline marks cells above the level by less than the interval, which the seed variance cannot separate from noise.}
+\label{tab:uncertainty_indist}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{llccc}
+\toprule
+model & class_name & $\alpha$ & FNR & 95\% CI \\
+\midrule
+Mask2Former & bicycle & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & bicycle & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & bicycle & 0.20 & 0.000 & [0.000, 0.000] \\
+Mask2Former & person & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & person & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & person & 0.20 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rider & 0.05 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rider & 0.10 & 0.000 & [0.000, 0.000] \\
+Mask2Former & rider & 0.20 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 & bicycle & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 & bicycle & 0.10 & 0.023 & [0.013, 0.033] \\
+SegFormer-B2 & bicycle & 0.20 & 0.189 & [0.182, 0.197] \\
+SegFormer-B2 & person & 0.05 & 0.009 & [0.005, 0.014] \\
+SegFormer-B2 & person & 0.10 & 0.085 & [0.080, 0.090] \\
+SegFormer-B2 & person & 0.20 & 0.194 & [0.188, 0.200] \\
+SegFormer-B2 & rider & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 & rider & 0.10 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 & rider & 0.20 & 0.163 & [0.153, 0.173] \\
+SegFormer-B2 (MC-dropout) & bicycle & 0.05 & 0.002 & [-0.001, 0.005] \\
+SegFormer-B2 (MC-dropout) & bicycle & 0.10 & 0.080 & [0.074, 0.085] \\
+SegFormer-B2 (MC-dropout) & bicycle & 0.20 & 0.190 & [0.182, 0.197] \\
+SegFormer-B2 (MC-dropout) & person & 0.05 & 0.031 & [0.026, 0.036] \\
+SegFormer-B2 (MC-dropout) & person & 0.10 & 0.090 & [0.085, 0.095] \\
+SegFormer-B2 (MC-dropout) & person & 0.20 & 0.194 & [0.188, 0.200] \\
+SegFormer-B2 (MC-dropout) & rider & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B2 (MC-dropout) & rider & 0.10 & 0.005 & [-0.001, 0.011] \\
+SegFormer-B2 (MC-dropout) & rider & 0.20 & 0.166 & [0.157, 0.175] \\
+SegFormer-B5 & bicycle & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & bicycle & 0.10 & 0.067 & [0.057, 0.077] \\
+SegFormer-B5 & bicycle & 0.20 & 0.194 & [0.188, 0.200] \\
+SegFormer-B5 & person & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & person & 0.10 & 0.090 & [0.085, 0.095] \\
+SegFormer-B5 & person & 0.20 & 0.196 & [0.191, 0.201] \\
+SegFormer-B5 & rider & 0.05 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & rider & 0.10 & 0.000 & [0.000, 0.000] \\
+SegFormer-B5 & rider & 0.20 & 0.149 & [0.131, 0.166] \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,25 @@
+\begin{table}[t]
+\centering
+\caption{Area-matched comparison at $\rho=0.5$. Both methods are swept over the requested level; the reported FNRs are linearly interpolated onto a common marked-area grid over the range in which both were measured, with no extrapolation. $\Delta$ is pixel minus region, so positive favors region CRC.}
+\label{tab:pareto}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccc}
+\toprule
+Model & Area & Region CRC & Pixel CRC & $\Delta$ & Lower FNR \\
+\midrule
+SegFormer-B2 & 0.0114 & 0.493 & 0.488 & -0.006 & pixel \\
+SegFormer-B2 & 0.0279 & 0.224 & 0.229 & 0.005 & region \\
+SegFormer-B2 & 0.0683 & 0.171 & 0.209 & 0.038 & region \\
+SegFormer-B2 & 0.1671 & 0.139 & 0.161 & 0.023 & region \\
+SegFormer-B2 & 0.4088 & 0.078 & 0.071 & -0.007 & pixel \\
+SegFormer-B2 & 1.0000 & 0.000 & 0.000 & 0.000 & tie \\
+SegFormer-B5 & 0.0071 & 0.495 & 0.484 & -0.011 & pixel \\
+SegFormer-B5 & 0.0191 & 0.280 & 0.256 & -0.024 & pixel \\
+SegFormer-B5 & 0.0514 & 0.234 & 0.243 & 0.008 & region \\
+SegFormer-B5 & 0.1383 & 0.163 & 0.206 & 0.043 & region \\
+SegFormer-B5 & 0.3718 & 0.084 & 0.084 & 0.000 & region \\
+SegFormer-B5 & 1.0000 & 0.000 & 0.000 & 0.000 & tie \\
+\bottomrule
+\end{tabular}
+\end{table}

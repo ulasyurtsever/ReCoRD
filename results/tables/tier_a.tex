@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\caption{Tier A on ACDC: exact recalibration from $n_t$ labeled target images. FNR and marked area are averaged over feasible draws only; Inf.\ is the fraction of draws where $\alpha$ is unattainable because too few of the $n_t$ images contain the class. Where Inf.\ approaches one, the paired FNR and area rest on very few draws and are indicative only. Capture level $\rho=0.5$.}
+\label{tab:tier_a}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccccccc}
+\toprule
+$n_t$ & \multicolumn{3}{c}{$\alpha=0.05$} & \multicolumn{3}{c}{$\alpha=0.1$} & \multicolumn{3}{c}{$\alpha=0.2$} \\
+\midrule
+ & FNR & Area & Inf. & FNR & Area & Inf. & FNR & Area & Inf. \\
+\midrule
+25 & 0.005 & 0.940 & $>$0.99 & 0.022 & 0.807 & 0.74 & 0.075 & 0.648 & 0.38 \\
+50 & 0.004 & 0.944 & 0.80 & 0.022 & 0.818 & 0.45 & 0.085 & 0.623 & 0.19 \\
+100 & 0.004 & 0.949 & 0.47 & 0.018 & 0.835 & 0.27 & 0.072 & 0.662 & 0.03 \\
+\bottomrule
+\end{tabular}
+\end{table}

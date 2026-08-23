@@ -1,0 +1,17 @@
+{
+ "model_key": "marida_unet_official_holdout_ens5",
+ "dataset_key": "marida_test",
+ "class_name": "marine_debris",
+ "gt_value": 1,
+ "model_channel": 0,
+ "n_images": 359,
+ "n_labeled_pixels": 194863,
+ "n_debris_pixels": 381,
+ "tp": 308,
+ "fp": 261,
+ "fn": 73,
+ "precision": 0.5413,
+ "recall": 0.8084,
+ "f1": 0.6484,
+ "completed_utc": "2026-08-16T20:51:13.425062+00:00"
+}

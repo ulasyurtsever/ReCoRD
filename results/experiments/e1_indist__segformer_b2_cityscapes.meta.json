@@ -1,0 +1,45 @@
+{
+ "name": "e1_indist__segformer_b2_cityscapes",
+ "argv": {
+  "name": "e1_indist__segformer_b2_cityscapes",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "test_datasets": [
+   "cityscapes_val"
+  ],
+  "methods": [
+   "region_crc",
+   "pixel_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "cityscapes_val_half.json",
+ "n_records": 7200,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T09:51:28.961875+00:00"
+}

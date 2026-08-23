@@ -1,0 +1,139 @@
+{
+ "generated_utc": "2026-08-08T00:31:07.719338+00:00",
+ "base_seed": 20260806,
+ "n_seeds": 100,
+ "schemes": [
+  {
+   "scheme": "cityscapes_val_half",
+   "file": "cityscapes_val_half.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_urban_val_half",
+   "file": "loveda_urban_val_half.json",
+   "n_items": 677,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_rural_val_half",
+   "file": "loveda_rural_val_half.json",
+   "n_items": 992,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_fog_targetcal25",
+   "file": "acdc_fog_targetcal25.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_fog_targetcal50",
+   "file": "acdc_fog_targetcal50.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_fog_targetcal100",
+   "file": "acdc_fog_targetcal100.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_night_targetcal25",
+   "file": "acdc_night_targetcal25.json",
+   "n_items": 506,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_night_targetcal50",
+   "file": "acdc_night_targetcal50.json",
+   "n_items": 506,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_night_targetcal100",
+   "file": "acdc_night_targetcal100.json",
+   "n_items": 506,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_rain_targetcal25",
+   "file": "acdc_rain_targetcal25.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_rain_targetcal50",
+   "file": "acdc_rain_targetcal50.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_rain_targetcal100",
+   "file": "acdc_rain_targetcal100.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_snow_targetcal25",
+   "file": "acdc_snow_targetcal25.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_snow_targetcal50",
+   "file": "acdc_snow_targetcal50.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "acdc_snow_targetcal100",
+   "file": "acdc_snow_targetcal100.json",
+   "n_items": 500,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_urban_targetcal25",
+   "file": "loveda_urban_targetcal25.json",
+   "n_items": 677,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_urban_targetcal50",
+   "file": "loveda_urban_targetcal50.json",
+   "n_items": 677,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_urban_targetcal100",
+   "file": "loveda_urban_targetcal100.json",
+   "n_items": 677,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_rural_targetcal25",
+   "file": "loveda_rural_targetcal25.json",
+   "n_items": 992,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_rural_targetcal50",
+   "file": "loveda_rural_targetcal50.json",
+   "n_items": 992,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "loveda_rural_targetcal100",
+   "file": "loveda_rural_targetcal100.json",
+   "n_items": 992,
+   "n_seeds": 100
+  },
+  {
+   "scheme": "marida_official",
+   "file": "marida_official.json",
+   "n_items": 1381,
+   "n_seeds": 1
+  }
+ ]
+}

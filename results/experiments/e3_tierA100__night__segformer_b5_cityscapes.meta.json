@@ -1,0 +1,46 @@
+{
+ "name": "e3_tierA100__night__segformer_b5_cityscapes",
+ "argv": {
+  "name": "e3_tierA100__night__segformer_b5_cityscapes",
+  "model": "segformer_b5_cityscapes",
+  "scheme": "acdc_night_targetcal100",
+  "cal_datasets": [
+   "acdc_night_train",
+   "acdc_night_val"
+  ],
+  "test_datasets": [
+   "acdc_night_train",
+   "acdc_night_val"
+  ],
+  "methods": [
+   "region_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "acdc_night_targetcal100.json",
+ "n_records": 5400,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T10:30:36.818218+00:00"
+}

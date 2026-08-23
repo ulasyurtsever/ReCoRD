@@ -1,0 +1,46 @@
+{
+ "name": "e3_tierA100__rain__segformer_b2_cityscapes_mcdrop8",
+ "argv": {
+  "name": "e3_tierA100__rain__segformer_b2_cityscapes_mcdrop8",
+  "model": "segformer_b2_cityscapes_mcdrop8",
+  "scheme": "acdc_rain_targetcal100",
+  "cal_datasets": [
+   "acdc_rain_train",
+   "acdc_rain_val"
+  ],
+  "test_datasets": [
+   "acdc_rain_train",
+   "acdc_rain_val"
+  ],
+  "methods": [
+   "region_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "acdc_rain_targetcal100.json",
+ "n_records": 5400,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T11:38:42.410416+00:00"
+}

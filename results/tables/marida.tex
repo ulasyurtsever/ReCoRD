@@ -1,0 +1,26 @@
+\begin{table}[t]
+\centering
+\caption{MARIDA marine-debris region FNR under region-level CRC. One model per held-out axis, fitted without that tile or season and without the calibration group; the official axis carries a single model and a five-member ensemble. The tile axis is a within-site hold-out (Section~\ref{sec:setup}). Partitions are fixed, so cells are single measurements. Bold marks the cells whose whole 95\% scene-level bootstrap interval lies above the level; intervals are in Table~\ref{tab:uncertainty_marida}. Capture level $\rho=0.5$.}
+\label{tab:marida}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccc}
+\toprule
+Axis & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ \\
+\midrule
+Official split, U-Net single & 0.066 & 0.095 & 0.200 \\
+Official split, U-Net ensemble-5 & 0.069 & 0.098 & 0.265 \\
+\addlinespace
+Held-out tile 16PCC & 0.000 & 0.027 & 0.094 \\
+Held-out tile 16PDC & 0.009 & 0.027 & 0.142 \\
+Held-out tile 16PEC & 0.000 & 0.159 & 0.333 \\
+Held-out tile 18QYF & 0.001 & 0.096 & 0.267 \\
+Held-out tile 48PZC & 0.000 & 0.250 & 0.375 \\
+\addlinespace
+Held-out season (winter) & 0.030 & 0.041 & 0.108 \\
+Held-out season (spring) & \textbf{0.217} & \textbf{0.357} & \textbf{0.430} \\
+Held-out season (summer) & 0.000 & 0.005 & 0.044 \\
+Held-out season (autumn) & 0.000 & 0.002 & 0.054 \\
+\bottomrule
+\end{tabular}
+\end{table}

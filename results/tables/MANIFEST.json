@@ -1,0 +1,15 @@
+{
+ "tables": [
+  "validity_cityscapes.tex",
+  "baselines.tex",
+  "breakdown.tex",
+  "tier_a.tex",
+  "loveda.tex",
+  "marida.tex",
+  "ablations.tex"
+ ],
+ "rho": 0.5,
+ "n_experiment_rows": 730650,
+ "n_rows_at_rho": 365340,
+ "completed_utc": "2026-08-23T09:13:23.228199+00:00"
+}

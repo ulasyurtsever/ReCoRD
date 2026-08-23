@@ -1,0 +1,36 @@
+# Environments
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+
+# Data and caches (never committed; see README for acquisition)
+data/
+cache/
+results/raw/
+results/experiments/*.npz
+# per-run CSV statistics ARE committed: they are what regenerates
+# every table and figure in the article without re-running inference.
+*.npz
+*.npy
+*.pt
+*.pth
+
+# OS
+.DS_Store
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+
+# Locally trained checkpoints (large; never committed)
+checkpoints/
+
+# Run logs and the machine-specific environment snapshot
+*.log
+results/environment_report.txt
+
+# Retired artifacts kept outside the published tree
+_to_delete/

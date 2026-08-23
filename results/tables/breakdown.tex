@@ -1,0 +1,19 @@
+\begin{table*}[t]
+\centering
+\caption{Region FNR on ACDC conditions under source (Cityscapes) calibration. Bold entries violate the nominal level: the in-distribution guarantee does not survive the shift. Capture level $\rho=0.5$.}
+\label{tab:breakdown}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccccccccc}
+\toprule
+Model & \multicolumn{4}{c}{$\alpha=0.05$} & \multicolumn{4}{c}{$\alpha=0.1$} & \multicolumn{4}{c}{$\alpha=0.2$} \\
+\midrule
+ & Fog & Night & Rain & Snow & Fog & Night & Rain & Snow & Fog & Night & Rain & Snow \\
+\midrule
+SegFormer-B2 & 0.007 & 0.003 & 0.003 & 0.004 & 0.066 & 0.036 & 0.051 & 0.057 & \textbf{0.325} & \textbf{0.298} & \textbf{0.387} & \textbf{0.345} \\
+SegFormer-B5 & 0.000 & 0.000 & 0.000 & 0.000 & 0.062 & \textbf{0.148} & 0.081 & 0.087 & \textbf{0.200} & \textbf{0.406} & \textbf{0.309} & \textbf{0.225} \\
+Mask2Former & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+SegFormer-B2 (MC-dropout) & 0.025 & 0.008 & 0.012 & 0.011 & \textbf{0.104} & 0.065 & \textbf{0.119} & \textbf{0.134} & \textbf{0.320} & \textbf{0.291} & \textbf{0.388} & \textbf{0.333} \\
+\bottomrule
+\end{tabular}
+\end{table*}

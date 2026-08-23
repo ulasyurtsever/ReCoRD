@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Shared-threshold ablation on Cityscapes: mean marked area under independent per-class thresholds (Area\textsubscript{per}) versus a single shared threshold (Area\textsubscript{sh}), and the max-over-classes FNR the shared threshold controls. Coupling to the hardest class inflates the area of easy classes by up to an order of magnitude. Capture level $\rho=0.1$.}
+\label{tab:ablations}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{lcccccc}
+\toprule
+Model & \multicolumn{3}{c}{$\alpha=0.1$} & \multicolumn{3}{c}{$\alpha=0.2$} \\
+\midrule
+ & Area\textsubscript{per} & Area\textsubscript{sh} & FNR\textsubscript{max} & Area\textsubscript{per} & Area\textsubscript{sh} & FNR\textsubscript{max} \\
+\midrule
+SegFormer-B2 & 0.29 & 0.97 & 0.004 & 0.02 & 0.03 & 0.179 \\
+SegFormer-B5 & 0.34 & 1.00 & 0.000 & 0.01 & 0.02 & 0.186 \\
+Mask2Former & 1.00 & 1.00 & 0.000 & 0.71 & 1.00 & 0.000 \\
+SegFormer-B2 (MC-dropout) & 0.05 & 0.16 & 0.077 & 0.02 & 0.03 & 0.187 \\
+\bottomrule
+\end{tabular}
+\end{table}

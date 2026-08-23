@@ -1,0 +1,52 @@
+{
+ "name": "x3_triage__season_spring__marida_unet_holdout_season_spring",
+ "argv": {
+  "name": "x3_triage__season_spring__marida_unet_holdout_season_spring",
+  "model": "marida_unet_holdout_season_spring",
+  "scheme": "marida_holdout_season_spring",
+  "cal_datasets": [
+   "marida_train",
+   "marida_val",
+   "marida_test"
+  ],
+  "test_datasets": [
+   "marida_train",
+   "marida_val",
+   "marida_test"
+  ],
+  "methods": [
+   "region_crc"
+  ],
+  "loss": "region",
+  "triage": true,
+  "triage_rankings": [
+   "area",
+   "random",
+   "oracle"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_source_holdout": 0.0,
+  "weight_holdout": 0.0,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": "calibration",
+  "test_split": "test",
+  "bootstrap_clusters": null,
+  "bootstrap_ci": 0,
+  "max_seeds": null
+ },
+ "scheme_file": "marida_holdout_season_spring.json",
+ "n_records": 6,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-16T20:26:38.566673+00:00"
+}

@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{LoveDA: in-domain validity and cross-domain breakdown under source calibration. Bold entries violate the nominal level; the shift is strongly directional. Capture level $\rho=0.1$.}
+\label{tab:loveda}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+Setting & \multicolumn{2}{c}{$\alpha=0.05$} & \multicolumn{2}{c}{$\alpha=0.1$} & \multicolumn{2}{c}{$\alpha=0.2$} \\
+\midrule
+ & FNR & Area & FNR & Area & FNR & Area \\
+\midrule
+Urban (in-domain) & 0.046 & 0.394 & 0.099 & 0.281 & 0.201 & 0.175 \\
+Rural (in-domain) & 0.038 & 0.303 & 0.096 & 0.135 & 0.196 & 0.097 \\
+\addlinespace
+Urban$\to$Rural & \textbf{0.153} & 0.173 & \textbf{0.277} & 0.111 & \textbf{0.470} & 0.068 \\
+Rural$\to$Urban & 0.047 & 0.392 & 0.099 & 0.208 & 0.173 & 0.156 \\
+\bottomrule
+\end{tabular}
+\end{table}

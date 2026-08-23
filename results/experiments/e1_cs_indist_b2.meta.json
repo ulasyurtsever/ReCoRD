@@ -1,0 +1,35 @@
+{
+ "name": "e1_cs_indist_b2",
+ "argv": {
+  "name": "e1_cs_indist_b2",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "test_datasets": [
+   "cityscapes_val"
+  ],
+  "methods": [
+   "region_crc",
+   "pixel_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "max_seeds": 20
+ },
+ "scheme_file": "cityscapes_val_half.json",
+ "n_records": 1440,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-07T10:04:00.100038+00:00"
+}

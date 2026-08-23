@@ -1,0 +1,53 @@
+{
+ "name": "h2_region__16PDC__marida_unet_holdout_region_16PDC",
+ "argv": {
+  "name": "h2_region__16PDC__marida_unet_holdout_region_16PDC",
+  "model": "marida_unet_holdout_region_16PDC",
+  "scheme": "marida_holdout_region_16PDC",
+  "cal_datasets": [
+   "marida_train",
+   "marida_val",
+   "marida_test"
+  ],
+  "test_datasets": [
+   "marida_train",
+   "marida_val",
+   "marida_test"
+  ],
+  "methods": [
+   "region_crc",
+   "pixel_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_source_holdout": 0.0,
+  "weight_holdout": 0.0,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": "calibration",
+  "test_split": "test",
+  "bootstrap_clusters": "splits/marida_meta.csv",
+  "bootstrap_ci": 4000,
+  "max_seeds": null
+ },
+ "scheme_file": "marida_holdout_region_16PDC.json",
+ "n_records": 24,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-17T22:36:15.087796+00:00"
+}

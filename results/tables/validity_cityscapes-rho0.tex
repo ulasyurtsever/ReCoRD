@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{In-distribution region-level risk control on Cityscapes. Mean region FNR and marked-area fraction over 100 calibration draws; the guarantee requires FNR $\le \alpha$. Capture level $\rho=0.1$.}
+\label{tab:validity_cityscapes}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lcccccc}
+\toprule
+Model & \multicolumn{2}{c}{$\alpha=0.05$} & \multicolumn{2}{c}{$\alpha=0.1$} & \multicolumn{2}{c}{$\alpha=0.2$} \\
+\midrule
+ & FNR & Area & FNR & Area & FNR & Area \\
+\midrule
+SegFormer-B2 & 0.014 & 0.681 & 0.068 & 0.294 & 0.187 & 0.020 \\
+SegFormer-B5 & 0.013 & 0.701 & 0.064 & 0.337 & 0.192 & 0.015 \\
+Mask2Former & 0.000 & 1.000 & 0.000 & 1.000 & 0.058 & 0.710 \\
+SegFormer-B2 (MC-dropout) & 0.020 & 0.582 & 0.085 & 0.049 & 0.190 & 0.020 \\
+\bottomrule
+\end{tabular}
+\end{table}

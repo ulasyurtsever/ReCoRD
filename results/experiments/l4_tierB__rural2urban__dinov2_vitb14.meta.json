@@ -1,0 +1,42 @@
+{
+ "name": "l4_tierB__rural2urban__dinov2_vitb14",
+ "argv": {
+  "name": "l4_tierB__rural2urban__dinov2_vitb14",
+  "model": "segformer_b2_loveda_rural",
+  "scheme": "loveda_rural_val_half",
+  "cal_datasets": [
+   "loveda_Val_Rural"
+  ],
+  "test_datasets": [
+   "loveda_Val_Urban"
+  ],
+  "methods": [
+   "weighted_crc"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": "dinov2_vitb14",
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "loveda_rural_val_half.json",
+ "n_records": 1200,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T12:18:50.671924+00:00"
+}

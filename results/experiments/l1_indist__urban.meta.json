@@ -1,0 +1,45 @@
+{
+ "name": "l1_indist__urban",
+ "argv": {
+  "name": "l1_indist__urban",
+  "model": "segformer_b2_loveda_urban",
+  "scheme": "loveda_urban_val_half",
+  "cal_datasets": [
+   "loveda_Val_Urban"
+  ],
+  "test_datasets": [
+   "loveda_Val_Urban"
+  ],
+  "methods": [
+   "region_crc",
+   "pixel_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "max_seeds": null
+ },
+ "scheme_file": "loveda_urban_val_half.json",
+ "n_records": 4800,
+ "git_revision": "unknown",
+ "completed_utc": "2026-08-10T11:53:55.161692+00:00"
+}
