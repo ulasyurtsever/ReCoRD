@@ -91,3 +91,31 @@ def test_no_components_case():
     gt = np.zeros((16, 16), dtype=bool)
     stats = compute_image_class_stats(prob, gt)
     assert stats.coverage_curves.shape == (0, LAMBDA_GRID.size)
+
+
+def test_fp_subgrid_slot_never_rounds_up():
+    """The FP subgrid slot must never sit above the calibrated threshold.
+
+    Rounding to the nearest subgrid point sent almost every calibrated
+    threshold to lambda_max, where the mask covers the whole image and the
+    false-positive component count degenerates to the class-absence indicator.
+    """
+    from record.grid import FP_SUBGRID_INDICES, N_POINTS, fp_subgrid_slot
+
+    for lam_index in range(N_POINTS):
+        slot = fp_subgrid_slot(lam_index)
+        assert 0 <= slot < FP_SUBGRID_INDICES.size
+        assert FP_SUBGRID_INDICES[slot] <= lam_index
+        nxt = slot + 1
+        if nxt < FP_SUBGRID_INDICES.size:
+            assert FP_SUBGRID_INDICES[nxt] > lam_index
+
+
+def test_fp_subgrid_resolves_the_operating_region():
+    """Calibrated thresholds live in the top of the grid and must be resolved."""
+    from record.grid import FP_SUBGRID_INDICES, N_POINTS, fp_subgrid_slot
+
+    tail = FP_SUBGRID_INDICES[FP_SUBGRID_INDICES >= 960]
+    assert tail.size == N_POINTS - 960
+    for lam_index in range(960, N_POINTS):
+        assert FP_SUBGRID_INDICES[fp_subgrid_slot(lam_index)] == lam_index

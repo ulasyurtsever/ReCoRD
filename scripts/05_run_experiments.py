@@ -53,7 +53,7 @@ import pandas as pd
 from record.cache import embeddings_path
 from record.crc import ThresholdSelection, crc_threshold, heuristic_threshold, weighted_crc_threshold
 from record.evaluation import evaluate_at_threshold, index_rows, stratified_region_fnr
-from record.grid import FP_SUBGRID_INDICES, LAMBDA_GRID
+from record.grid import FP_SUBGRID_INDICES, LAMBDA_GRID, fp_subgrid_slot
 from record.losses import enforce_nonincreasing, image_loss_curves
 from record.monitor import ks_drift_check
 from record.paths import results_dir, splits_dir
@@ -115,6 +115,12 @@ class TableStore:
         self.argmax_marked_area = np.concatenate(argmax_area_blocks)
         self.component_counts = np.concatenate(count_blocks)    # (N, C)
         self.fp_counts = np.concatenate(fp_blocks)              # (N, C, subgrid)
+        if self.fp_counts.shape[-1] != FP_SUBGRID_INDICES.size:
+            raise ValueError(
+                "cached false-positive counts were built on a subgrid of "
+                f"{self.fp_counts.shape[-1]} points but the current subgrid has "
+                f"{FP_SUBGRID_INDICES.size}; rebuild the region tables "
+                "(stage 4) before reading this column")
         self._view_cache: dict = {}
 
     def class_index(self, class_name: str) -> int:
@@ -564,6 +570,7 @@ UNDEFINED_RECORD = {
     "lam": np.nan, "lam_index": -1, "feasible": False,
     "controlled_risk": np.nan, "region_fnr": np.nan,
     "marked_area_fraction": np.nan, "fp_components_per_image": np.nan,
+    "fp_lam_index": -1,
     "monitor_ks": np.nan, "monitor_flag": False,
     "fnr_stratum0": np.nan, "fnr_stratum1": np.nan, "fnr_stratum2": np.nan,
     "weight_ess": np.nan, "weight_p_test": np.nan,
@@ -719,8 +726,13 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
         boot_lo = float(np.quantile(means, 0.025))
         boot_hi = float(np.quantile(means, 0.975))
 
-    # False-positive component count at the nearest subgrid threshold.
-    sub_pos = int(np.argmin(np.abs(FP_SUBGRID_INDICES - selection.lam_index)))
+    # False-positive component count at the largest subgrid threshold at or
+    # below the selected one. Rounding to the nearest subgrid point instead
+    # would round upward for almost every calibrated threshold and, at the top
+    # of the grid, would report the count for a mask covering the whole image.
+    # The lambda actually used is recorded so the reader can see the gap.
+    sub_pos = fp_subgrid_slot(int(selection.lam_index))
+    fp_lam_index = int(FP_SUBGRID_INDICES[sub_pos])
     fp_per_image = float(test_view["fp_counts"][test_rows][:, sub_pos].mean())
 
     comp_in_test = np.isin(test_view["component_image_rows"], test_rows)
@@ -755,6 +767,7 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
         "region_fnr": metrics.region_fnr,
         "marked_area_fraction": metrics.marked_area_fraction,
         "fp_components_per_image": fp_per_image,
+        "fp_lam_index": fp_lam_index,
         "n_test_images": metrics.n_test_images,
         "n_test_components": metrics.n_test_components,
         "n_missed_components": comp_missed,

@@ -16,7 +16,27 @@ LAMBDA_GRID: np.ndarray = np.linspace(0.0, 1.0, N_POINTS)
 # Coarser subgrid for statistics that require per-threshold connected-component
 # labeling (e.g. false-positive component counts), which is too expensive to
 # evaluate at every grid point. Indices into LAMBDA_GRID.
-FP_SUBGRID_INDICES: np.ndarray = np.arange(0, N_POINTS, 25)  # 41 points
+#
+# The grid is deliberately non-uniform. Calibrated thresholds concentrate in the
+# top twenty grid points, so a uniform 25-step subgrid resolves the operating
+# region not at all and forces every selected threshold onto lambda_max, where
+# the mask covers the whole image and the component count degenerates. The tail
+# is therefore sampled at every point from index 960 upward.
+FP_SUBGRID_INDICES: np.ndarray = np.unique(np.concatenate([
+    np.arange(0, 960, 25),      # coarse body
+    np.arange(960, N_POINTS),   # dense tail, where lambda-hat lives
+]))
+
+
+def fp_subgrid_slot(lam_index: int) -> int:
+    """Position in ``FP_SUBGRID_INDICES`` of the largest index <= ``lam_index``.
+
+    Never rounds upward. Rounding up crosses into a more permissive mask than
+    the one that was calibrated, and at ``lam_index = N_POINTS - 1`` it reaches
+    the mask that covers the whole image, where the count is degenerate.
+    """
+    pos = int(np.searchsorted(FP_SUBGRID_INDICES, lam_index, side="right")) - 1
+    return max(pos, 0)
 
 
 def curve_on_grid(scores: np.ndarray) -> np.ndarray:

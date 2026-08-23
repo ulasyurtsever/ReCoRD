@@ -30,10 +30,15 @@ import glob
 import os
 import re
 
+import traceback
+
 import numpy as np
 import pandas as pd
 
 from record.paths import results_dir
+
+FP_SUBGRID = np.arange(0, 1001, 25)
+LAM_MAX = 1000
 
 
 def paths_root():
@@ -312,18 +317,24 @@ def section_baselines():
     near(68, "B5 region CRC area 9.0%", 0.090,
          mean(sel(b5, method="region_crc"), "marked_area_fraction"))
 
-    # 76 / 77: false positives, and the "smaller area" claim
-    fp_b2 = mean(sel(e1, method="region_crc", model="segformer_b2_cityscapes",
-                     alpha=0.20, rho=0.5), "fp_components_per_image")
-    fp_b5 = mean(sel(e1, method="region_crc", model="segformer_b5_cityscapes",
-                     alpha=0.20, rho=0.5), "fp_components_per_image")
-    near(76, "false-positive components per image, B2", 0.7, fp_b2, 0.05)
-    near(76, "false-positive components per image, B5", 5.6, fp_b5, 0.05)
+    # 76: the false-positive component count is WITHDRAWN from the article.
+    # The stored column is read at the nearest point of a 25-step subgrid, and
+    # every selected threshold sits in the top 20 grid points, so most draws are
+    # read at lambda_max, where the whole image is one component and the count
+    # degenerates to the class-absence indicator. Guard against the column
+    # silently returning to the text before the subgrid is fixed.
+    for _mo in ("segformer_b2_cityscapes", "segformer_b5_cityscapes",
+                "segformer_b2_cityscapes_mcdrop8"):
+        _d = sel(e1, method="region_crc", model=_mo, alpha=0.20, rho=0.5)
+        _snapped = float((np.abs(FP_SUBGRID - _d.lam_index.values[:, None])
+                          .argmin(axis=1).astype(float) * 25 > _d.lam_index.values).mean())
+        note(76, f"{_mo}: fraction of draws whose FP slot snaps UP",
+             f"{_snapped:.3f} (metric withdrawn from the text)")
     a_b2 = mean(sel(e1, method="region_crc", model="segformer_b2_cityscapes",
                     alpha=0.20, rho=0.5), "marked_area_fraction")
     a_b5 = mean(sel(e1, method="region_crc", model="segformer_b5_cityscapes",
                     alpha=0.20, rho=0.5), "marked_area_fraction")
-    truth(77, "text: B5's LARGER mask (9.0% against 3.4%) is the more fragmented",
+    truth(77, "B5 marks a larger area than B2 (9.0% against 3.4%)",
           a_b5 > a_b2 and abs(a_b5 - 0.090) < 5e-4 and abs(a_b2 - 0.034) < 5e-4,
           f"B5 area={a_b5:.3f} vs B2 area={a_b2:.3f} at alpha=0.2, rho=0.5")
 
@@ -569,17 +580,31 @@ def section_breakdown():
           bool(np.allclose(m2f.marked_area_fraction, 1.0)),
           f"max FNR={m2f.region_fnr.max():.4f}, min area={m2f.marked_area_fraction.min():.4f}")
 
+    # The KS statistic is identically zero when lambda-hat = lambda_max, since
+    # both sides then mark every pixel. Those draws cannot fire and are excluded
+    # from the reported rates, as the text now states.
     mon = sel(r, rho=0.5)
     mon = mon[mon.model.isin(SEGF)]
-    fl = mon.groupby("experiment")["monitor_flag"].mean()
-    rng_claim(132, "monitor fires in 38-63% of the region-CRC (draw, class, "
-                   "level) configurations at rho=0.5, per model x condition",
-              0.38, 0.63, fl.values, 0.006)
+    degen = mon[mon.lam_index == LAM_MAX]
+    truth(132, "the monitor is identically silent when lambda-hat = lambda_max",
+          bool(np.allclose(degen.monitor_ks, 0.0))
+          and bool((~degen.monitor_flag.astype(bool)).all()),
+          f"{len(degen)} degenerate draws, max KS {float(degen.monitor_ks.max()):.2e}")
+    near(132, "46.8% of region-CRC draws at rho=0.5 are degenerate", 0.468,
+         float((mon.lam_index == LAM_MAX).mean()), 0.002)
+    usable = mon[mon.lam_index < LAM_MAX]
+    fl = usable.groupby("experiment")["monitor_flag"].mean()
+    rng_claim(132, "monitor fires in 64-100% of the non-degenerate region-CRC "
+                   "(draw, class, level) configurations at rho=0.5",
+              0.64, 1.00, fl.values, 0.006)
     ind = sel(e1, method="region_crc", rho=0.5)
     ind = ind[ind.model.isin(SEGF)]
+    ind = ind[ind.lam_index < LAM_MAX]
     fa = ind.groupby("model")["monitor_flag"].mean()
-    rng_claim(132, "in-distribution false-alarm rate 0.2-1.0%", 0.002, 0.010,
-              fa.values, 0.0006)
+    rng_claim(132, "in-distribution false-alarm rate 0.5-1.9% on the same subset",
+              0.005, 0.019, fa.values, 0.0006)
+    note(132, "nominal KS level is 1%; the realized in-distribution rate is",
+         f"{float(ind.monitor_flag.mean()):.4f} pooled over the three variants")
 
     by_cond = {}
     for c_ in CONDS:
@@ -587,11 +612,15 @@ def section_breakdown():
         sub = sub[sub.model.isin(SEGF) & sub.experiment.str.contains(f"__{c_}__")]
         cellsc = cellmean(sel(sub, alpha=0.20), ["model"])
         by_cond[c_] = (float(cellsc.mean()), float(cellsc.max()),
-                       float(sub.monitor_flag.mean()))
+                       float(sub[sub.lam_index < LAM_MAX].monitor_flag.mean()))
+    for c_, want in (("night", 0.729), ("rain", 0.839),
+                     ("snow", 0.982), ("fog", 1.000)):
+        near(133, f"{c_} fires in {want:.0%} of non-degenerate draws",
+             want, by_cond[c_][2], 0.002)
     worst_mean = max(by_cond, key=lambda k: by_cond[k][0])
     worst_cell = max(by_cond, key=lambda k: by_cond[k][1])
     least_flag = min(by_cond, key=lambda k: by_cond[k][2])
-    truth(133, "night is the LEAST FLAGGED condition",
+    truth(133, "night is the LEAST FLAGGED condition (non-degenerate draws)",
           least_flag == "night",
           str({k: round(v[2], 3) for k, v in by_cond.items()}))
     truth(133, "night produces the single worst cell",
@@ -1737,7 +1766,10 @@ def main() -> int:
         try:
             SECTIONS[k]()
         except Exception as exc:  # a failing check must not hide the rest
+            global N_FAIL
+            N_FAIL += 1
             print(f"[ERROR] section {k}: {type(exc).__name__}: {exc}")
+            traceback.print_exc()
     print(f"\n=== SUMMARY: {N_OK} ok, {N_FAIL} FAIL, {N_NOTE} notes ===")
     return 1 if N_FAIL else 0
 
