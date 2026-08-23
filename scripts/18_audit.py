@@ -572,7 +572,8 @@ def section_breakdown():
     mon = sel(r, rho=0.5)
     mon = mon[mon.model.isin(SEGF)]
     fl = mon.groupby("experiment")["monitor_flag"].mean()
-    rng_claim(132, "monitor flags 38-63% of shifted batches (per model x condition)",
+    rng_claim(132, "monitor fires in 38-63% of the (draw, class, level, method) "
+                   "configurations per model x condition",
               0.38, 0.63, fl.values, 0.006)
     ind = sel(e1, method="region_crc", rho=0.5)
     ind = ind[ind.model.isin(SEGF)]
@@ -823,7 +824,8 @@ def section_loveda():
     r = sel(i, method="region_crc", rho=0.5)
     c = cellmean(r, ["experiment", "alpha"])
     lev = c.index.get_level_values("alpha").values
-    truth(177, "LoveDA in-domain validity holds on both domains at every level",
+    truth(177, "LoveDA in-domain validity holds on both domains at every level "
+               "when the two classes are averaged (per class: see check 920)",
           bool((c.values <= lev + 1e-12).all()), str({k: round(v, 3) for k, v in c.items()}))
     near(177, "tightest urban cell 0.199", 0.199,
          mean(sel(r, experiment="l1_indist__urban", alpha=0.20)))
@@ -1105,7 +1107,9 @@ def section_triage():
     settings = ["official", "region_16PCC", "region_16PDC", "region_16PEC",
                 "season_spring", "night_tierA50"]
     print("      the random ranking is a Monte-Carlo draw; its expectation is exact:")
-    print("      E[residual(b)] = (1 - floor(b*n)/n) * residual(0)")
+    print("      E[residual(b)] = (1 - floor(b*n)/n) * residual(0);")
+    print("      the figure and the caption use the closed form (1 - b),")
+    print("      which differs by less than 1/n and is checked below.")
     for s in settings:
         sub = sel(tr, setting=s)
         if sub.empty:
@@ -1390,7 +1394,8 @@ def section_revision():
     lv = sel(load("l1_indist__*"), method="region_crc")
     cells = cellmean(lv, ["scheme", "rho", "alpha"])
     over = [(k, v) for k, v in cells.items() if v > k[2] + 1e-12]
-    truth(178, "the only LoveDA in-domain cell above its level is urban at "
+    truth(178, "the only class-AVERAGED LoveDA in-domain cell above its level "
+               "is urban at "
                "rho=0.1, alpha=0.2",
           len(over) == 1 and abs(over[0][1] - 0.2006) < 5e-4, str(over))
 
@@ -1611,6 +1616,47 @@ def section_review():
               2.01, 2.45, ratios_mean, 0.01)
     rng_claim(934, "the union is 67-82% of the sum of the three masks",
               0.669, 0.816, ratios_sum, 0.005)
+
+    # Section V-E: the class-conditional target pool does not lift the collapse.
+    pool_paths = sorted(glob.glob(str(exp_dir / "x8_tierb_pool__*.csv")))
+    if not pool_paths:
+        note(935, "tier-B target-pool run absent; skipping the pool checks")
+        return
+    x8 = pd.concat([pd.read_csv(p) for p in pool_paths], ignore_index=True)
+    truth(935, "every weight clips to the floor under BOTH target pools",
+          bool(np.allclose(x8.frac_at_floor, 1.0)),
+          f"frac_at_floor in [{x8.frac_at_floor.min():.4f}, "
+          f"{x8.frac_at_floor.max():.4f}] over {len(x8)} rows")
+    truth(936, "no single unclipped weight reaches the floor 0.05",
+          float(x8.raw_max.max()) < 0.05, f"largest raw weight {x8.raw_max.max():.4f}")
+    w = x8.drop_duplicates(["condition", "class_name", "seed", "pool"])
+    piv = w.pivot_table(index=["condition", "class_name"], columns="pool",
+                        values=["raw_median", "n_pool"])
+    lift = piv[("raw_median", "class")] / piv[("raw_median", "all")]
+    inv_q = piv[("n_pool", "all")] / piv[("n_pool", "class")]
+    rng_claim(937, "the class-conditional pool raises the median ratio by "
+                   "3.1-21.4x", 3.09, 21.43, lift.values, 0.02)
+    rng_claim(938, "the reciprocal class frequency spans 1.7-17.9",
+              1.68, 17.86, inv_q.values, 0.02)
+    near(939, "the median ratio under the class pool stays near 6e-4",
+         6e-4, float(piv[("raw_median", "class")].max()), 5e-5)
+    # The 'all' arm has to reproduce the published tier-B diagnostics exactly.
+    try:
+        pub = sel(load("e4_tierB__*"), rho=0.5, alpha=0.2, method="weighted_crc")
+    except FileNotFoundError:
+        note(940, "published tier-B runs absent; skipping the reproduction check")
+        return
+    pub = pub.assign(condition=pub.experiment.str.extract(r"e4_tierB__(\w+?)__")[0])
+    a = x8[(x8["pool"] == "all") & np.isclose(x8.kappa, 20.0)].drop_duplicates(
+        ["condition", "class_name", "seed"])
+    j = a.merge(pub[["condition", "class_name", "seed", "weight_p_test",
+                     "weight_ess"]],
+                on=["condition", "class_name", "seed"], suffixes=("_23", "_5"))
+    d = max(float((j.weight_p_test_23 - j.weight_p_test_5).abs().max()),
+            float((j.weight_ess_23 - j.weight_ess_5).abs().max()))
+    truth(940, "stage 23 reproduces the published tier-B weights exactly on "
+               "the shared pool", len(j) > 0 and d == 0.0,
+          f"{len(j)} matched records, max abs diff {d:.3e}")
 
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,

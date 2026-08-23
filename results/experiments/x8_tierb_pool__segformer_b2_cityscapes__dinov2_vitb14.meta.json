@@ -1,0 +1,27 @@
+{
+ "name": "x8_tierb_pool__segformer_b2_cityscapes__dinov2_vitb14",
+ "argv": {
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "embedding": "dinov2_vitb14",
+  "conditions": [
+   "fog",
+   "night",
+   "rain",
+   "snow"
+  ],
+  "dataset_template": "acdc_{cond}_train,acdc_{cond}_val",
+  "classes": [
+   "person",
+   "rider",
+   "bicycle"
+  ],
+  "max_seeds": 25,
+  "out_name": null
+ },
+ "n_records": 5400,
+ "completed_utc": "2026-08-23T12:51:53.988009+00:00"
+}
