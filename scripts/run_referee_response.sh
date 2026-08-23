@@ -28,10 +28,31 @@ echo "############ 2. tier B: is the vacuity the ceiling's fault?"
 # q(x)/p(x|c) conditioning the estimator actually uses is measured rather than
 # argued about. The ceiling arm must reproduce the published e4_tierB numbers;
 # the script aborts if it does not.
+# ACDC. --rhos is passed explicitly: the stage defaults to 0.5 alone, but the
+# published tier-B matrix covers both capture levels and the reproduction
+# check can only compare the cells it is given.
 python scripts/25_tierb_test_charge.py \
     --model segformer_b2_cityscapes --scheme cityscapes_val_half \
     --cal-datasets cityscapes_val --embedding dinov2_vitb14 \
-    --conditions fog night rain snow --max-seeds 25
+    --conditions fog night rain snow --rhos 0.5 0.1 --max-seeds 25
+
+# LoveDA, both directions. These need --classes (the LoveDA tables carry
+# building and water, not the ACDC critical classes) and --out-name, because
+# the default output name is keyed on the model alone and the second direction
+# would otherwise overwrite the first.
+python scripts/25_tierb_test_charge.py \
+    --model segformer_b2_loveda_urban --scheme loveda_urban_val_half \
+    --cal-datasets loveda_Val_Urban --embedding dinov2_vitb14 \
+    --conditions urban2rural --dataset-template loveda_Val_Rural \
+    --classes building water --rhos 0.5 0.1 --max-seeds 25 \
+    --out-name x10_tierb_test_charge__loveda_urban2rural
+
+python scripts/25_tierb_test_charge.py \
+    --model segformer_b2_loveda_rural --scheme loveda_rural_val_half \
+    --cal-datasets loveda_Val_Rural --embedding dinov2_vitb14 \
+    --conditions rural2urban --dataset-template loveda_Val_Urban \
+    --classes building water --rhos 0.5 0.1 --max-seeds 25 \
+    --out-name x10_tierb_test_charge__loveda_rural2urban
 
 echo "############ 3. MARIDA annotation confidence"
 # MARIDA flags every annotation High/Moderate/Low and the pipeline ignored it.
