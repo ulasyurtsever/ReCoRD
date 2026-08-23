@@ -572,8 +572,8 @@ def section_breakdown():
     mon = sel(r, rho=0.5)
     mon = mon[mon.model.isin(SEGF)]
     fl = mon.groupby("experiment")["monitor_flag"].mean()
-    rng_claim(132, "monitor fires in 38-63% of the (draw, class, level, method) "
-                   "configurations per model x condition",
+    rng_claim(132, "monitor fires in 38-63% of the region-CRC (draw, class, "
+                   "level) configurations at rho=0.5, per model x condition",
               0.38, 0.63, fl.values, 0.006)
     ind = sel(e1, method="region_crc", rho=0.5)
     ind = ind[ind.model.isin(SEGF)]
@@ -885,16 +885,34 @@ def _components(model_key="marida_unet_official_holdout"):
     return pd.concat(frames, ignore_index=True)
 
 
-def _debris_patches():
-    """Patch ids whose region tables carry at least one debris component."""
-    comp = _components()
-    return None if comp is None else sorted(set(comp["image_id"]))
+def _component_summary():
+    """Committed reduction of the pooled component tables (stage 24)."""
+    import json
+    p = results_dir("experiments") / "x9_marida_component_stats.json"
+    if not p.exists():
+        return None
+    return json.loads(p.read_text(encoding="utf-8"))
 
 
-def _component_sizes():
-    """Sizes in pixels of every ground-truth debris component in the pool."""
+def _n_debris_patches():
+    """Number of MARIDA patches carrying at least one debris component."""
+    s = _component_summary()
+    if s is not None:
+        return int(s["n_debris_patches"])
     comp = _components()
-    return None if comp is None else comp["size_px"]
+    return None if comp is None else int(comp["image_id"].nunique())
+
+
+def _size_stats():
+    """(median size in px, fraction of components at 3 px or smaller)."""
+    s = _component_summary()
+    if s is not None:
+        return float(s["size_px_median"]), float(s["frac_size_le_3"])
+    comp = _components()
+    if comp is None:
+        return None
+    size = comp["size_px"]
+    return float(size.median()), float((size <= 3).mean())
 
 
 def _spring_geometry():
@@ -1023,11 +1041,12 @@ def section_marida():
     ens = "h1_official__marida_unet_official_holdout_ens5"
 
     # --- prose numbers of Section V-E that no table carries -------------
-    debris = _debris_patches()
+    debris = _n_debris_patches()
     if debris is None:
-        note(190, "component tables unreadable; debris-patch count not checked")
+        note(190, "component summary and tables unreadable; debris-patch "
+                  "count not checked")
     else:
-        near(190, "373 of 1381 patches contain debris", 373, float(len(debris)), 0.5)
+        near(190, "373 of 1381 patches contain debris", 373, float(debris), 0.5)
     near(199, "official test group spans 14 debris-bearing scenes", 14,
          float(sel(rm, experiment=single, alpha=0.20).n_test_clusters.mean()), 0.5)
     near(200, "48PZC rests on 3 scenes", 3,
@@ -1056,14 +1075,13 @@ def section_marida():
         note(201, "splits/marida_meta.csv absent; spring geometry not checked")
 
     # component-size statistics quoted in the prose
-    sizes = _component_sizes()
+    sizes = _size_stats()
     if sizes is not None:
-        near(202, "median MARIDA component size is 2 px", 2.0,
-             float(sizes.median()), 0.001)
-        near(202, "83% of components are 3 px or smaller", 0.83,
-             float((sizes <= 3).mean()), 0.005)
+        near(202, "median MARIDA component size is 2 px", 2.0, sizes[0], 0.001)
+        near(202, "83% of components are 3 px or smaller", 0.83, sizes[1], 0.005)
     else:
-        note(202, "component tables absent; size statistics not checked")
+        note(202, "component summary and tables absent; size statistics "
+                  "not checked")
 
     # pixel-level F1 of the reported detectors
     for key, want in (("marida_unet_official_holdout", 0.55),
@@ -1379,6 +1397,36 @@ def section_revision():
         near(70, "region CRC trails by at most 0.024 on the released grid",
              -0.024, min(deltas), 0.0005)
 
+    # The prose compares the two frontiers at every matched area, not only at
+    # the six tabulated points, so the dense interpolation is checked too.
+    try:
+        dense = load("p1_pareto__*")
+    except FileNotFoundError:
+        note(70, "dense-alpha pareto runs missing", "skipped")
+        dense = None
+    if dense is not None:
+        want = {"segformer_b2_cityscapes": (0.044, -0.016),
+                "segformer_b5_cityscapes": (0.064, -0.025)}
+        for model, (lead, trail) in want.items():
+            sub = dense[(dense["model"] == model) & np.isclose(dense["rho"], 0.5)]
+            cur = {}
+            for meth in ("region_crc", "pixel_crc"):
+                m = (sub[sub["method"] == meth]
+                     .groupby("alpha")[["marked_area_fraction", "region_fnr"]]
+                     .mean().sort_values("marked_area_fraction"))
+                cur[meth] = m
+            lo = max(float(c["marked_area_fraction"].min()) for c in cur.values())
+            hi = min(float(c["marked_area_fraction"].max()) for c in cur.values())
+            grid = np.geomspace(lo, hi, 2001)
+            d = (np.interp(grid, cur["pixel_crc"]["marked_area_fraction"],
+                           cur["pixel_crc"]["region_fnr"])
+                 - np.interp(grid, cur["region_crc"]["marked_area_fraction"],
+                             cur["region_crc"]["region_fnr"]))
+            near(70, f"{model}: largest region-CRC lead over the whole band",
+                 lead, float(d.max()), 0.0006)
+            near(70, f"{model}: largest pixel-CRC lead over the whole band",
+                 trail, float(d.min()), 0.0006)
+
     # Section IV-F: the two Tier-B estimators fail for different reasons.
     try:
         knn = sel(load("e4_tierB_knn__*"), method="weighted_crc")
@@ -1429,35 +1477,40 @@ def section_revision():
         near(200, f"spring pooled component rate at alpha={alpha}", want,
              pooled, 0.001)
 
-    # Section IV-B: refitting the temperature per draw must reproduce the
-    # published tempered rows, otherwise the leakage was not immaterial.
-    published = {
-        ("segformer_b2_cityscapes", "heuristic", 0.1): (0.197, 0.020),
-        ("segformer_b2_cityscapes", "heuristic", 0.5): (0.196, 0.024),
-        ("segformer_b2_cityscapes", "region_crc", 0.1): (0.192, 0.020),
-        ("segformer_b2_cityscapes", "region_crc", 0.5): (0.191, 0.025),
-        ("segformer_b5_cityscapes", "heuristic", 0.1): (0.197, 0.012),
-        ("segformer_b5_cityscapes", "heuristic", 0.5): (0.197, 0.014),
-        ("segformer_b5_cityscapes", "region_crc", 0.1): (0.192, 0.012),
-        ("segformer_b5_cityscapes", "region_crc", 0.5): (0.192, 0.015),
-    }
-    worst = 0.0
+    # Section IV-B: the tempered rows of Table II use the seed-0 scalar. The
+    # prose bounds the dependence that reuse leaves behind by the move to the
+    # per-draw refit, so the two runs are differenced cell by cell.
+    cells = [(m, meth, rho)
+             for m in ("segformer_b2_cityscapes", "segformer_b5_cityscapes")
+             for meth in ("heuristic", "region_crc")
+             for rho in (0.1, 0.5)]
+    worst_fnr = worst_area = 0.0
     try:
+        fixed = load("x5_temp__*")
         free = load("x6_temp_leakfree__*")
     except FileNotFoundError:
-        note(99, "leak-free temperature runs missing", "skipped")
-        free = None
+        note(99, "temperature runs missing", "skipped")
+        fixed = free = None
     if free is not None:
-        for (model, method, rho), (want_fnr, want_area) in published.items():
-            cell = free[(free["model"] == model) & (free["method"] == method)
-                        & np.isclose(free["rho"], rho)
-                        & np.isclose(free["alpha"], 0.2)]
-            worst = max(worst,
-                        abs(float(cell["region_fnr"].mean()) - want_fnr),
-                        abs(float(cell["marked_area_fraction"].mean()) - want_area))
-        truth(99, "refitting the temperature per draw moves every tempered "
-                  "cell by at most 0.0006", worst <= 0.0006 + 1e-9,
-              f"largest move {worst:.4f}")
+        # stage 4b tags the fixed-temperature run with a "_tempscaled" model key
+        def _cell(frame, model, method, rho):
+            keys = [k for k in frame["model"].unique() if k.startswith(model)]
+            c = frame[frame["model"].isin(keys) & (frame["method"] == method)
+                      & np.isclose(frame["rho"], rho)
+                      & np.isclose(frame["alpha"], 0.2)]
+            if c.empty:
+                raise AssertionError(f"no rows for {model}/{method}/rho={rho}")
+            return (float(c["region_fnr"].mean()),
+                    float(c["marked_area_fraction"].mean()))
+        for model, method, rho in cells:
+            a = _cell(fixed, model, method, rho)
+            b = _cell(free, model, method, rho)
+            worst_fnr = max(worst_fnr, abs(a[0] - b[0]))
+            worst_area = max(worst_area, abs(a[1] - b[1]))
+        truth(99, "refitting the temperature per draw moves the tempered cells "
+                  "by at most 0.0007 in FNR and 0.0002 in area",
+              worst_fnr <= 0.0007 + 1e-9 and worst_area <= 0.0002 + 1e-9,
+              f"largest FNR move {worst_fnr:.5f}, area move {worst_area:.5f}")
         for model, lo, hi, k in (("segformer_b2_cityscapes", 1.45, 1.65, 5),
                                  ("segformer_b5_cityscapes", 1.90, 2.15, 6)):
             temps = sorted(free[free["model"] == model]["temperature"].unique())

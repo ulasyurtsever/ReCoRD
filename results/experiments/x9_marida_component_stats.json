@@ -1,0 +1,18 @@
+{
+ "model_key": "marida_unet_official_holdout",
+ "splits": [
+  "marida_train",
+  "marida_val",
+  "marida_test"
+ ],
+ "n_components": 1330,
+ "n_debris_patches": 373,
+ "size_px_median": 2.0,
+ "size_px_mean": 2.555639097744361,
+ "size_px_min": 1,
+ "size_px_max": 63,
+ "frac_size_le_3": 0.8300751879699249,
+ "frac_size_le_2": 0.7075187969924812,
+ "frac_size_eq_1": 0.39172932330827065,
+ "written_utc": "2026-08-23T17:40:00+00:00"
+}
