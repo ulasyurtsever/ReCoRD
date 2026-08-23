@@ -156,12 +156,19 @@ class TableStore:
         self.argmax_marked_area = np.concatenate(argmax_area_blocks)
         self.component_counts = np.concatenate(count_blocks)    # (N, C)
         self.fp_counts = np.concatenate(fp_blocks)              # (N, C, subgrid)
-        if self.fp_counts.shape[-1] != FP_SUBGRID_INDICES.size:
-            raise ValueError(
-                "cached false-positive counts were built on a subgrid of "
-                f"{self.fp_counts.shape[-1]} points but the current subgrid has "
-                f"{FP_SUBGRID_INDICES.size}; rebuild the region tables "
-                "(stage 4) before reading this column")
+        # A cache written before the subgrid was densified indexes a different
+        # set of thresholds, so its slots cannot be read. Refusing to construct
+        # the store would block every stage, including the ones that never
+        # touch this column; instead the column is marked unavailable and the
+        # records carry NaN, which no reader can mistake for a measurement.
+        self.fp_subgrid_stale = self.fp_counts.shape[-1] != FP_SUBGRID_INDICES.size
+        if self.fp_subgrid_stale:
+            print(f"WARNING: {model_key}: cached false-positive counts were "
+                  f"built on a subgrid of {self.fp_counts.shape[-1]} points "
+                  f"but the current subgrid has {FP_SUBGRID_INDICES.size}. "
+                  "fp_components_per_image will be recorded as NaN. Run "
+                  "scripts/run_fp_subgrid_rebuild.sh to restore the column; "
+                  "no other column is affected.")
         self._view_cache: dict = {}
 
     def class_index(self, class_name: str) -> int:
@@ -221,6 +228,7 @@ class TableStore:
             "argmax_marked_area": self.argmax_marked_area[:, c],
             "component_counts": self.component_counts[:, c],
             "fp_counts": self.fp_counts[:, c, :],
+            "fp_subgrid_stale": self.fp_subgrid_stale,
         }
         self._view_cache[key] = view
         return view
@@ -865,9 +873,12 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
     # would round upward for almost every calibrated threshold and, at the top
     # of the grid, would report the count for a mask covering the whole image.
     # The lambda actually used is recorded so the reader can see the gap.
-    sub_pos = fp_subgrid_slot(int(selection.lam_index))
-    fp_lam_index = int(FP_SUBGRID_INDICES[sub_pos])
-    fp_per_image = float(test_view["fp_counts"][test_rows][:, sub_pos].mean())
+    if test_view["fp_subgrid_stale"]:
+        fp_lam_index, fp_per_image = -1, float("nan")
+    else:
+        sub_pos = fp_subgrid_slot(int(selection.lam_index))
+        fp_lam_index = int(FP_SUBGRID_INDICES[sub_pos])
+        fp_per_image = float(test_view["fp_counts"][test_rows][:, sub_pos].mean())
 
     comp_in_test = np.isin(test_view["component_image_rows"], test_rows)
     strata_fnr = stratified_region_fnr(
