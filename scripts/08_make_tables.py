@@ -354,8 +354,76 @@ def table_ablations(df: pd.DataFrame) -> str:
         "tab:ablations", "l" + "ccc" * 2, header, size="scriptsize", colsep="2.5pt")
 
 
+CRITICAL_CLASSES = ["person", "rider", "bicycle"]
+# The full model labels overflow an IEEE column at twelve rows by eight
+# columns; the caption names the table they abbreviate.
+SHORT_MODEL_LABELS = {
+    "segformer_b2_cityscapes": "B2",
+    "segformer_b5_cityscapes": "B5",
+    "mask2former_swinb_cityscapes": "M2F",
+    "segformer_b2_cityscapes_mcdrop8": "B2-MC",
+}
+
+
+def table_perclass(df: pd.DataFrame) -> str:
+    """T2: the in-distribution matrix resolved per class, at both capture levels.
+
+    The other Cityscapes tables average the three critical classes, which is a
+    weaker check than the guarantee: a class mean below the level does not
+    imply every class is. This table is the 72-cell claim itself, and marking
+    the cells whose selected threshold covers essentially the whole image also
+    makes the efficiency caveat checkable.
+    """
+    sub = df[(df.block == "e1") & (df.method == "region_crc")]
+    cells = cell_means(sub, ["model", "class_name", "alpha", "rho"])
+    rows, n_cells, n_over, n_full = [], 0, 0, 0
+    for model in CITYSCAPES_MODELS:
+        for k, cname in enumerate(CRITICAL_CLASSES):
+            label = SHORT_MODEL_LABELS[model] if k == 0 else ""
+            parts = [label, cname]
+            for rho in (0.5, 0.1):
+                for alpha in ALPHAS:
+                    row = cells[(cells.model == model)
+                                & (cells.class_name == cname)
+                                & np.isclose(cells.alpha, alpha)
+                                & np.isclose(cells.rho, rho)]
+                    if row.empty:
+                        parts.append("--")
+                        continue
+                    val = float(row.region_fnr.iloc[0])
+                    area = float(row.marked_area.iloc[0])
+                    n_cells += 1
+                    n_over += val > alpha
+                    n_full += area > 0.99
+                    parts.append(fmt(val) + ("$^{\\ast}$" if area > 0.99 else ""))
+            rows.append(" & ".join(parts) + r" \\")
+        if model != CITYSCAPES_MODELS[-1]:
+            rows.append(r"\addlinespace")
+    header = ("Model & Class & "
+              + " & ".join(rf"\multicolumn{{3}}{{c}}{{$\rho={r:g}$}}"
+                           for r in (0.5, 0.1)))
+    subheader = (" & & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS) * 1
+                 + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
+                 + r" \\")
+    body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
+    caption = (
+        f"In-distribution region FNR on Cityscapes, resolved per class over "
+        f"the {n_cells} cells behind the class averages of "
+        f"Table~\\ref{{tab:validity_cityscapes}}. No cell exceeds its level. "
+        f"$\\ast$ marks the {n_full} cells where the level is met only by "
+        f"marking more than $99\\%$ of the image, so the bound holds but the "
+        f"mask is uninformative. Model labels abbreviate those of "
+        f"Table~\\ref{{tab:validity_cityscapes}}; means over 100 calibration "
+        f"draws.")
+    if n_over:
+        caption += f" WARNING: {n_over} cells exceed their level."
+    return latex_table(body, caption, "tab:perclass",
+                       "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
+
+
 TABLES = {
     "validity_cityscapes": table_validity_cityscapes,
+    "perclass": table_perclass,
     "baselines": table_baselines,
     "breakdown": table_breakdown,
     "tier_a": table_tier_a,
@@ -368,7 +436,7 @@ TABLES = {
 # table_baselines reports both capture levels side by side and filters rho
 # itself. The other builders take a single capture level, because averaging
 # the two can hide a violation at one behind a compliant value at the other.
-BOTH_RHO_TABLES = {"baselines"}
+BOTH_RHO_TABLES = {"baselines", "perclass"}
 
 
 def main() -> int:
