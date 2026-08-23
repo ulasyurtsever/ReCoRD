@@ -127,8 +127,8 @@ def table_baselines(df: pd.DataFrame) -> str:
         "least-ambiguous set-valued classifier; the temperature-scaled rows "
         "use one scalar fitted by negative log-likelihood on the seed-0 "
         "calibration list and reused across the draws; refitting it on each "
-        "draw's own list moves every tempered cell by at most $0.0006$ "
-        "(Section~\\ref{sec:exp_indist}). FNR is the "
+        "draw's own list moves the tempered cells by at most $0.0007$ in FNR "
+        "and $0.0002$ in area (Section~\\ref{sec:exp_indist}). FNR is the "
         "mean region-miss loss over test images containing the class, "
         "averaged over the three critical classes; Area is "
         "the mean marked fraction over all test images.",
@@ -148,9 +148,14 @@ def table_breakdown(df: pd.DataFrame) -> str:
                 row = cells[(cells.model == model) & (cells.condition == cond)
                             & (cells.alpha == alpha)]
                 val = row.region_fnr.iloc[0] if not row.empty else np.nan
+                area = row.marked_area.iloc[0] if not row.empty else np.nan
                 cell = fmt(val)
                 if not np.isnan(val) and val > alpha:
                     cell = rf"\textbf{{{cell}}}"
+                # A compliant cell bought by marking the whole image is not a
+                # success, and at alpha=0.05 most of this table is that case.
+                if not np.isnan(area) and area > 0.99:
+                    cell += "$^{\\ast}$"
                 parts.append(cell)
         rows.append(" & ".join(parts) + r" \\")
     header = "Model & " + " & ".join(
@@ -162,7 +167,9 @@ def table_breakdown(df: pd.DataFrame) -> str:
         body,
         "Region FNR on ACDC conditions under source (Cityscapes) calibration. "
         "Bold entries violate the nominal level: the in-distribution "
-        "guarantee does not survive the shift. "
+        "guarantee does not survive the shift. $\\ast$ marks cells whose mean "
+        "marked area exceeds $99\\%$, where the level is met only by marking "
+        "the whole image. "
         "Each cell averages the three critical classes; the guarantee is per "
         "class, and Section~\\ref{sec:exp_indist} reports the per-class cells." + _rho_note(df),
         "tab:breakdown", "l" + "cccc" * len(ALPHAS), header, star=True)
@@ -172,36 +179,47 @@ def table_tier_a(df: pd.DataFrame) -> str:
     """T4: tier-A recovery and applicability vs n_t (Cityscapes->ACDC)."""
     sub = df[(df.block == "e3") & (df.method == "region_crc")]
     feas = sub[sub.feasible.astype(bool)]
-    cells = cell_means(feas, ["n_target", "alpha"])
+    # The infeasibility column is class-balanced. Averaging FNR and area over
+    # raw feasible rows instead would weight whichever class still has feasible
+    # draws, and at the tight levels that is a single class. Both columns are
+    # therefore averaged per class first, then over classes.
+    percls = cell_means(feas, ["n_target", "class_name", "alpha"])
+    counts = feas.groupby(["n_target", "alpha"]).size()
     infeas = infeasibility(sub, ["n_target", "class_name", "alpha"])
     rows = []
     for nt in (25, 50, 100):
         parts = [str(nt)]
         for alpha in ALPHAS:
-            row = cells[(cells.n_target == nt) & (cells.alpha == alpha)]
+            row = percls[(percls.n_target == nt) & np.isclose(percls.alpha, alpha)]
+            n_draws = int(counts.get((nt, alpha), 0))
             if row.empty:
                 parts += ["--", "--"]
             else:
-                parts += [fmt(row.region_fnr.iloc[0]), fmt(row.marked_area.iloc[0])]
+                parts += [fmt(row.region_fnr.mean()), fmt(row.marked_area.mean())]
             inf = infeas[(infeas.n_target == nt) & (infeas.alpha == alpha)]
             rate = inf.infeasible_rate.mean()
             # A rate printed as 1.00 while an FNR is printed beside it would
             # imply that FNR came from no draws at all; bound it instead.
-            parts.append(r"$>$0.99" if 0.995 <= rate < 1.0 else fmt(rate, 2))
+            cell = r"$>$0.99" if 0.995 <= rate < 1.0 else fmt(rate, 2)
+            parts.append(rf"{cell} ({n_draws})")
         rows.append(" & ".join(parts) + r" \\")
     header = "$n_t$ & " + " & ".join(
         rf"\multicolumn{{3}}{{c}}{{$\alpha={a:g}$}}" for a in ALPHAS)
-    subheader = " & " + " & ".join(["FNR & Area & Inf."] * len(ALPHAS)) + r" \\"
+    subheader = " & " + " & ".join(["FNR & Area & Inf.\\ ($n$)"] * len(ALPHAS)) + r" \\"
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
     return latex_table(
         body,
         "Tier A on ACDC: exact recalibration from $n_t$ labeled target "
-        "images. FNR and marked area are averaged over feasible draws only; "
-        "Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
-        "because too few of the $n_t$ images contain the class. Where Inf.\\ "
-        "approaches one, the paired FNR and area rest on very few draws and "
-        "are indicative only." + _rho_note(df),
-        "tab:tier_a", "l" + "ccc" * len(ALPHAS), header)
+        "images. All three columns are averaged per class and then over the "
+        "three critical classes, so no column is dominated by whichever class "
+        "still has feasible draws. FNR and marked area use feasible draws "
+        "only; Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
+        "because too few of the $n_t$ images contain the class, and the count "
+        "in parentheses is the number of feasible draws the paired FNR and "
+        "area rest on. Where Inf.\\ approaches one that count is small and the "
+        "pair is indicative only." + _rho_note(df),
+        # The feasible-draw counts widen the table past one IEEE column.
+        "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
 
 def table_loveda(df: pd.DataFrame) -> str:
@@ -421,6 +439,109 @@ def table_perclass(df: pd.DataFrame) -> str:
                        "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
 
 
+def table_loveda_perclass(df: pd.DataFrame) -> str:
+    """T7: the LoveDA in-domain cells resolved per class, at both capture levels.
+
+    The class average of Table~\ref{tab:loveda} hides two facts a reader needs:
+    which class carries the exceedances, and that water at the tight levels is
+    met only by marking the whole image.
+    """
+    sub = df[(df.block == "l1") & (df.method == "region_crc")]
+    cells = cell_means(sub, ["model", "class_name", "alpha", "rho"])
+    classes = sorted(cells.class_name.unique())
+    rows, n_cells, n_over, n_full = [], 0, 0, 0
+    models = [("segformer_b2_loveda_urban", "Urban"),
+              ("segformer_b2_loveda_rural", "Rural")]
+    for model, label in models:
+        for k, cname in enumerate(classes):
+            parts = [label if k == 0 else "", cname]
+            for rho in (0.5, 0.1):
+                for alpha in ALPHAS:
+                    row = cells[(cells.model == model)
+                                & (cells.class_name == cname)
+                                & np.isclose(cells.alpha, alpha)
+                                & np.isclose(cells.rho, rho)]
+                    if row.empty:
+                        parts.append("--")
+                        continue
+                    val = float(row.region_fnr.iloc[0])
+                    area = float(row.marked_area.iloc[0])
+                    n_cells += 1
+                    n_over += val > alpha
+                    n_full += area > 0.99
+                    cell = fmt(val)
+                    if val > alpha:
+                        cell = rf"\textbf{{{cell}}}"
+                    parts.append(cell + ("$^{\\ast}$" if area > 0.99 else ""))
+            rows.append(" & ".join(parts) + r" \\")
+        if model != models[-1][0]:
+            rows.append(r"\addlinespace")
+    header = ("Domain & Class & "
+              + " & ".join(rf"\multicolumn{{3}}{{c}}{{$\rho={r:g}$}}"
+                           for r in (0.5, 0.1)))
+    subheader = (" & & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
+                 + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
+                 + r" \\")
+    body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
+    caption = (
+        f"LoveDA in-domain region FNR resolved per class over the {n_cells} "
+        f"cells behind the class averages of Table~\\ref{{tab:loveda}}. Bold "
+        f"marks the {n_over} cells above their level; $\\ast$ marks the "
+        f"{n_full} cells where the level is met only by marking more than "
+        f"$99\\%$ of the image. Means over 100 calibration draws.")
+    return latex_table(body, caption, "tab:loveda_perclass",
+                       "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
+
+
+def table_perclass_area(df: pd.DataFrame) -> str:
+    """T8: marked area for the per-class cells of Table~\ref{tab:perclass}.
+
+    The efficiency spread across classes is the operator's real cost and
+    appears otherwise only in prose.
+    """
+    segformer = [m for m in CITYSCAPES_MODELS if m.startswith("segformer")]
+    sub = df[(df.block == "e1") & (df.method == "region_crc")]
+    cells = cell_means(sub, ["model", "class_name", "alpha", "rho"])
+    rows, lo, hi = [], np.inf, -np.inf
+    for model in CITYSCAPES_MODELS:
+        for k, cname in enumerate(CRITICAL_CLASSES):
+            label = SHORT_MODEL_LABELS[model] if k == 0 else ""
+            parts = [label, cname]
+            for rho in (0.5, 0.1):
+                for alpha in ALPHAS:
+                    row = cells[(cells.model == model)
+                                & (cells.class_name == cname)
+                                & np.isclose(cells.alpha, alpha)
+                                & np.isclose(cells.rho, rho)]
+                    if row.empty:
+                        parts.append("--")
+                        continue
+                    area = float(row.marked_area.iloc[0])
+                    if (np.isclose(alpha, 0.20) and np.isclose(rho, 0.5)
+                            and model in segformer):
+                        lo, hi = min(lo, area), max(hi, area)
+                    parts.append(fmt(area))
+            rows.append(" & ".join(parts) + r" \\")
+        if model != CITYSCAPES_MODELS[-1]:
+            rows.append(r"\addlinespace")
+    header = ("Model & Class & "
+              + " & ".join(rf"\multicolumn{{3}}{{c}}{{$\rho={r:g}$}}"
+                           for r in (0.5, 0.1)))
+    subheader = (" & & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
+                 + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
+                 + r" \\")
+    body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
+    caption = (
+        "Mean marked fraction of the image for the cells of "
+        "Table~\\ref{tab:perclass}. The class average understates what an "
+        "operator pays, since the cost is set by the hardest class: on the "
+        "SegFormer variants at $\\alpha=0.2$ and $\\rho=0.5$ the per-class "
+        f"area ranges from {lo:.3f} to {hi:.3f}. Means over 100 calibration "
+        "draws.")
+    return latex_table(body, caption, "tab:perclass_area",
+                       "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
+
+
 TABLES = {
     "validity_cityscapes": table_validity_cityscapes,
     "perclass": table_perclass,
@@ -428,6 +549,8 @@ TABLES = {
     "breakdown": table_breakdown,
     "tier_a": table_tier_a,
     "loveda": table_loveda,
+    "loveda_perclass": table_loveda_perclass,
+    "perclass_area": table_perclass_area,
     "marida": table_marida,
     "ablations": table_ablations,
 }
@@ -436,7 +559,8 @@ TABLES = {
 # table_baselines reports both capture levels side by side and filters rho
 # itself. The other builders take a single capture level, because averaging
 # the two can hide a violation at one behind a compliant value at the other.
-BOTH_RHO_TABLES = {"baselines", "perclass"}
+BOTH_RHO_TABLES = {"baselines", "perclass", "loveda_perclass",
+                   "perclass_area"}
 
 
 def main() -> int:

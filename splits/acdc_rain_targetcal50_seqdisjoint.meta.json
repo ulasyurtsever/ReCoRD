@@ -1,0 +1,43 @@
+{
+ "scheme": "acdc_rain_targetcal50_seqdisjoint",
+ "file": "acdc_rain_targetcal50_seqdisjoint.json",
+ "condition": "rain",
+ "n_target_calibration": 50,
+ "n_seeds": 100,
+ "base_seed": 20260806,
+ "whole_sequences": false,
+ "n_pool_frames": 500,
+ "n_sequences": 11,
+ "sequence_sizes": [
+  103,
+  102,
+  83,
+  82,
+  63,
+  31,
+  13,
+  10,
+  6,
+  5,
+  2
+ ],
+ "calibration_sequences": {
+  "min": 1,
+  "median": 2.0,
+  "max": 5
+ },
+ "frames_in_calibration_sequences": {
+  "min": 51,
+  "median": 99.5,
+  "max": 138
+ },
+ "test_frames": {
+  "min": 362,
+  "median": 400.5,
+  "max": 449
+ },
+ "test_frames_in_published_scheme": 450,
+ "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
+ "warnings": [],
+ "generated_utc": "2026-08-23T21:54:52.324710+00:00"
+}

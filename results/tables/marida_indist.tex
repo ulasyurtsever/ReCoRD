@@ -1,19 +1,21 @@
 \begin{table}[t]
 \centering
-\caption{MARIDA in-distribution control at $\rho=0.5$. Region CRC on a random patch-level split of the pooled MARIDA patches over 100 seeded draws. Every other MARIDA scheme assigns scenes disjointly; this one is exchangeable by construction, so the empirical region miss rate is expected to respect the requested level, and a violation here would indicate an implementation fault rather than a hard partition. The interval is over the seeded draws and covers the level in every row.}
+\caption{MARIDA in-distribution control at $\rho=0.5$. A random patch-level split of the pooled MARIDA patches over 100 seeded draws. Every other MARIDA scheme assigns scenes disjointly; this one is exchangeable by construction, so the empirical region miss rate is expected to respect the requested level, and a violation here would indicate an implementation fault rather than a hard partition. The interval is over the seeded draws and covers the level in every row. Pixel CRC also respects the requested level here, unlike on Cityscapes: the median MARIDA component is two pixels wide, so the region-level and pixel-level formulations nearly coincide. The pooled split includes patches used to fit the models, so the marked areas in this table are not deployment costs and are not comparable with those of Table~\ref{tab:marida}.}
 \label{tab:marida_indist}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-Model & $\alpha$ & FNR & 95\% CI & Area \\
+Model & $\alpha$ & \multicolumn{3}{c}{Region CRC} & \multicolumn{2}{c}{Pixel CRC} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-7}
+ &  & FNR & 95\% CI & Area & FNR & Area \\
 \midrule
-U-Net single & 0.05 & 0.047 & [0.043, 0.051] & 0.0997 \\
-U-Net single & 0.10 & 0.097 & [0.091, 0.102] & 0.0241 \\
-U-Net single & 0.20 & 0.202 & [0.193, 0.211] & 0.0035 \\
-U-Net ensemble-5 & 0.05 & 0.049 & [0.045, 0.052] & 0.0045 \\
-U-Net ensemble-5 & 0.10 & 0.098 & [0.092, 0.103] & 0.0014 \\
-U-Net ensemble-5 & 0.20 & 0.199 & [0.191, 0.208] & 0.0006 \\
+U-Net single & 0.05 & 0.047 & [0.043, 0.051] & 0.0997 & 0.047 & 0.0998 \\
+U-Net single & 0.10 & 0.097 & [0.091, 0.102] & 0.0241 & 0.095 & 0.0250 \\
+U-Net single & 0.20 & 0.202 & [0.193, 0.211] & 0.0035 & 0.196 & 0.0038 \\
+U-Net ensemble-5 & 0.05 & 0.049 & [0.045, 0.052] & 0.0045 & 0.047 & 0.0054 \\
+U-Net ensemble-5 & 0.10 & 0.098 & [0.092, 0.103] & 0.0014 & 0.097 & 0.0014 \\
+U-Net ensemble-5 & 0.20 & 0.199 & [0.191, 0.208] & 0.0006 & 0.196 & 0.0006 \\
 \bottomrule
 \end{tabular}
 \end{table}

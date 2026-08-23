@@ -15,8 +15,15 @@ model:
    as ``lac_miscoverage.npy`` next to the existing region tables. A single
    global threshold calibrated on these curves reproduces the LAC-style
    multi-label baseline at the pixel-coverage level.
+3. Class-conditional LAC miscoverage curves: the same quantity restricted to
+   one critical class at a time, written as
+   ``lac_miscoverage_by_class.npz``. WHY a second table: the marginal curve
+   of (2) is dominated by road, building and vegetation, so a threshold
+   calibrated on it is set by the easy classes and then charged with the
+   critical classes' region loss. Per-class curves let stage 5 calibrate one
+   threshold per critical class, which is the fair form of the baseline.
 
-Both derivations are deterministic CPU passes over the cache.
+All derivations are deterministic CPU passes over the cache.
 
 Example
 -------
@@ -185,6 +192,68 @@ def build_lac_curves(model_key, dataset_key, value_to_channel, stride):
     print(f"{dataset_key}: LAC miscoverage curves for {len(ids)} images")
 
 
+def build_lac_class_curves(model_key, dataset_key, stride):
+    """Per-image pixel miscoverage curves restricted to each critical class.
+
+    Identical in definition to :func:`build_lac_curves` -- the fraction of
+    strided pixels whose true-class probability falls below ``1 - lambda`` --
+    except that the pixel population is one critical class at a time instead
+    of every labeled pixel.
+
+    WHY this exists. The marginal curve pools all classes, and the pool is
+    dominated by road, building and vegetation, which the model covers almost
+    everywhere. A threshold calibrated on it is therefore chosen by the easy
+    classes and then scored on the critical classes' region loss, which is the
+    comparison a referee is entitled to call unfair. With one curve per
+    critical class, stage 5 can calibrate one threshold per class against that
+    class's own pixel-coverage target and score it exactly as before, so what
+    is left in the comparison is the genuine gap between controlling pixel
+    coverage and capturing regions.
+
+    Images with no ground-truth pixels of a class carry a NaN row for that
+    class; stage 5 drops those rows from the calibration set, as it already
+    does for images without ground-truth components.
+    """
+    critical = critical_classes_for(parse_dataset_key(dataset_key)[0])
+    out_dir = results_dir(f"raw/{model_key}/{dataset_key}")
+    ids = list_ids(dataset_key)
+    class_names = list(critical)
+    curves = np.full((len(ids), len(class_names), LAMBDA_GRID.size), np.nan,
+                     dtype=np.float16)
+    for img_row, image_id in enumerate(
+            tqdm(ids, desc=f"lac/class {dataset_key}", unit="img")):
+        cached = np.load(image_cache_path(model_key, dataset_key, image_id))
+        label = load_label_array(dataset_key, image_id)
+        probs = cached["strided_probs"].astype(np.float32)
+        lab = label[::stride, ::stride]
+        # The cached posterior and the strided label can differ by a pixel at
+        # the border; crop both to the common window, as strided_true_probs
+        # does, so the two are indexed consistently.
+        h = min(lab.shape[0], probs.shape[1])
+        w = min(lab.shape[1], probs.shape[2])
+        lab = lab[:h, :w]
+        for c_idx, (gt_value, model_channel) in enumerate(critical.values()):
+            sel = lab == gt_value
+            if not sel.any():
+                continue  # class absent from this image: row stays NaN
+            true_p = probs[model_channel, :h, :w][sel]
+            coverage = curve_on_grid(1.0 - true_p)
+            curves[img_row, c_idx] = (1.0 - coverage).astype(np.float16)
+    np.savez_compressed(out_dir / "lac_miscoverage_by_class.npz",
+                        curves=curves, class_names=np.array(class_names))
+    (out_dir / "lac_class_meta.json").write_text(json.dumps({
+        "model_key": model_key, "dataset_key": dataset_key,
+        "stride": stride, "n_images": len(ids), "classes": class_names,
+        "definition": "per-image fraction of strided pixels of the class "
+                      "whose true-class probability is below 1 - lambda; "
+                      "NaN where the class is absent from the image",
+        "completed_utc": datetime.now(timezone.utc).isoformat(),
+    }, indent=1))
+    n_defined = int(np.sum(~np.isnan(curves[:, :, 0])))
+    print(f"{dataset_key}: class-conditional LAC curves for {len(ids)} images "
+          f"x {len(class_names)} classes ({n_defined} defined rows)")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--model", required=True)
@@ -242,6 +311,16 @@ def main() -> int:
             print(f"{dataset_key}: LAC curves exist, skipping")
         else:
             build_lac_curves(args.model, dataset_key, value_to_channel, stride)
+
+        # Additive: the per-class table is a new file next to the marginal
+        # one, so an existing lac_miscoverage.npy (and every table built from
+        # it) is left exactly as it was.
+        lac_class_path = results_dir(f"raw/{args.model}/{dataset_key}") \
+            / "lac_miscoverage_by_class.npz"
+        if lac_class_path.exists() and not args.force:
+            print(f"{dataset_key}: class-conditional LAC curves exist, skipping")
+        else:
+            build_lac_class_curves(args.model, dataset_key, stride)
 
     print("RESULT: PASS")
     return 0

@@ -1,0 +1,44 @@
+{
+ "scheme": "acdc_snow_targetcal100_seqdisjoint",
+ "file": "acdc_snow_targetcal100_seqdisjoint.json",
+ "condition": "snow",
+ "n_target_calibration": 100,
+ "n_seeds": 100,
+ "base_seed": 20260806,
+ "whole_sequences": false,
+ "n_pool_frames": 500,
+ "n_sequences": 12,
+ "sequence_sizes": [
+  86,
+  69,
+  66,
+  65,
+  54,
+  49,
+  48,
+  28,
+  22,
+  5,
+  5,
+  3
+ ],
+ "calibration_sequences": {
+  "min": 2,
+  "median": 3.0,
+  "max": 6
+ },
+ "frames_in_calibration_sequences": {
+  "min": 100,
+  "median": 124.0,
+  "max": 183
+ },
+ "test_frames": {
+  "min": 317,
+  "median": 376.0,
+  "max": 400
+ },
+ "test_frames_in_published_scheme": 400,
+ "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
+ "warnings": [],
+ "generated_utc": "2026-08-23T21:54:53.148766+00:00"
+}

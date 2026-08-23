@@ -233,15 +233,47 @@ def _triage_frame():
     return tr
 
 
+def _permutation_band(alpha: float = 0.20, rho: float = 0.5):
+    """Stage-27 permutation quantiles, or ``None`` if they were never computed.
+
+    Returns ``{setting: (budgets, q05, q95)}`` in units of the no-review rate,
+    read from the setting-level aggregate rows only: the per-class rows of the
+    same file belong to the individual classes, not to the curve drawn here,
+    and averaging the two together would mix two different aggregations.
+    """
+    path = results_dir("experiments") / "x12_triage_permutation_band.csv"
+    if not path.exists():
+        print(f"WARNING: {path.name} not found; drawing the triage baselines "
+              "against the closed-form line alone, with no permutation band. "
+              "Run scripts/27_triage_permutation_band.py to add it.")
+        return None
+    band = pd.read_csv(path)
+    band = band[(band["class_name"] == "all_classes")
+                & np.isclose(band["alpha"].astype(float), alpha)
+                & np.isclose(band["rho"].astype(float), rho)]
+    if band.empty:
+        print(f"WARNING: {path.name} carries no aggregate rows at "
+              f"alpha={alpha:g}, rho={rho:g}; drawing without the band")
+        return None
+    out = {}
+    for setting, sub in band.groupby("setting"):
+        sub = sub.sort_values("budget")
+        out[str(setting)] = (sub["budget"].to_numpy(dtype=float),
+                             sub["q05_rel"].to_numpy(dtype=float),
+                             sub["q95_rel"].to_numpy(dtype=float))
+    return out
+
+
 def fig_triage_baselines(df: pd.DataFrame, path) -> None:
-    """Marked-area ranking measured against the exact random floor.
+    """Marked-area ranking against the random floor and its sampling band.
 
     Under the oracle review model any ordering removes part of the risk, so an
     absolute reduction is not by itself evidence that a priority score works.
-    What the score has to beat is a random ranking -- and that reference needs
-    no simulation. With ``triage_curve`` reporting the unresolved loss of the
-    unreviewed images divided by the full test-set size, a uniformly random
-    order includes each image with probability beta, so
+    What the score has to beat is a random ranking -- and the centre of that
+    reference needs no simulation. With ``triage_curve`` reporting the
+    unresolved loss of the unreviewed images divided by the full test-set
+    size, a uniformly random order includes each image with probability beta,
+    so
 
         E[residual(beta)] = (1 - beta) * residual(0),
 
@@ -251,13 +283,27 @@ def fig_triage_baselines(df: pd.DataFrame, path) -> None:
     is at most 0.7% of the no-review rate). The single sampled permutation
     stored in the CSVs is one draw around that line and deviates from it by up
     to 29% of the no-review rate on the fixed MARIDA partitions, which is why
-    the closed form is used here instead. Plotting the difference rather than the two rates puts every
-    deployment setting on one axis: negative means the score orders images
-    better than chance.
+    the closed form is used here instead. Plotting the difference rather than
+    the two rates puts every deployment setting on one axis: negative means
+    the score orders images better than chance, and the zero line is the
+    closed form.
+
+    An expectation is not a scale, though. Five of the six settings are single
+    MARIDA partitions with one realized permutation, and a curve sitting below
+    zero there may be nothing but the spread of the random ranking itself. The
+    shaded envelopes are that spread: the 5th-to-95th percentile of the
+    residual over 1000 redrawn uniform permutations per setting and per class,
+    from ``results/experiments/x12_triage_permutation_band.csv`` (stage 27),
+    plotted in the same units and shaded in each setting's colour. A curve
+    inside its own band is indistinguishable from chance at that budget; only
+    where it leaves the band below is the advantage larger than permutation
+    noise. When the stage-27 file is absent the figure falls back to the
+    closed-form line alone and says so.
     """
     tr = _triage_frame()
     if "ranking" in tr.columns:
         tr = tr[tr["ranking"] == "area"]
+    bands = _permutation_band()
 
     fig, ax = plt.subplots(figsize=(COLUMN_W, 2.6))
     drawn = 0
@@ -271,6 +317,13 @@ def fig_triage_baselines(df: pd.DataFrame, path) -> None:
             continue
         beta = area.index.values.astype(float)
         gap = area.values / base - (1.0 - beta)
+        if bands and setting in bands:
+            # Same subtraction as the curve, so the band is read on the same
+            # axis: both are residuals in units of the no-review rate with the
+            # closed-form line removed.
+            b_beta, q05, q95 = bands[setting]
+            ax.fill_between(b_beta, q05 - (1.0 - b_beta), q95 - (1.0 - b_beta),
+                            color=color, alpha=0.13, lw=0, zorder=0)
         ax.plot(beta, gap, marker="o", ms=2.2, lw=1.1,
                 color=color, label=label)
         drawn += 1
@@ -283,13 +336,18 @@ def fig_triage_baselines(df: pd.DataFrame, path) -> None:
     ax.annotate("random floor", xy=(ax.get_xlim()[1], 0.0),
                 xytext=(-2, 3), textcoords="offset points",
                 ha="right", va="bottom", fontsize=6)
-    # Open a strip of empty axes below the curves so the six-entry legend does
-    # not sit on top of the deepest one.
+    # Open a strip of empty axes below the curves so the legend does not sit
+    # on top of the deepest one.
     lo, hi = ax.get_ylim()
     ax.set_ylim(lo - 0.30 * (hi - lo), hi)
     ax.set_xlabel(r"review budget $\beta$ (fraction of images)")
     ax.set_ylabel("marked area minus random\n(fraction of the no-review rate)")
-    ax.legend(frameon=False, fontsize=6, ncol=2, loc="lower left")
+    handles, labels = ax.get_legend_handles_labels()
+    if bands:
+        handles.append(plt.Rectangle((0, 0), 1, 1, color="0.45", alpha=0.30))
+        labels.append("5-95% of random orders")
+    ax.legend(handles, labels, frameon=False, fontsize=6, ncol=2,
+              loc="lower left")
     fig.savefig(path); plt.close(fig)
 
 

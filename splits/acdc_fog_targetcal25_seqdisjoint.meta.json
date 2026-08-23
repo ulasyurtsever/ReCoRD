@@ -1,0 +1,43 @@
+{
+ "scheme": "acdc_fog_targetcal25_seqdisjoint",
+ "file": "acdc_fog_targetcal25_seqdisjoint.json",
+ "condition": "fog",
+ "n_target_calibration": 25,
+ "n_seeds": 100,
+ "base_seed": 20260806,
+ "whole_sequences": false,
+ "n_pool_frames": 500,
+ "n_sequences": 11,
+ "sequence_sizes": [
+  103,
+  101,
+  61,
+  50,
+  41,
+  41,
+  37,
+  29,
+  20,
+  10,
+  7
+ ],
+ "calibration_sequences": {
+  "min": 1,
+  "median": 1.0,
+  "max": 3
+ },
+ "frames_in_calibration_sequences": {
+  "min": 29,
+  "median": 50.0,
+  "max": 123
+ },
+ "test_frames": {
+  "min": 377,
+  "median": 450.0,
+  "max": 471
+ },
+ "test_frames_in_published_scheme": 475,
+ "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
+ "warnings": [],
+ "generated_utc": "2026-08-23T21:54:50.942705+00:00"
+}

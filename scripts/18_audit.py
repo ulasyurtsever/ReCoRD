@@ -338,6 +338,36 @@ def section_baselines():
           a_b5 > a_b2 and abs(a_b5 - 0.090) < 5e-4 and abs(a_b2 - 0.034) < 5e-4,
           f"B5 area={a_b5:.3f} vs B2 area={a_b2:.3f} at alpha=0.2, rho=0.5")
 
+    # 79: the new per-class LoveDA and breakdown conventions
+    lov = sel(load("l1_*"), method="region_crc")
+    lcells = lov[lov.feasible.astype(bool)].groupby(
+        ["model", "class_name", "alpha", "rho"]).agg(
+        fnr=("region_fnr", "mean"), area=("marked_area_fraction", "mean"))
+    truth(79, "LoveDA per-class table covers 24 in-domain cells",
+          len(lcells) == 24, f"{len(lcells)} cells")
+    vac = lcells[lcells.area > 0.99]
+    truth(79, "exactly two LoveDA in-domain cells mark >99% of the image",
+          len(vac) == 2, str(sorted(vac.index.tolist())))
+    truth(79, "both vacuous cells are rural water at rho=0.5, a<=0.1",
+          all(m.endswith("rural") and c == "water" and np.isclose(rh, 0.5)
+              and al <= 0.1 for m, c, al, rh in vac.index),
+          str(sorted(vac.index.tolist())))
+    over = lcells[lcells.fnr > lcells.index.get_level_values("alpha")]
+    truth(79, "exactly three LoveDA in-domain cells exceed their level",
+          len(over) == 3, str(sorted(over.index.tolist())))
+
+    brk = sel(load("e2_break__*"), method="region_crc", rho=0.5)
+    bcells = brk[brk.feasible.astype(bool)].groupby(
+        ["model", "experiment", "alpha"]).agg(
+        area=("marked_area_fraction", "mean"))
+    star05 = bcells[(bcells.index.get_level_values("alpha") == 0.05)
+                    & (bcells.area > 0.99)]
+    models05 = sorted({m for m, _, _ in star05.index})
+    truth(79, "at alpha=0.05 the vacuous breakdown cells are B5 and Mask2Former",
+          models05 == ["mask2former_swinb_cityscapes",
+                       "segformer_b5_cityscapes"],
+          f"{len(star05)} starred cells over models {models05}")
+
     # 78: size strata
     for cid, mo in [(78, "segformer_b2_cityscapes"), (78, "segformer_b5_cityscapes")]:
         d = sel(e1, method="region_crc", model=mo, alpha=0.20, rho=0.5)
@@ -681,9 +711,17 @@ def section_tier_a():
     note(141, "same over both capture levels",
          f"max sd = {np.nanmax(sdall.values):.4f} at {sdall.idxmax()}")
 
-    ar = [mean(sel(r, n_target=n, alpha=0.20, rho=0.5), "marked_area_fraction")
-          for n in (25, 50, 100)]
-    rng_claim(142, "tier-A marked area 62-66% at alpha=0.2", 0.623, 0.662, ar)
+    # Table VI is class-balanced: each column is averaged per class and then
+    # over classes, so no cell is dominated by whichever class still has
+    # feasible draws at a tight level.
+    def _balanced(n, alpha, col="region_fnr"):
+        d = sel(r, n_target=n, alpha=alpha, rho=0.5)
+        d = d[d.feasible.astype(bool)]
+        return float(d.groupby("class_name")[col].mean().mean())
+
+    ar = [_balanced(n, 0.20, "marked_area_fraction") for n in (25, 50, 100)]
+    rng_claim(142, "tier-A marked area 67-73% at alpha=0.2 (class-balanced)",
+              0.668, 0.726, ar, 0.006)
     truth(142, "area does not decrease from n_t=25 to 100",
           not (ar[0] > ar[1] > ar[2]), str([round(x, 3) for x in ar]))
 
@@ -693,15 +731,16 @@ def section_tier_a():
           inf25 > 0.99, f"{inf25:.4f}")
     near(145, "infeasible fraction at n_t=100, alpha=0.05 is 0.47", 0.47, inf100, 0.006)
 
-    table6 = {25: [(0.005, 0.940, 0.99), (0.022, 0.807, 0.74), (0.075, 0.648, 0.38)],
-              50: [(0.004, 0.944, 0.80), (0.022, 0.818, 0.45), (0.085, 0.623, 0.19)],
-              100: [(0.004, 0.949, 0.47), (0.018, 0.835, 0.27), (0.072, 0.662, 0.03)]}
+    table6 = {25: [(0.005, 0.940, 0.99), (0.011, 0.912, 0.74), (0.065, 0.726, 0.38)],
+              50: [(0.001, 0.980, 0.80), (0.015, 0.887, 0.45), (0.078, 0.668, 0.19)],
+              100: [(0.002, 0.972, 0.47), (0.014, 0.876, 0.27), (0.071, 0.670, 0.03)]}
     for n, rows in table6.items():
         for al, (f_, ar_, inf_) in zip(ALPHAS, rows):
             d = sel(r, n_target=n, alpha=al, rho=0.5)
-            near(149, f"tier A n_t={n} a={al} FNR", f_, mean(d))
-            near(149, f"tier A n_t={n} a={al} area", ar_,
-                 mean(d, "marked_area_fraction"))
+            near(149, f"tier A n_t={n} a={al} FNR (class-balanced)",
+                 f_, _balanced(n, al))
+            near(149, f"tier A n_t={n} a={al} area (class-balanced)",
+                 ar_, _balanced(n, al, "marked_area_fraction"))
             got = 1 - d.feasible.astype(bool).mean()
             if n == 25 and al == 0.05:
                 truth(149, f"tier A n_t=25 a=0.05 infeasible >0.99", got > 0.99, f"{got:.4f}")

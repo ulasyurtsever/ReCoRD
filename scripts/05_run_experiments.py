@@ -15,6 +15,26 @@ Methods
 - ``pixel_crc``    : CRC controlling pixel FNR, evaluated at region level
 - ``heuristic``    : uncorrected empirical threshold (no guarantee)
 - ``argmax``       : plain argmax prediction (reference operating point)
+- ``lac_global``   : LAC-style pixel-coverage baseline. ``--lac-variants``
+                     chooses which rows are emitted: ``marginal`` (default,
+                     labelled ``lac_global``) calibrates one global threshold
+                     on all-class pixel miscoverage, ``class_conditional``
+                     (labelled ``lac_classcond``) calibrates one threshold per
+                     critical class on that class's own pixel miscoverage.
+                     See :func:`run_lac` for why both belong in the table.
+
+Columns worth naming
+--------------------
+- ``controlled_risk`` : the risk the method's own calibration targets, read
+  off the test set. For ``region_crc`` this is the (possibly size-weighted)
+  region loss; for every other method it is the region loss on the
+  ``--loss region`` definition. Its meaning is unchanged by ``--measure-pixel-fnr``.
+- ``realized_pixel_fnr`` : present only with ``--measure-pixel-fnr``. The
+  pixel-level false-negative rate actually attained on the test set at the
+  selected threshold, averaged over test images with ground-truth pixels of
+  the class, for ``pixel_crc`` and ``region_crc``. This is the measurement
+  behind the claim that pixel CRC controls the pixel-level FNR; the column is
+  opt-in so that existing result CSVs keep their exact column set.
 
 Examples
 --------
@@ -105,6 +125,27 @@ class TableStore:
             lac_blocks.append(np.load(lac_path) if lac_path.exists() else None)
         self.lac = (np.vstack([b.astype(np.float32) for b in lac_blocks])
                     if all(b is not None for b in lac_blocks) else None)
+
+        # Class-conditional LAC curves (stage 4b, optional). Stored as an
+        # archive rather than a bare array so the class axis carries its own
+        # names and can be checked against the region tables instead of being
+        # assumed to agree.
+        lac_class_blocks = []
+        for key in dataset_keys:
+            path = results_dir(f"raw/{model_key}/{key}") / "lac_miscoverage_by_class.npz"
+            if not path.exists():
+                lac_class_blocks.append(None)
+                continue
+            data = np.load(path, allow_pickle=False)
+            names = [str(c) for c in data["class_names"]]
+            if class_names is not None and names != class_names:
+                raise ValueError(
+                    f"{path}: class order {names} does not match the region "
+                    f"tables' {class_names}")
+            lac_class_blocks.append(data["curves"])
+        self.lac_by_class = (
+            np.vstack([b.astype(np.float32) for b in lac_class_blocks])
+            if all(b is not None for b in lac_class_blocks) else None)
 
         assert class_names is not None
         self.class_names = class_names
@@ -241,6 +282,25 @@ def parse_args() -> argparse.Namespace:
                         choices=["region_crc", "shared_crc", "lac_global",
                                  "weighted_crc", "pixel_crc", "heuristic",
                                  "argmax"])
+    parser.add_argument("--lac-variants", nargs="+", default=["marginal"],
+                        choices=["marginal", "class_conditional"],
+                        help="which LAC baselines to emit when 'lac_global' "
+                             "is among --methods. 'marginal' (the default, "
+                             "and the published behaviour) calibrates one "
+                             "global threshold on all-class pixel "
+                             "miscoverage; 'class_conditional' calibrates one "
+                             "threshold per critical class on that class's "
+                             "own pixel miscoverage and labels its rows "
+                             "'lac_classcond'. Requesting both reports them "
+                             "side by side")
+    parser.add_argument("--measure-pixel-fnr", action="store_true",
+                        help="add the 'realized_pixel_fnr' column: the "
+                             "pixel-level false-negative rate actually "
+                             "achieved on the test set at the selected "
+                             "threshold, for pixel_crc (whose calibration "
+                             "target it is) and region_crc (so the two are "
+                             "comparable). Off by default so existing CSVs "
+                             "keep their exact column set")
     parser.add_argument("--loss", default="region", choices=["region", "size_weighted"],
                         help="calibration loss for region_crc: per-region miss "
                              "fraction or size-weighted miss fraction")
@@ -398,7 +458,8 @@ def main() -> int:
                             emb_ids, emb, cal_rows, args.weight_estimator,
                             weights_cache, (seed_key, class_name), clip,
                             loss_key, weight_pool_rows, source_pool_ids,
-                            args.bootstrap_ci, bootstrap_clusters)
+                            args.bootstrap_ci, bootstrap_clusters,
+                            args.measure_pixel_fnr)
                         if rec is None:
                             continue
                         rec.update({
@@ -538,32 +599,104 @@ def run_shared(records, triage_records, cal_store, test_store, cal_rows,
 
 def run_lac(records, cal_store, test_store, cal_rows, test_rows, seed_key,
             args):
-    """LAC baseline: one global threshold calibrated on all-class pixel
-    miscoverage (stage-4b curves), evaluated on region-level metrics."""
-    if cal_store.lac is None:
-        raise FileNotFoundError(
-            "lac_miscoverage.npy missing; run scripts/04b_build_baseline_tables.py")
-    cal_curves = cal_store.lac[cal_rows]
-    cal_def_mask = ~np.isnan(cal_curves[:, 0])
-    for alpha in args.alphas:
-        selection = crc_threshold(
-            np.nan_to_num(cal_curves[cal_def_mask], nan=0.0), alpha, LAMBDA_GRID)
-        col = selection.lam_index
-        for rho in args.rhos:
-            for class_name in test_store.class_names:
-                tv = test_store.class_view(class_name, rho)
-                per = tv["losses"][test_rows][:, col]
-                area = tv["marked_area"][test_rows][:, col]
-                records.append(dict(
-                    UNDEFINED_RECORD, lam=selection.lam, lam_index=int(col),
-                    feasible=selection.feasible,
-                    region_fnr=float(np.nanmean(per)),
-                    marked_area_fraction=float(np.mean(area)),
-                    n_test_images=int(np.sum(~np.isnan(per))),
-                    seed=seed_key, class_name=class_name, alpha=alpha,
-                    rho=rho, method="lac_global", model=args.model,
-                    scheme=args.scheme,
-                    n_cal_images=int(cal_def_mask.sum())))
+    """LAC baselines: pixel-coverage thresholds scored on region metrics.
+
+    Two variants, selected with ``--lac-variants`` and labelled distinctly so
+    that they cannot be mistaken for one another in the table:
+
+    ``marginal`` -> rows with ``method="lac_global"``
+        One global threshold calibrated on all-class pixel miscoverage
+        (stage-4b ``lac_miscoverage.npy``). This is the default and the
+        published behaviour.
+    ``class_conditional`` -> rows with ``method="lac_classcond"``
+        One threshold per critical class, each calibrated on that class's own
+        pixel miscoverage (stage-4b ``lac_miscoverage_by_class.npz``), then
+        scored exactly as the marginal variant is: on the class's region loss
+        at the selected threshold.
+
+    WHY both belong in the table. The marginal variant is LAC as it is
+    actually deployed, and its threshold is set by the classes that dominate
+    the pixel pool -- road, building, vegetation -- which the model covers
+    almost everywhere; charging it with the critical classes' region loss is
+    a fair description of what a class-agnostic pixel-level baseline does to
+    those classes, but it is not a fair description of what LAC can do. The
+    class-conditional variant removes exactly that objection: it is given the
+    same class information the method under test uses, and its target is the
+    pixel coverage of the class it is scored on. What survives in the
+    comparison is then the quantity in dispute -- controlling the pixel
+    coverage of a class is not the same as capturing its regions -- rather
+    than an artifact of which pixels set the threshold. Reporting only the
+    first invites the referee's objection; reporting only the second hides
+    the out-of-the-box behaviour a practitioner would actually get.
+    """
+    if "marginal" in args.lac_variants:
+        if cal_store.lac is None:
+            raise FileNotFoundError(
+                "lac_miscoverage.npy missing; run scripts/04b_build_baseline_tables.py")
+        cal_curves = cal_store.lac[cal_rows]
+        cal_def_mask = ~np.isnan(cal_curves[:, 0])
+        for alpha in args.alphas:
+            selection = crc_threshold(
+                np.nan_to_num(cal_curves[cal_def_mask], nan=0.0), alpha, LAMBDA_GRID)
+            col = selection.lam_index
+            for rho in args.rhos:
+                for class_name in test_store.class_names:
+                    tv = test_store.class_view(class_name, rho)
+                    per = tv["losses"][test_rows][:, col]
+                    area = tv["marked_area"][test_rows][:, col]
+                    records.append(dict(
+                        UNDEFINED_RECORD, lam=selection.lam, lam_index=int(col),
+                        feasible=selection.feasible,
+                        region_fnr=float(np.nanmean(per)),
+                        marked_area_fraction=float(np.mean(area)),
+                        n_test_images=int(np.sum(~np.isnan(per))),
+                        seed=seed_key, class_name=class_name, alpha=alpha,
+                        rho=rho, method="lac_global", model=args.model,
+                        scheme=args.scheme,
+                        n_cal_images=int(cal_def_mask.sum())))
+
+    if "class_conditional" in args.lac_variants:
+        if cal_store.lac_by_class is None:
+            raise FileNotFoundError(
+                "lac_miscoverage_by_class.npz missing; rerun "
+                "scripts/04b_build_baseline_tables.py to build it")
+        for c_idx, class_name in enumerate(cal_store.class_names):
+            cal_curves = cal_store.lac_by_class[cal_rows, c_idx]
+            # A row is either fully defined or all-NaN (the class is absent
+            # from that image), so the first column decides membership, as in
+            # the marginal variant.
+            cal_def_mask = ~np.isnan(cal_curves[:, 0])
+            for alpha in args.alphas:
+                # Degenerate draws are recorded, not skipped: on a small
+                # target-calibration set a rare class can be absent from every
+                # calibration image, and how often that happens is itself a
+                # reportable finding.
+                selection = crc_threshold(
+                    np.nan_to_num(cal_curves[cal_def_mask], nan=0.0),
+                    alpha, LAMBDA_GRID) if cal_def_mask.any() else None
+                for rho in args.rhos:
+                    if selection is None:
+                        records.append(dict(
+                            UNDEFINED_RECORD,
+                            n_test_images=int(len(test_rows)),
+                            seed=seed_key, class_name=class_name, alpha=alpha,
+                            rho=rho, method="lac_classcond", model=args.model,
+                            scheme=args.scheme, n_cal_images=0))
+                        continue
+                    col = selection.lam_index
+                    tv = test_store.class_view(class_name, rho)
+                    per = tv["losses"][test_rows][:, col]
+                    area = tv["marked_area"][test_rows][:, col]
+                    records.append(dict(
+                        UNDEFINED_RECORD, lam=selection.lam, lam_index=int(col),
+                        feasible=selection.feasible,
+                        region_fnr=float(np.nanmean(per)),
+                        marked_area_fraction=float(np.mean(area)),
+                        n_test_images=int(np.sum(~np.isnan(per))),
+                        seed=seed_key, class_name=class_name, alpha=alpha,
+                        rho=rho, method="lac_classcond", model=args.model,
+                        scheme=args.scheme,
+                        n_cal_images=int(cal_def_mask.sum())))
 
 
 UNDEFINED_RECORD = {
@@ -582,7 +715,8 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
                weight_estimator="logistic", weights_cache=None,
                weight_key=(), clip=(WEIGHT_CLIP_MIN, WEIGHT_CLIP_MAX_DEFAULT),
                loss_key="losses", weight_pool_rows=None,
-               source_pool_ids=None, bootstrap_ci=0, clusters=None) -> dict | None:
+               source_pool_ids=None, bootstrap_ci=0, clusters=None,
+               measure_pixel_fnr=False) -> dict | None:
     test_losses = test_view["losses"][test_rows]
     test_area = test_view["marked_area"][test_rows]
     test_counts = test_view["component_counts"][test_rows]
@@ -756,6 +890,21 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
         test_area[:, selection.lam_index],
     ) if len(cal_rows) >= 2 and len(test_rows) >= 2 else None
 
+    # Realized pixel-level FNR at the selected threshold, opt-in via
+    # --measure-pixel-fnr. pixel_crc calibrates on the pixel-FNR curve but the
+    # record's controlled_risk column carries the region loss, so without this
+    # column the "controls the pixel-level FNR by construction" claim is
+    # asserted on the calibration side and never measured on the test side.
+    # The curve is the one TableStore.class_view already built for the test
+    # store, not a recomputation; it is the size-weighted complement of
+    # component coverage, and being a pixel quantity it does not depend on
+    # rho, so the value legitimately repeats across the rho sweep. region_crc
+    # gets the same column so the two rows are directly comparable.
+    extra: dict = {}
+    if measure_pixel_fnr and method in ("pixel_crc", "region_crc"):
+        realized = test_view["pixel_fnr"][test_rows][:, selection.lam_index]
+        extra["realized_pixel_fnr"] = float(np.nanmean(realized))
+
     controlled = test_view[loss_key][test_rows][:, selection.lam_index] \
         if method == "region_crc" else test_losses[:, selection.lam_index]
     return {
@@ -778,6 +927,7 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
         "fnr_stratum0": strata_fnr[0], "fnr_stratum1": strata_fnr[1],
         "fnr_stratum2": strata_fnr[2],
         **weight_diag,
+        **extra,
     }
 
 

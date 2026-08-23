@@ -1,0 +1,40 @@
+{
+ "scheme": "acdc_night_targetcal25_seqdisjoint",
+ "file": "acdc_night_targetcal25_seqdisjoint.json",
+ "condition": "night",
+ "n_target_calibration": 25,
+ "n_seeds": 100,
+ "base_seed": 20260806,
+ "whole_sequences": false,
+ "n_pool_frames": 506,
+ "n_sequences": 6,
+ "sequence_sizes": [
+  149,
+  147,
+  60,
+  56,
+  50,
+  44
+ ],
+ "calibration_sequences": {
+  "min": 1,
+  "median": 1.0,
+  "max": 1
+ },
+ "frames_in_calibration_sequences": {
+  "min": 44,
+  "median": 60.0,
+  "max": 149
+ },
+ "test_frames": {
+  "min": 357,
+  "median": 446.0,
+  "max": 462
+ },
+ "test_frames_in_published_scheme": 481,
+ "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
+ "warnings": [
+  "night: only 6 driving sequences. A sequence-disjoint calibration set rests on one or two of them, so the seed-to-seed spread, not the mean, is the reportable quantity here."
+ ],
+ "generated_utc": "2026-08-23T21:54:51.550653+00:00"
+}

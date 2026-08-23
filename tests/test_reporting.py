@@ -19,11 +19,13 @@ def test_parse_axis_fields():
         "e3_tierA50__fog__segformer_b2_cityscapes",
         "c1_clip5__rain__segformer_b2_cityscapes__dinov2_vitb14",
         "l2_break__urban2rural",
-        "m2_region__16PDC__marida_unet_ens5",
-        "m3_season__spring__marida_unet_s0",
+        # The MARIDA blocks were renamed m2_/m3_ -> h2_/h3_; the parser follows
+        # the names the pipeline actually writes, and so must this test.
+        "h2_region__16PDC__marida_unet_ens5",
+        "h3_season__spring__marida_unet_s0",
     ]})
     out = parse_axis_fields(frame)
-    assert list(out["block"]) == ["e1", "e2", "e3", "c1", "l2", "m2", "m3"]
+    assert list(out["block"]) == ["e1", "e2", "e3", "c1", "l2", "h2", "h3"]
     assert out.loc[1, "condition"] == "night"
     assert out.loc[2, "n_target"] == 50
     assert out.loc[3, "clip_max"] == 5

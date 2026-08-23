@@ -175,40 +175,63 @@ def marida_indist_table(rho: float) -> str:
     rows = []
     print("\n=== 3. MARIDA in-distribution positive control ===")
     print(f"{'model':<26}{'alpha':>7}{'FNR':>8}{'SE':>8}{'95% CI':>20}{'holds':>6}")
-    for (model, method), sub in ctrl.groupby(["model", "method"]):
-        if method != "region_crc":
-            continue
-        for alpha, cell in sub.groupby("alpha"):
-            ok = cell["feasible"].astype(bool)
-            x = cell.loc[ok, "region_fnr"].dropna()
-            fnr = float(x.mean())
-            se = float(x.std(ddof=1) / np.sqrt(len(x))) if len(x) > 1 else 0.0
+    # Pixel CRC is reported beside region CRC. On MARIDA the two formulations
+    # nearly coincide, because the median ground-truth component is two pixels
+    # wide, and a reader is owed that comparison here rather than only the
+    # Cityscapes cells where the two separate.
+    def _cell(sub, alpha):
+        cell = sub[np.isclose(sub["alpha"], alpha)]
+        ok = cell["feasible"].astype(bool)
+        x = cell.loc[ok, "region_fnr"].dropna()
+        fnr = float(x.mean())
+        se = float(x.std(ddof=1) / np.sqrt(len(x))) if len(x) > 1 else 0.0
+        return fnr, se, float(cell.loc[ok, "marked_area_fraction"].mean())
+
+    for model, sub in ctrl.groupby("model"):
+        reg = sub[sub["method"] == "region_crc"]
+        pix = sub[sub["method"] == "pixel_crc"]
+        label = ("U-Net ensemble-5" if model.endswith("_ens5")
+                 else "U-Net single")
+        for alpha in sorted(reg["alpha"].unique()):
+            fnr, se, area = _cell(reg, alpha)
             lo, hi = fnr - 1.96 * se, fnr + 1.96 * se
-            area = float(cell.loc[ok, "marked_area_fraction"].mean())
             # A point estimate a hair above the level is not a violation with
             # 100 draws; the level has to sit below the whole interval.
             holds = not (lo > alpha)
             print(f"{model:<26}{alpha:>7.2f}{fnr:>8.4f}{se:>8.4f}"
                   f"  [{lo:.4f}, {hi:.4f}]{('yes' if holds else 'NO'):>6}")
-            label = ("U-Net ensemble-5" if model.endswith("_ens5")
-                     else "U-Net single")
+            if len(pix):
+                p_fnr, _, p_area = _cell(pix, alpha)
+                p_cols = [fmt(p_fnr, 3), fmt(p_area, 4)]
+            else:
+                p_cols = ["--", "--"]
             rows.append(" & ".join([
                 label, fmt(alpha, 2), fmt(fnr, 3),
-                f"[{fmt(lo, 3)}, {fmt(hi, 3)}]", fmt(area, 4)]) + r" \\")
+                f"[{fmt(lo, 3)}, {fmt(hi, 3)}]", fmt(area, 4)]
+                + p_cols) + r" \\")
 
     if not rows:
         return ""
-    header = "Model & $\\alpha$ & FNR & 95\\% CI & Area"
+    header = ("Model & $\\alpha$ & \\multicolumn{3}{c}{Region CRC} & "
+              "\\multicolumn{2}{c}{Pixel CRC} \\\\\n"
+              "\\cmidrule(lr){3-5} \\cmidrule(lr){6-7}\n"
+              " &  & FNR & 95\\% CI & Area & FNR & Area")
     caption = (
-        f"MARIDA in-distribution control at $\\rho={rho}$. Region CRC on a "
-        "random patch-level split of the pooled MARIDA patches over 100 seeded "
-        "draws. Every other MARIDA scheme assigns scenes disjointly; this one "
-        "is exchangeable by construction, so the empirical region miss rate is "
+        f"MARIDA in-distribution control at $\\rho={rho}$. A random "
+        "patch-level split of the pooled MARIDA patches over 100 seeded draws. "
+        "Every other MARIDA scheme assigns scenes disjointly; this one is "
+        "exchangeable by construction, so the empirical region miss rate is "
         "expected to respect the requested level, and a violation here would "
         "indicate an implementation fault rather than a hard partition. The "
-        "interval is over the seeded draws and covers the level in every row.")
+        "interval is over the seeded draws and covers the level in every row. "
+        "Pixel CRC also respects the requested level here, unlike on "
+        "Cityscapes: the median MARIDA component is two pixels wide, so the "
+        "region-level and pixel-level formulations nearly coincide. The pooled "
+        "split includes patches used to fit the models, so the marked areas in "
+        "this table are not deployment costs and are not comparable with those "
+        "of Table~\\ref{tab:marida}.")
     return latex_table("\n".join(rows), caption, "tab:marida_indist",
-                       "lcccc", header)
+                       "lcccccc", header)
 
 
 def main() -> int:

@@ -1,6 +1,6 @@
-\begin{table}[t]
+\begin{table*}[t]
 \centering
-\caption{Tier A on ACDC: exact recalibration from $n_t$ labeled target images. FNR and marked area are averaged over feasible draws only; Inf.\ is the fraction of draws where $\alpha$ is unattainable because too few of the $n_t$ images contain the class. Where Inf.\ approaches one, the paired FNR and area rest on very few draws and are indicative only. Capture level $\rho=0.5$.}
+\caption{Tier A on ACDC: exact recalibration from $n_t$ labeled target images. All three columns are averaged per class and then over the three critical classes, so no column is dominated by whichever class still has feasible draws. FNR and marked area use feasible draws only; Inf.\ is the fraction of draws where $\alpha$ is unattainable because too few of the $n_t$ images contain the class, and the count in parentheses is the number of feasible draws the paired FNR and area rest on. Where Inf.\ approaches one that count is small and the pair is indicative only. Capture level $\rho=0.5$.}
 \label{tab:tier_a}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -8,11 +8,11 @@
 \toprule
 $n_t$ & \multicolumn{3}{c}{$\alpha=0.05$} & \multicolumn{3}{c}{$\alpha=0.1$} & \multicolumn{3}{c}{$\alpha=0.2$} \\
 \midrule
- & FNR & Area & Inf. & FNR & Area & Inf. & FNR & Area & Inf. \\
+ & FNR & Area & Inf.\ ($n$) & FNR & Area & Inf.\ ($n$) & FNR & Area & Inf.\ ($n$) \\
 \midrule
-25 & 0.005 & 0.940 & $>$0.99 & 0.022 & 0.807 & 0.74 & 0.075 & 0.648 & 0.38 \\
-50 & 0.004 & 0.944 & 0.80 & 0.022 & 0.818 & 0.45 & 0.085 & 0.623 & 0.19 \\
-100 & 0.004 & 0.949 & 0.47 & 0.018 & 0.835 & 0.27 & 0.072 & 0.662 & 0.03 \\
+25 & 0.005 & 0.940 & $>$0.99 (16) & 0.011 & 0.912 & 0.74 (1244) & 0.065 & 0.726 & 0.38 (2964) \\
+50 & 0.001 & 0.980 & 0.80 (964) & 0.015 & 0.887 & 0.45 (2632) & 0.078 & 0.668 & 0.19 (3876) \\
+100 & 0.002 & 0.972 & 0.47 (2548) & 0.014 & 0.876 & 0.27 (3488) & 0.071 & 0.670 & 0.03 (4636) \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
