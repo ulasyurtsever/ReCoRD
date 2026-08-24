@@ -131,7 +131,19 @@ done
 
 echo "############ 7. regenerate the derived artifacts"
 python scripts/08_make_tables.py --rho 0.5
+# The released rho=0.1 companion set. It is regenerated here because it is
+# built by the same code from the same rows: leaving it out is how it fell
+# behind, and a released artifact whose captions predate the article is worse
+# than no companion set at all.
+python scripts/08_make_tables.py --rho 0.1 --suffix=-rho0
 python scripts/15_tierb_summary.py --rho 0.5
+# The generators that write into results/ but were not in this driver.
+# Leaving them out is how results/tables/uncertainty_marida.tex fell a
+# revision behind the copy the article inputs: a generator that no driver
+# calls stops being regenerated and stops being checked.
+python scripts/13_pareto_tradeoff.py
+python scripts/14_uncertainty_tables.py
+python scripts/16_clip_window.py
 python scripts/09_make_figures.py
 
 echo "############ 8. audit"

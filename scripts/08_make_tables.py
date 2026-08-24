@@ -586,7 +586,7 @@ def main() -> int:
     parser.add_argument("--rho", type=float, default=0.5,
                         help="capture level for the single-rho tables; the "
                              "main article reports 0.5 and the released "
-                             "artifacts carry 0.1 under a -rho01 suffix")
+                             "artifacts carry 0.1 under a -rho0 suffix")
     parser.add_argument("--suffix", default="",
                         help="appended to every output filename, so a second "
                              "capture level can be generated without "
