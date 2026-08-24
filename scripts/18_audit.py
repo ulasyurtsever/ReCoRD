@@ -1451,6 +1451,86 @@ def section_triage():
     truth(229, "an oracle ranking reaches zero residual risk by beta=0.3 everywhere",
           all(b is not None and b <= 0.3 + 1e-9 for _, b in zero_by), str(zero_by))
 
+    _permutation_band_claims()
+
+
+def _permutation_band_claims():
+    """Section IV-G: the marked-area ranking against the permutation band.
+
+    Every number the subsection prints is checked here. The claim it supports
+    is negative -- the ranking is not separable from a random order at these
+    sample sizes -- so these checks matter more than usual: a silent change
+    in the band would turn a reported negative result into an unreported
+    positive one.
+    """
+    path = results_dir("experiments") / "x12_triage_permutation_band.csv"
+    if not path.exists():
+        note(230, "permutation band not computed",
+             "run scripts/27_triage_permutation_band.py")
+        return
+    band = pd.read_csv(path)
+    band = band[(band["class_name"] != "all_classes")
+                & np.isclose(band["alpha"].astype(float), 0.20)
+                & np.isclose(band["rho"].astype(float), 0.5)]
+    band = band.drop_duplicates(["setting", "class_name", "budget"])
+    w = band[band["budget"] > 0].copy()
+    w["above"] = w["area_rel"] > w["q95_rel"]
+
+    n, below, above = len(w), int(w["below_band"].sum()), int(w["above"].sum())
+    inside = n - below - above
+    truth(230, "80 comparisons: 9 below the band, 18 above, 53 inside",
+          (n, below, above, inside) == (80, 9, 18, 53),
+          f"{n} comparisons, {below} below, {above} above, {inside} inside")
+    truth(230, "1000 permutations per setting",
+          set(band["n_permutations"].unique()) == {1000},
+          str(sorted(band["n_permutations"].unique())))
+    truth(230, "six settings", band["setting"].nunique() == 6,
+          str(sorted(band["setting"].unique())))
+
+    # Every above-band outcome is in the one replicated setting.
+    ab = sorted(w.loc[w["above"], "setting"].unique())
+    truth(231, "every above-band outcome arises in the replicated night setting",
+          ab == ["night_tierA50"], f"above-band settings: {ab}")
+    ni = w[w["setting"] == "night_tierA50"]
+    truth(231, "night, tier A: above the band in 18 of its 30 comparisons",
+          (int(ni["above"].sum()), len(ni)) == (18, 30),
+          f"{int(ni['above'].sum())} of {len(ni)}")
+
+    # The five single-partition settings, and 16PCC as the single exception.
+    per = w.groupby("setting")["below_band"].sum()
+    never = sorted(per[per == 0].index)
+    truth(231, "the score never leaves the band in four of the five single "
+               "MARIDA partitions",
+          set(never) == {"official", "region_16PDC", "region_16PEC",
+                         "season_spring"},
+          f"never below: {never}")
+    pcc = w[(w["setting"] == "region_16PCC") & w["below_band"]]
+    truth(231, "16PCC falls below the band from beta=0.1 upward",
+          not pcc.empty and abs(float(pcc["budget"].min()) - 0.10) < 1e-9,
+          f"first separation at beta={float(pcc['budget'].min()):g}"
+          if not pcc.empty else "never separates")
+
+    # The two quoted bands at beta = 0.5.
+    def cell(setting):
+        g = w[(w["setting"] == setting) & np.isclose(w["budget"], 0.5)]
+        return (float(g["area_rel"].mean()), float(g["q05_rel"].mean()),
+                float(g["q50_rel"].mean()), float(g["q95_rel"].mean()))
+
+    a, lo, med, hi = cell("official")
+    near(232, "official at beta=0.5: score", 0.49, a, tol=5e-3)
+    near(232, "official at beta=0.5: band lower end", 0.37, lo, tol=5e-3)
+    near(232, "official at beta=0.5: band upper end", 0.64, hi, tol=5e-3)
+    near(232, "official at beta=0.5: band median", 0.51, med, tol=5e-3)
+    a, lo, med, hi = cell("night_tierA50")
+    near(232, "night at beta=0.5: score", 0.63, a, tol=5e-3)
+    near(232, "night at beta=0.5: band lower end", 0.46, lo, tol=5e-3)
+    near(232, "night at beta=0.5: band upper end", 0.54, hi, tol=5e-3)
+    truth(232, "the night band is narrower than the official one",
+          (cell("night_tierA50")[3] - cell("night_tierA50")[1])
+          < (cell("official")[3] - cell("official")[1]),
+          f"night width {cell('night_tierA50')[3]-cell('night_tierA50')[1]:.3f} "
+          f"vs official {cell('official')[3]-cell('official')[1]:.3f}")
+
 
 # --------------------------------------------------------------------------
 # cross-cutting
