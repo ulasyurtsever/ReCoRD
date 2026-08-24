@@ -54,7 +54,7 @@ PIXEL_TARGET_SLACK = 0.02
 # before the two count as the same operating point. Wide enough for the
 # threshold grid to land a step apart, far narrower than the gap to the
 # marginal LAC row, which is above 0.7.
-LAC_PIXEL_GAP = 0.05
+LAC_PIXEL_GAP = 0.02
 N_FAIL = 0
 N_OK = 0
 N_NOTE = 0
@@ -569,35 +569,25 @@ def _lac_classcond_and_pixel_fnr():
         # its own class's pixel-coverage target, class-conditional LAC lands
         # on the pixel-CRC row. That is the honest answer to the referee --
         # the fair version of LAC is the pixel baseline the article already
-        # reports -- and it is a sharper statement than "it still misses
-        # regions", which is true of the pixel baseline too and would pass
-        # even if the two rows were far apart.
-        def _cell(method):
-            f = sel(raw[raw["method"] == method], alpha=0.20, rho=0.5)
-            g = feas(f).groupby("model")["region_fnr"].mean()
-            return g
-
-        cc_cell, px_cell = _cell("lac_classcond"), _cell("pixel_crc")
-        shared = sorted(set(cc_cell.index) & set(px_cell.index))
-        if not shared:
-            fail(98, "no model has both a class-conditional LAC and a pixel-CRC "
-                     "cell at alpha=0.2, rho=0.5")
+        # reports -- and it is checked over every cell of the matrix, not one
+        # convenient corner, because the coincidence is what is being claimed.
+        cell = feas(raw).groupby(["method", "model", "alpha", "rho"]).agg(
+            reg=("region_fnr", "mean"),
+            area=("marked_area_fraction", "mean")).reset_index()
+        key = ["model", "alpha", "rho"]
+        ccc = cell[cell["method"] == "lac_classcond"].set_index(key)
+        pxc = cell[cell["method"] == "pixel_crc"].set_index(key)
+        shared = ccc.index.intersection(pxc.index)
+        if not len(shared):
+            fail(98, "no cell has both a class-conditional LAC and a pixel-CRC row")
         else:
-            gaps = {m: float(cc_cell[m] - px_cell[m]) for m in shared}
-            worst = max(abs(v) for v in gaps.values())
-            truth(98, "class-conditional LAC coincides with pixel CRC "
-                      "at alpha=0.2, rho=0.5",
-                  worst <= LAC_PIXEL_GAP,
-                  f"largest gap {worst:.4f} over {len(shared)} model(s): "
-                  + ", ".join(f"{m} {gaps[m]:+.4f}" for m in shared))
-            # And the marginal variant must stay far away, or the comparison
-            # in the article has lost its subject.
-            mg = _cell("lac_global")
-            mshared = sorted(set(mg.index) & set(px_cell.index))
-            sep = min((float(mg[m] - px_cell[m]) for m in mshared), default=0.0)
-            truth(98, "marginal LAC stays far from the pixel row",
-                  bool(mshared) and sep > 0.5,
-                  f"smallest gap {sep:+.4f} over {len(mshared)} model(s)")
+            dreg = (ccc.loc[shared, "reg"] - pxc.loc[shared, "reg"]).abs()
+            darea = (ccc.loc[shared, "area"] - pxc.loc[shared, "area"]).abs()
+            truth(98, "class-conditional LAC coincides with pixel CRC in every cell",
+                  float(dreg.max()) <= LAC_PIXEL_GAP,
+                  f"{len(shared)} cells; largest region-FNR gap {float(dreg.max()):.4f}, "
+                  f"largest area gap {float(darea.max()):.4f}, against a "
+                  f"{LAC_PIXEL_GAP:g} margin")
 
     has_px = "realized_pixel_fnr" in raw.columns
     if asked_px:
@@ -608,35 +598,70 @@ def _lac_classcond_and_pixel_fnr():
         note(99, "realized pixel FNR not yet measured",
              "rerun stage 5 with --measure-pixel-fnr")
     if has_px:
-        lac_rows = sel(raw[raw["method"].isin(["lac_global", "lac_classcond"])])
-        px = lac_rows.dropna(subset=["realized_pixel_fnr"])
-        if px.empty:
+        px = raw.dropna(subset=["realized_pixel_fnr"])
+        if px.empty or px[px["method"].isin(LAC_METHODS)].empty:
             fail(99, "realized_pixel_fnr is all-NaN on the LAC rows")
         else:
-            # The claim under test is qualitative and large: LAC lands near
-            # its pixel target while missing most regions. The margin is
-            # deliberately loose -- the realized test risk of a conformal
-            # threshold fluctuates around the level by sampling noise, so a
-            # tolerance of half a printed digit would fire on nothing but
-            # that noise. PIXEL_TARGET_SLACK is wide enough to ignore the
-            # fluctuation and far too narrow to admit a broken measurement,
-            # which would put the pixel FNR up beside the region FNR (0.8-0.96).
-            excess = (px["realized_pixel_fnr"] - px["alpha"]).max()
-            over = px[px["realized_pixel_fnr"] > px["alpha"] + PIXEL_TARGET_SLACK]
-            truth(99, "LAC lands on its own pixel target while missing regions",
-                  over.empty,
-                  f"{len(px)} rows, worst overshoot {excess:+.4f} against a "
-                  f"{PIXEL_TARGET_SLACK:g} margin" if over.empty
-                  else f"{len(over)} of {len(px)} rows exceed alpha by more "
-                       f"than {PIXEL_TARGET_SLACK:g} (worst {excess:+.4f})")
-            # The other half of the sentence: it is the region loss that is
-            # large. Without this the check above would pass on a run where
-            # LAC did well at everything, which is not what is claimed.
-            region = px["region_fnr"].dropna()
-            truth(99, "the same LAC rows miss most regions",
-                  bool(len(region)) and float(region.median()) > 0.5,
-                  f"median region FNR {float(region.median()):.3f}"
-                  if len(region) else "no region FNR on the LAC rows")
+            _pixel_target_checks(px)
+
+
+# Which pixel quantity each method is entitled to be judged against. The
+# column measures the realized pixel FNR OF THE CRITICAL CLASS the row is
+# scored on. For lac_classcond and pixel_crc that is the quantity the
+# threshold was calibrated to, so the level is a promise. For lac_global it
+# is not: that threshold is set by an all-class pixel-coverage target, in
+# which the three critical classes are a rounding error, so its per-class
+# pixel FNR is free to be anything -- and how far above the level it lands
+# is the finding, not a violation.
+LAC_METHODS = ("lac_global", "lac_classcond")
+OWN_TARGET_METHODS = ("lac_classcond", "pixel_crc")
+# How far above its own level a method that was calibrated to this exact
+# quantity may land before it stops being sampling noise.
+# The marginal threshold has to miss the critical classes' pixels by a wide
+# margin, or the article's whole reading of that row is wrong.
+MARGINAL_PIXEL_EXCESS = 0.20
+# ... and its region loss has to stand clear of the pixel-CRC row.
+MARGINAL_REGION_SEPARATION = 0.40
+
+
+def _pixel_target_checks(px):
+    """Judge each method against the pixel quantity it actually targets."""
+    cell = px.groupby(["method", "model", "alpha", "rho"]).agg(
+        pix=("realized_pixel_fnr", "mean"), reg=("region_fnr", "mean")).reset_index()
+
+    own = cell[cell["method"].isin(OWN_TARGET_METHODS)]
+    over = own[own["pix"] > own["alpha"] + PIXEL_TARGET_SLACK]
+    worst = float((own["pix"] - own["alpha"]).max()) if len(own) else float("nan")
+    truth(99, "a threshold calibrated to a class's own pixel risk lands on that "
+              "level (class-conditional LAC, pixel CRC)",
+          bool(len(own)) and over.empty,
+          f"{len(own)} cells, worst overshoot {worst:+.4f} against a "
+          f"{PIXEL_TARGET_SLACK:g} margin" if len(own) and over.empty
+          else f"{len(over)} of {len(own)} cells exceed their level by more "
+               f"than {PIXEL_TARGET_SLACK:g} (worst {worst:+.4f})")
+
+    # The marginal variant, charged with the same quantity, is nowhere near
+    # it: the all-class threshold under-covers the critical classes at the
+    # PIXEL level too, so the region-level failure reported in the article is
+    # not an artifact of having moved to regions.
+    mg = cell[cell["method"] == "lac_global"]
+    short = float((mg["pix"] - mg["alpha"]).min()) if len(mg) else float("nan")
+    truth(99, "the marginal LAC threshold misses the critical classes' pixels "
+              "as well, not only their regions",
+          bool(len(mg)) and short > MARGINAL_PIXEL_EXCESS,
+          f"{len(mg)} cells, smallest excess over the level {short:+.4f}; "
+          f"pixel FNR spans {mg['pix'].min():.3f}-{mg['pix'].max():.3f}"
+          if len(mg) else "no lac_global cell")
+
+    # And it stays far from the pixel-CRC row in region loss, which is what
+    # makes the two LAC variants worth reporting separately.
+    key = ["model", "alpha", "rho"]
+    gap = (mg.set_index(key)["reg"]
+           - cell[cell["method"] == "pixel_crc"].set_index(key)["reg"]).dropna()
+    truth(99, "marginal LAC stays far above the pixel-CRC row in region loss",
+          bool(len(gap)) and float(gap.min()) > MARGINAL_REGION_SEPARATION,
+          f"{len(gap)} cells, smallest separation {float(gap.min()):+.4f}"
+          if len(gap) else "no comparable cell")
 
 
 def section_ablations():
