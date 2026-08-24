@@ -69,10 +69,14 @@ echo "############ 3. MARIDA annotation confidence"
 # smallest, which is where the residual risk sits. Reports the composition and
 # the region miss rate restricted to components carrying a High-confidence
 # pixel.
+# --out-stem on the second call: the stem does not carry the model name, so
+# both runs left at the default would write the same two files and the
+# ensemble would overwrite the single model without a word.
 python scripts/26_marida_confidence.py
 python scripts/26_marida_confidence.py \
     --model marida_unet_official_holdout_ens5 \
-    --experiment h1_official__marida_unet_official_holdout_ens5
+    --experiment h1_official__marida_unet_official_holdout_ens5 \
+    --out-stem x11_marida_confidence__ens5
 
 echo "############ 4. triage: a permutation band, not just an expectation"
 # Five of the six triage settings are single partitions with one realized

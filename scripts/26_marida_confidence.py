@@ -80,14 +80,24 @@ through ``curve_row`` (a row index into ``coverage_curves.npy``, offset per
 dataset key exactly as stage 5's ``TableStore`` does), and components are mapped
 to images through ``image_row`` / ``component_image_rows``.
 
-Writes ``results/experiments/x11_marida_confidence.json`` (committed; every
-number the article would quote) and
-``results/experiments/x11_marida_confidence__components.csv`` (one row per
-component, so the whole analysis is re-derivable without the rasters).
+Writes ``results/experiments/<stem>.json`` (committed; every number the
+article would quote) and ``results/experiments/<stem>__components.csv`` (one
+row per component, so the whole analysis is re-derivable without the
+rasters), where ``<stem>`` is ``--out-stem``, by default
+``x11_marida_confidence``.
+
+Pass ``--out-stem`` whenever this stage is run for a second model. The stem
+does not carry the model name on its own, so two runs left at the default
+would write the same two files and the second would overwrite the first
+without saying so.
 
 Example
 -------
     python scripts/26_marida_confidence.py
+    python scripts/26_marida_confidence.py \
+        --model marida_unet_official_holdout_ens5 \
+        --experiment h1_official__marida_unet_official_holdout_ens5 \
+        --out-stem x11_marida_confidence__ens5
 """
 
 from __future__ import annotations
@@ -505,6 +515,11 @@ def parse_args() -> argparse.Namespace:
                         help="risk levels the paper reports")
     parser.add_argument("--rhos", nargs="+", type=float, default=[0.1, 0.5],
                         help="capture levels the paper reports")
+    parser.add_argument("--out-stem", default="x11_marida_confidence",
+                        help="output file stem under results/experiments; the "
+                             "default does not carry the model name, so a "
+                             "second model must be given its own stem or it "
+                             "overwrites the first run's two files")
     parser.add_argument("--confidence-codes", default="1,2,3",
                         help="raster codes for High,Moderate,Low in that order; "
                              "the default follows the MARIDA reference "
@@ -568,6 +583,9 @@ def main() -> int:
         "confidence_codes": codes,
         "confidence_source": "per-polygon 'conf' attribute of the MARIDA "
                              "shapefiles, distributed rasterized as *_conf.tif",
+        "model": args.model,
+        "scheme": args.scheme,
+        "out_stem": args.out_stem,
         "n_components": n_total,
         "n_debris_patches": int(frame["image_id"].nunique()),
         "pixels_by_confidence": pixels,
@@ -586,8 +604,8 @@ def main() -> int:
     }
 
     out_dir = results_dir("experiments")
-    json_path = out_dir / "x11_marida_confidence.json"
-    csv_path = out_dir / "x11_marida_confidence__components.csv"
+    json_path = out_dir / f"{args.out_stem}.json"
+    csv_path = out_dir / f"{args.out_stem}__components.csv"
     json_path.write_text(json.dumps(summary, indent=1) + "\n", encoding="utf-8")
     frame.to_csv(csv_path, index=False)
 
