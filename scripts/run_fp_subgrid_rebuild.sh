@@ -11,9 +11,9 @@
 # WHAT CHANGED. FP_SUBGRID_INDICES is now dense from index 960 upward (80 points
 # instead of 41), and the driver takes the largest subgrid index at or below the
 # calibrated one rather than the nearest. The cached per-image statistics carry
-# the old 41-column array, so stage 4 must be rerun before stage 5 can read the
-# column; stage 5 now refuses to run against a stale cache rather than reading
-# the wrong slot.
+# the old 41-column array. Stage 5 does not refuse such a cache -- it warns and
+# writes NaN into fp_components_per_image -- so skipping this rebuild costs the
+# column rather than stopping the run.
 #
 # COST. Stage 4 reads the cached posteriors written by stage 3. There is no
 # model inference here: it is a CPU pass over the existing cache, dominated by
@@ -24,11 +24,20 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-echo ">>> stage 4: Cityscapes region tables on the densified subgrid"
+echo ">>> stage 4: region tables on the densified subgrid"
+# Every dataset any later step reads has to be rebuilt, not just the one the
+# in-distribution block uses: the sequence-disjoint tier-A runs read the ACDC
+# tables, and a table left on the old subgrid yields an all-NaN column and a
+# warning rather than an error.
 for KEY in segformer_b2_cityscapes segformer_b5_cityscapes \
            mask2former_swinb_cityscapes segformer_b2_cityscapes_mcdrop8; do
   python scripts/04_build_region_tables.py \
     --model "$KEY" --datasets cityscapes_val --force
+done
+for C in fog night rain snow; do
+  python scripts/04_build_region_tables.py \
+    --model segformer_b2_cityscapes \
+    --datasets "acdc_${C}_train" "acdc_${C}_val" --force
 done
 
 echo ">>> stage 5: in-distribution runs (the only ones that reported the column)"
