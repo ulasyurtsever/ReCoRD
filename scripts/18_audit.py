@@ -588,6 +588,11 @@ def _lac_classcond_and_pixel_fnr():
                   f"{len(shared)} cells; largest region-FNR gap {float(dreg.max()):.4f}, "
                   f"largest area gap {float(darea.max()):.4f}, against a "
                   f"{LAC_PIXEL_GAP:g} margin")
+            # The two gaps the section prints, to the precision it prints them.
+            near(98, "largest class-conditional / pixel-CRC region-FNR gap",
+                 0.002, float(dreg.max()), tol=5e-4)
+            near(98, "largest class-conditional / pixel-CRC marked-area gap",
+                 0.028, float(darea.max()), tol=5e-4)
 
     has_px = "realized_pixel_fnr" in raw.columns
     if asked_px:
@@ -662,6 +667,30 @@ def _pixel_target_checks(px):
           bool(len(gap)) and float(gap.min()) > MARGINAL_REGION_SEPARATION,
           f"{len(gap)} cells, smallest separation {float(gap.min()):+.4f}"
           if len(gap) else "no comparable cell")
+
+    # The per-level values Section IV-B prints. The realized pixel FNR does
+    # not depend on rho, so one number per (method, level) is the whole claim.
+    by_level = cell.groupby(["method", "alpha"])["pix"].mean()
+    for alpha, want in ((0.05, 0.46), (0.10, 0.67), (0.20, 0.88)):
+        near(100, f"marginal LAC pixel FNR on the critical class at alpha={alpha:g}",
+             want, float(by_level[("lac_global", alpha)]), tol=5e-3)
+    excess = [float(by_level[("lac_global", a)] - a) for a in (0.05, 0.10, 0.20)]
+    rng_claim(100, "the marginal excess over the level spans 0.41-0.68",
+              0.41, 0.68, excess, tol=5e-3)
+    for alpha, want in ((0.05, 0.005), (0.10, 0.060), (0.20, 0.188)):
+        near(100, f"class-conditional LAC pixel FNR at alpha={alpha:g}",
+             want, float(by_level[("lac_classcond", alpha)]), tol=5e-4)
+
+    # What Table II prints: the alpha=0.2 rows, rounded as the table rounds.
+    tab = cell[np.isclose(cell["alpha"], 0.20)]
+    key = ["model", "rho"]
+    cc = tab[tab["method"] == "lac_classcond"].set_index(key)
+    px = tab[tab["method"] == "pixel_crc"].set_index(key)
+    shared = cc.index.intersection(px.index)
+    dprint = (cc.loc[shared, "reg"].round(3) - px.loc[shared, "reg"].round(3)).abs()
+    truth(100, "as printed in Table II the two rows agree to 0.002 in FNR",
+          bool(len(shared)) and float(dprint.max()) <= 0.002 + 1e-12,
+          f"{len(shared)} printed cells, largest printed gap {float(dprint.max()):.3f}")
 
 
 def section_ablations():
