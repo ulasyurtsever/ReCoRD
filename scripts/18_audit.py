@@ -921,6 +921,9 @@ def section_tier_a():
 # --------------------------------------------------------------------------
 # J. tier B
 # --------------------------------------------------------------------------
+
+    _seqdisjoint_tier_a_claims()
+
 def section_tier_b():
     head("J  Tier B and the clip window")
     tb = load("e4_tierB*")
@@ -1051,6 +1054,210 @@ def section_tier_b():
 # --------------------------------------------------------------------------
 # K/L. LoveDA and MARIDA
 # --------------------------------------------------------------------------
+
+    _tierb_test_charge_claims()
+
+def _seqdisjoint_tier_a_claims():
+    """Section IV-E: tier A with whole driving sequences held out.
+
+    The paragraph claims the recovery is not proximity within a drive. The
+    checks are the cells that carry a feasible draw under both schemes, and
+    the three quantities the text prints from them.
+    """
+    paths = sorted(glob.glob(str(results_dir("experiments")
+                                 / "x13_tierA25_seqdisjoint__*.csv")))
+    if not paths:
+        note(245, "sequence-disjoint tier A not run",
+             "run scripts/28_acdc_sequence_schemes.py and the stage-5 arm")
+        return
+
+    def cells(pattern):
+        frames = []
+        for path in sorted(glob.glob(str(results_dir("experiments") / pattern))):
+            f = pd.read_csv(path)
+            f["experiment"] = os.path.basename(path)[:-4]
+            frames.append(f)
+        d = pd.concat(frames, ignore_index=True)
+        d = d[d["method"] == "region_crc"].copy()
+        d["cond"] = d["experiment"].str.extract(r"__(fog|night|rain|snow)__")[0]
+        f = feas(d)
+        g = (f.groupby(["cond", "alpha", "rho", "class_name"])
+              [["region_fnr", "marked_area_fraction"]].mean()
+              .groupby(["cond", "alpha", "rho"]).mean())
+        return g
+
+    sq = cells("x13_tierA25_seqdisjoint__*.csv")
+    pub = cells("e3_tierA25__*segformer_b2_cityscapes.csv")
+    j = pub.join(sq, lsuffix="_pub", rsuffix="_sq", how="inner")
+    truth(245, "eighteen tier-A cells carry a feasible draw under both schemes",
+          len(j) == 18, f"{len(j)} cells")
+
+    lev = j.index.get_level_values("alpha").values
+    over = int((j["region_fnr_sq"].values > lev).sum())
+    truth(245, "no sequence-disjoint cell exceeds its level", over == 0,
+          f"{over} of {len(j)} cells above the level; worst "
+          f"{float(j['region_fnr_sq'].max()):.4f}")
+    near(246, "largest published tier-A cell at n_t=25", 0.113,
+         float(j["region_fnr_pub"].max()), tol=5e-4)
+    near(246, "largest sequence-disjoint cell at n_t=25", 0.127,
+         float(j["region_fnr_sq"].max()), tol=5e-4)
+    move = j["region_fnr_sq"] - j["region_fnr_pub"]
+    near(246, "largest single movement in region FNR", 0.055,
+         float(move.max()), tol=5e-4)
+    truth(246, "the largest movement is on snow at alpha=0.2, rho=0.5",
+          move.idxmax() == ("snow", 0.20, 0.5), str(move.idxmax()))
+    area = j["marked_area_fraction_sq"] - j["marked_area_fraction_pub"]
+    truth(247, "marked area is smaller in fourteen of the eighteen cells",
+          int((area < 0).sum()) == 14, f"{int((area < 0).sum())} of {len(area)}")
+    truth(247, "the largest area reduction is at most 0.17",
+          float(-area.min()) <= 0.175,
+          f"largest reduction {float(-area.min()):.4f} at {area.idxmin()}")
+
+
+def _marida_confidence_claims():
+    """Section IV-H: MARIDA annotation confidence.
+
+    The pixel split is checked against MARIDA's own published total of 3399
+    annotated debris pixels, so a change in how the rasters are read shows up
+    as a disagreement with the source rather than as a new number.
+    """
+    path = results_dir("experiments") / "x11_marida_confidence.json"
+    if not path.exists():
+        note(250, "MARIDA confidence layer not read",
+             "run scripts/26_marida_confidence.py")
+        return
+    with open(path) as f:
+        d = json.load(f)
+    px = d["pixels_by_confidence"]
+    truth(250, "3399 annotated debris pixels, 1625 High / 1235 Moderate / 539 Low",
+          (px["high"], px["moderate"], px["low"]) == (1625, 1235, 539)
+          and sum(px.values()) == 3399,
+          f"{px}, total {sum(px.values())}")
+    truth(250, "1330 debris components over 373 patches",
+          (d["n_components"], d["n_debris_patches"]) == (1330, 373),
+          f"{d['n_components']} components, {d['n_debris_patches']} patches")
+    near(250, "44.4% of components carry at least one High pixel",
+         0.444, float(d["frac_any_high"]), tol=5e-4)
+
+    rows = {(round(r["alpha"], 2), round(r["rho"], 1)): r
+            for r in d["official_split_operating_points"]}
+    r = rows[(0.20, 0.5)]
+    truth(251, "158 of the 223 official test components carry no High pixel",
+          (r["n_test_components_no_high"], r["n_test_components"]) == (158, 223),
+          f"{r['n_test_components_no_high']} of {r['n_test_components']}")
+    near(251, "single model at alpha=0.2: miss rate on any-High components",
+         0.123, float(r["miss_rate_component_avg_any_high"]), tol=5e-4)
+    near(251, "single model at alpha=0.2: miss rate on no-High components",
+         0.184, float(r["miss_rate_component_avg_no_high"]), tol=5e-4)
+    r5 = rows[(0.05, 0.5)]
+    near(251, "single model at alpha=0.05: any-High", 0.046,
+         float(r5["miss_rate_component_avg_any_high"]), tol=5e-4)
+    near(251, "single model at alpha=0.05: no-High", 0.076,
+         float(r5["miss_rate_component_avg_no_high"]), tol=5e-4)
+    truth(251, "the no-High group is missed more often at every level",
+          all(rows[(a, 0.5)]["miss_rate_component_avg_no_high"]
+              > rows[(a, 0.5)]["miss_rate_component_avg_any_high"]
+              for a in (0.05, 0.10, 0.20)),
+          "; ".join(f"a={a}: {rows[(a,0.5)]['miss_rate_component_avg_any_high']:.3f}"
+                    f" vs {rows[(a,0.5)]['miss_rate_component_avg_no_high']:.3f}"
+                    for a in (0.05, 0.10, 0.20)))
+
+    ens = results_dir("experiments") / "x11_marida_confidence__ens5.json"
+    if ens.exists():
+        with open(ens) as f:
+            e = json.load(f)
+        er = {(round(r["alpha"], 2), round(r["rho"], 1)): r
+              for r in e["official_split_operating_points"]}[(0.20, 0.5)]
+        near(251, "ensemble at alpha=0.2: any-High", 0.169,
+             float(er["miss_rate_component_avg_any_high"]), tol=5e-4)
+        near(251, "ensemble at alpha=0.2: no-High", 0.247,
+             float(er["miss_rate_component_avg_no_high"]), tol=5e-4)
+    else:
+        note(251, "the ensemble confidence run is missing",
+             "rerun stage 26 with --out-stem x11_marida_confidence__ens5")
+
+    sz = d["size_by_any_high"]
+    truth(252, "both confidence groups have a median size of two pixels",
+          sz["any_high"]["size_px_median"] == 2.0
+          and sz["no_high"]["size_px_median"] == 2.0,
+          f"any-High {sz['any_high']['size_px_median']}, "
+          f"no-High {sz['no_high']['size_px_median']}")
+    near(252, "49.6% of no-High components are a single pixel",
+         0.496, float(sz["no_high"]["frac_size_eq_1"]), tol=5e-4)
+    near(252, "26.1% of any-High components are a single pixel",
+         0.261, float(sz["any_high"]["frac_size_eq_1"]), tol=5e-4)
+    near(252, "93.5% of no-High components are three pixels or fewer",
+         0.935, float(sz["no_high"]["frac_size_le_3"]), tol=5e-4)
+    near(252, "69.8% of any-High components are three pixels or fewer",
+         0.698, float(sz["any_high"]["frac_size_le_3"]), tol=5e-4)
+
+
+def _tierb_test_charge_claims():
+    """Section IV-F: charging the test point its own estimated weight.
+
+    The paragraph rests on two measurements -- that the four arms agree
+    exactly, and that they agree because every target weight is already at
+    the ceiling. Both are checked, because the second is what licenses the
+    sentence saying the ceiling IS the estimate rather than a bound on it.
+    """
+    paths = sorted(glob.glob(str(results_dir("experiments")
+                                 / "x10_tierb_test_charge__*.csv")))
+    if not paths:
+        note(240, "tier-B test-charge arms not computed",
+             "run scripts/25_tierb_test_charge.py")
+        return
+    frames = []
+    for path in paths:
+        f = pd.read_csv(path)
+        f["source"] = os.path.basename(path)[:-4]
+        frames.append(f)
+    d = pd.concat(frames, ignore_index=True)
+
+    key = ["source", "condition", "kappa", "c_low", "alpha", "rho", "seed",
+           "class_name"]
+    worst, compared = 0.0, 0
+    for col in ("region_fnr", "marked_area_fraction", "frac_informative"):
+        piv = d.pivot_table(index=key, columns="arm", values=col)
+        base = piv["published/ceiling"]
+        for arm in piv.columns:
+            if arm == "published/ceiling":
+                continue
+            diff = (piv[arm] - base).abs()
+            worst = max(worst, float(diff.max()))
+            compared += int(diff.notna().sum())
+    truth(240, "charging the test point its own weight changes nothing: the "
+               "four arms agree to machine zero",
+          worst == 0.0,
+          f"{compared} cell comparisons over three metrics, largest "
+          f"|difference| {worst:.3e}")
+
+    cells = d.groupby(["source", "condition", "kappa"]).size()
+    truth(240, "eighteen condition-clip cells, twelve on ACDC and six on LoveDA",
+          len(cells) == 18
+          and sum(1 for k in cells.index if "segformer_b2_cityscapes" in k[0]) == 12,
+          f"{len(cells)} cells: " + ", ".join(sorted({k[0].split('__')[-1] for k in cells.index})))
+
+    truth(241, "the median target weight equals kappa in every cell",
+          bool(np.allclose(d["tgt_w_median"], d["kappa"])),
+          f"largest |median - kappa| "
+          f"{float((d['tgt_w_median'] - d['kappa']).abs().max()):.3e}")
+
+    acdc = d[d["source"].str.contains("segformer_b2_cityscapes")]
+    love = d[~d["source"].str.contains("segformer_b2_cityscapes")]
+    near(241, "fraction of ACDC target images at the ceiling", 1.000,
+         float(acdc["tgt_frac_ceiling"].min()), tol=5e-4)
+    rng_claim(241, "fraction of LoveDA target images at the ceiling",
+              0.991, 1.000, [float(love["tgt_frac_ceiling"].min()),
+                             float(love["tgt_frac_ceiling"].max())], tol=5e-4)
+    truth(241, "no target image reaches the floor",
+          float(d["tgt_frac_floor"].max()) == 0.0,
+          f"largest floor fraction {float(d['tgt_frac_floor'].max()):.3e}")
+    truth(241, "every source weight is at the floor",
+          bool(np.allclose(d["cal_w_median"], d["c_low"])),
+          f"source median in [{d['cal_w_median'].min():.4f}, "
+          f"{d['cal_w_median'].max():.4f}]")
+
+
 def section_loveda():
     head("K  LoveDA")
     try:
@@ -1345,6 +1552,9 @@ def section_marida():
 # --------------------------------------------------------------------------
 # M. triage
 # --------------------------------------------------------------------------
+
+    _marida_confidence_claims()
+
 def section_triage():
     head("M  Budgeted human review")
     tr = load_triage("x3_*_triage")
