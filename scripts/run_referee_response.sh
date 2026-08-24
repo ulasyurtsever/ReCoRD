@@ -20,7 +20,12 @@ cd "$(dirname "$0")/.."
 export PYTHONPATH="src:${PYTHONPATH:-}"
 
 echo "############ 1. rebuild the region tables on the densified FP subgrid"
-bash scripts/run_fp_subgrid_rebuild.sh
+# SKIP_AUDIT: the rebuild script ends with an audit when it is run on its own.
+# Here it must not: steps 2 to 6 have not produced their outputs yet, so that
+# audit reads a half-updated directory, and under `set -e` its non-zero exit
+# would kill this driver at step 1 -- which is exactly what happened on the
+# first attempt. Step 8 is the audit that counts.
+SKIP_AUDIT=1 bash scripts/run_fp_subgrid_rebuild.sh
 
 echo "############ 2. tier B: is the vacuity the ceiling's fault?"
 # Charges the test point its own estimated weight instead of the ceiling, and
@@ -105,10 +110,18 @@ echo "############ 6. sequence-disjoint tier A on ACDC"
 # The published tier-A schemes draw target labels from the same driving
 # sequences they are tested on: at n_t=25, 91-96% of test frames share a
 # sequence with a calibration frame. These schemes hold whole sequences out.
+#
+# The runs are named x13_, NOT e3_. They are a separate, deliberately
+# pessimistic arm, and every consumer of the published tier-A numbers selects
+# it by the e3 prefix -- scripts/18_audit.py globs "e3_tierA*" and the tables
+# filter on block == "e3". Naming these e3_tierA25_seqdisjoint__* put them
+# inside those selections: the published tier-A cell count went from 648 to
+# 694 and the class-balanced means moved, which is how the first run was
+# caught. An arm that answers a different question needs a block of its own.
 python scripts/28_acdc_sequence_schemes.py
 for C in fog night rain snow; do
   python scripts/05_run_experiments.py \
-      --name "e3_tierA25_seqdisjoint__${C}__segformer_b2_cityscapes" \
+      --name "x13_tierA25_seqdisjoint__${C}__segformer_b2_cityscapes" \
       --model segformer_b2_cityscapes \
       --scheme "acdc_${C}_targetcal25_seqdisjoint" \
       --cal-datasets "acdc_${C}_train" "acdc_${C}_val" \

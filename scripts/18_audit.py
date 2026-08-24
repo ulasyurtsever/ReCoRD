@@ -50,6 +50,11 @@ TOL = 5e-4          # a printed three-decimal value must agree to half a unit
 # nominal level before it stops being sampling noise. Used only where the
 # claim is that a method lands ON its target, not that it never exceeds it.
 PIXEL_TARGET_SLACK = 0.02
+# How close the class-conditional LAC row has to sit to the pixel-CRC row
+# before the two count as the same operating point. Wide enough for the
+# threshold grid to land a step apart, far narrower than the gap to the
+# marginal LAC row, which is above 0.7.
+LAC_PIXEL_GAP = 0.05
 N_FAIL = 0
 N_OK = 0
 N_NOTE = 0
@@ -560,16 +565,39 @@ def _lac_classcond_and_pixel_fnr():
              "the table row is written the moment the rows exist")
 
     if not cc.empty:
-        # The point of the arm: given its own class's pixel target, LAC still
-        # misses regions. If it did not, the paper's comparison would be an
-        # artifact of which pixels set the threshold.
-        per = sel(cc).groupby(["model", "alpha", "rho"])["region_fnr"].mean()
-        v = [val for (m, a, rh), val in per.items()
-             if abs(a - 0.2) < 1e-9 and abs(rh - 0.5) < 1e-9]
-        truth(98, "class-conditional LAC still misses regions at alpha=0.2, rho=0.5",
-              bool(v) and min(v) > 0.20,
-              f"region FNR {min(v):.3f}-{max(v):.3f} over models" if v
-              else "no alpha=0.2, rho=0.5 cell")
+        # What the arm actually shows, measured rather than hoped for: given
+        # its own class's pixel-coverage target, class-conditional LAC lands
+        # on the pixel-CRC row. That is the honest answer to the referee --
+        # the fair version of LAC is the pixel baseline the article already
+        # reports -- and it is a sharper statement than "it still misses
+        # regions", which is true of the pixel baseline too and would pass
+        # even if the two rows were far apart.
+        def _cell(method):
+            f = sel(raw[raw["method"] == method], alpha=0.20, rho=0.5)
+            g = feas(f).groupby("model")["region_fnr"].mean()
+            return g
+
+        cc_cell, px_cell = _cell("lac_classcond"), _cell("pixel_crc")
+        shared = sorted(set(cc_cell.index) & set(px_cell.index))
+        if not shared:
+            fail(98, "no model has both a class-conditional LAC and a pixel-CRC "
+                     "cell at alpha=0.2, rho=0.5")
+        else:
+            gaps = {m: float(cc_cell[m] - px_cell[m]) for m in shared}
+            worst = max(abs(v) for v in gaps.values())
+            truth(98, "class-conditional LAC coincides with pixel CRC "
+                      "at alpha=0.2, rho=0.5",
+                  worst <= LAC_PIXEL_GAP,
+                  f"largest gap {worst:.4f} over {len(shared)} model(s): "
+                  + ", ".join(f"{m} {gaps[m]:+.4f}" for m in shared))
+            # And the marginal variant must stay far away, or the comparison
+            # in the article has lost its subject.
+            mg = _cell("lac_global")
+            mshared = sorted(set(mg.index) & set(px_cell.index))
+            sep = min((float(mg[m] - px_cell[m]) for m in mshared), default=0.0)
+            truth(98, "marginal LAC stays far from the pixel row",
+                  bool(mshared) and sep > 0.5,
+                  f"smallest gap {sep:+.4f} over {len(mshared)} model(s)")
 
     has_px = "realized_pixel_fnr" in raw.columns
     if asked_px:
@@ -781,9 +809,27 @@ def section_breakdown():
 # --------------------------------------------------------------------------
 # I. tier A
 # --------------------------------------------------------------------------
+# Experiment-name fragments that must never appear inside the published
+# tier-A selection. Each one names a separate arm that answers a different
+# question; averaged into the published cells it moves them silently.
+TIER_A_FOREIGN = ("seqdisjoint",)
+
+
 def section_tier_a():
     head("I  Tier A recalibration")
     a = load("e3_tierA*")
+    # A new arm named into the e3 block would be swept in here and into the
+    # tables, which filter on block == "e3". That happened once, with
+    # e3_tierA25_seqdisjoint__*: 648 published cells became 694 and the
+    # class-balanced means moved. Catch it by name rather than by noticing
+    # the numbers drifted.
+    foreign = sorted({e for e in a.experiment.unique()
+                      if any(tok in e for tok in TIER_A_FOREIGN)})
+    truth(139, "the published tier-A selection holds no foreign arm",
+          not foreign,
+          f"{len(foreign)} foreign experiment(s) inside 'e3_tierA*': "
+          f"{', '.join(foreign)}; rename them out of the e3 block"
+          if foreign else f"{a.experiment.nunique()} experiments, all published tier A")
     a["n_target"] = pd.to_numeric(a.experiment.str.extract(r"tierA(\d+)")[0])
     r = sel(a, method="region_crc")
 

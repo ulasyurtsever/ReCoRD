@@ -29,7 +29,8 @@ Columns worth naming
   off the test set. For ``region_crc`` this is the (possibly size-weighted)
   region loss; for every other method it is the region loss on the
   ``--loss region`` definition. Its meaning is unchanged by ``--measure-pixel-fnr``.
-- ``realized_pixel_fnr`` : present only with ``--measure-pixel-fnr``. The
+- ``realized_pixel_fnr`` : present only with ``--measure-pixel-fnr``, on the
+                     ``pixel_crc``, ``region_crc`` and both ``lac_*`` rows. The
   pixel-level false-negative rate actually attained on the test set at the
   selected threshold, averaged over test images with ground-truth pixels of
   the class, for ``pixel_crc`` and ``region_crc``. This is the measurement
@@ -605,6 +606,21 @@ def run_shared(records, triage_records, cal_store, test_store, cal_rows,
                                    tuple(args.triage_rankings))
 
 
+def _lac_pixel_fnr(args, tv, test_rows, col) -> dict:
+    """The realized pixel FNR of a LAC threshold, when it was asked for.
+
+    The LAC rows are the ones the referee's objection is about -- a threshold
+    set by a pixel-coverage target, then charged with region loss -- so they
+    are the rows where the pixel quantity most needs to be on the record.
+    They are built here rather than in the main record path, which is why the
+    column was NaN on exactly these rows in the first run.
+    """
+    if not getattr(args, "measure_pixel_fnr", False):
+        return {}
+    return {"realized_pixel_fnr":
+            float(np.nanmean(tv["pixel_fnr"][test_rows][:, col]))}
+
+
 def run_lac(records, cal_store, test_store, cal_rows, test_rows, seed_key,
             args):
     """LAC baselines: pixel-coverage thresholds scored on region metrics.
@@ -661,7 +677,8 @@ def run_lac(records, cal_store, test_store, cal_rows, test_rows, seed_key,
                         seed=seed_key, class_name=class_name, alpha=alpha,
                         rho=rho, method="lac_global", model=args.model,
                         scheme=args.scheme,
-                        n_cal_images=int(cal_def_mask.sum())))
+                        n_cal_images=int(cal_def_mask.sum()),
+                        **_lac_pixel_fnr(args, tv, test_rows, col)))
 
     if "class_conditional" in args.lac_variants:
         if cal_store.lac_by_class is None:
@@ -704,7 +721,8 @@ def run_lac(records, cal_store, test_store, cal_rows, test_rows, seed_key,
                         seed=seed_key, class_name=class_name, alpha=alpha,
                         rho=rho, method="lac_classcond", model=args.model,
                         scheme=args.scheme,
-                        n_cal_images=int(cal_def_mask.sum())))
+                        n_cal_images=int(cal_def_mask.sum()),
+                        **_lac_pixel_fnr(args, tv, test_rows, col)))
 
 
 UNDEFINED_RECORD = {

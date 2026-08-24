@@ -99,6 +99,18 @@ def _make_lac_curves(results_root: Path) -> None:
             curves.astype(np.float16))
 
 
+def _make_lac_class_curves(results_root: Path) -> None:
+    """Per-class LAC miscoverage, the table the class-conditional variant reads."""
+    from record.grid import LAMBDA_GRID
+
+    start = RNG.uniform(0.2, 0.9, size=(N_IMAGES, len(CLASS_NAMES)))
+    curves = start[:, :, None] * (1.0 - LAMBDA_GRID[None, None, :])
+    np.savez_compressed(
+        results_root / "raw" / MODEL / DATASET / "lac_miscoverage_by_class.npz",
+        curves=curves.astype(np.float16),
+        class_names=np.array(CLASS_NAMES))
+
+
 def _make_embeddings(cache_root: Path) -> None:
     out = cache_root / "synthetic_emb" / DATASET
     out.mkdir(parents=True)
@@ -123,6 +135,7 @@ def synthetic_env(tmp_path, monkeypatch):
     monkeypatch.setenv("RECORD_CACHE_ROOT", str(cache_root))
     _make_stage4_tables(results_root)
     _make_lac_curves(results_root)
+    _make_lac_class_curves(results_root)
     _make_scheme(splits_root)
     _make_embeddings(cache_root)
     return results_root
@@ -265,6 +278,37 @@ def test_stage5_size_weighted_loss(synthetic_env):
     assert frame["feasible"].all()
     # The calibrated (size-weighted) risk respects the level on average.
     assert frame["controlled_risk"].mean() <= 0.2 + 0.1
+
+
+def test_stage5_measure_pixel_fnr_covers_the_lac_rows(synthetic_env):
+    """--measure-pixel-fnr must fill the column on the LAC rows too.
+
+    The first server run produced it on pixel_crc and region_crc and left it
+    NaN on lac_global and lac_classcond -- exactly the rows the referee's
+    question is about -- because run_lac builds its records separately from
+    the main record path.
+    """
+    frame = _run_stage5(synthetic_env, "lac_pixfnr_run", [
+        "--scheme", "synthetic_half",
+        "--methods", "lac_global", "region_crc", "pixel_crc",
+        "--lac-variants", "marginal", "class_conditional",
+        "--measure-pixel-fnr"])
+    assert "realized_pixel_fnr" in frame.columns
+    expected = {"lac_global", "lac_classcond", "region_crc", "pixel_crc"}
+    assert set(frame["method"]) == expected
+    for method in sorted(expected):
+        col = frame.loc[frame["method"] == method, "realized_pixel_fnr"]
+        assert col.notna().all(), f"{method}: {col.isna().sum()} NaN of {len(col)}"
+        assert col.between(0, 1).all()
+
+
+def test_stage5_lac_variants_are_labelled_apart(synthetic_env):
+    frame = _run_stage5(synthetic_env, "lac_variants_run", [
+        "--scheme", "synthetic_half", "--methods", "lac_global",
+        "--lac-variants", "marginal", "class_conditional"])
+    counts = frame["method"].value_counts().to_dict()
+    assert set(counts) == {"lac_global", "lac_classcond"}
+    assert counts["lac_global"] == counts["lac_classcond"]
 
 
 def test_stage5_lac_global(synthetic_env):
