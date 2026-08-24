@@ -46,6 +46,10 @@ def paths_root():
     return results_dir('tables').parent.parent
 
 TOL = 5e-4          # a printed three-decimal value must agree to half a unit
+# How far the realized test risk of a conformal threshold may sit above its
+# nominal level before it stops being sampling noise. Used only where the
+# claim is that a method lands ON its target, not that it never exceeds it.
+PIXEL_TARGET_SLACK = 0.02
 N_FAIL = 0
 N_OK = 0
 N_NOTE = 0
@@ -581,12 +585,30 @@ def _lac_classcond_and_pixel_fnr():
         if px.empty:
             fail(99, "realized_pixel_fnr is all-NaN on the LAC rows")
         else:
-            over = px[px["realized_pixel_fnr"] > px["alpha"] + TOL]
-            truth(99, "LAC meets its own pixel target while missing regions",
+            # The claim under test is qualitative and large: LAC lands near
+            # its pixel target while missing most regions. The margin is
+            # deliberately loose -- the realized test risk of a conformal
+            # threshold fluctuates around the level by sampling noise, so a
+            # tolerance of half a printed digit would fire on nothing but
+            # that noise. PIXEL_TARGET_SLACK is wide enough to ignore the
+            # fluctuation and far too narrow to admit a broken measurement,
+            # which would put the pixel FNR up beside the region FNR (0.8-0.96).
+            excess = (px["realized_pixel_fnr"] - px["alpha"]).max()
+            over = px[px["realized_pixel_fnr"] > px["alpha"] + PIXEL_TARGET_SLACK]
+            truth(99, "LAC lands on its own pixel target while missing regions",
                   over.empty,
-                  f"{len(px)} rows, worst realized pixel FNR "
-                  f"{px['realized_pixel_fnr'].max():.4f}" if over.empty
-                  else f"{len(over)} of {len(px)} rows exceed their alpha")
+                  f"{len(px)} rows, worst overshoot {excess:+.4f} against a "
+                  f"{PIXEL_TARGET_SLACK:g} margin" if over.empty
+                  else f"{len(over)} of {len(px)} rows exceed alpha by more "
+                       f"than {PIXEL_TARGET_SLACK:g} (worst {excess:+.4f})")
+            # The other half of the sentence: it is the region loss that is
+            # large. Without this the check above would pass on a run where
+            # LAC did well at everything, which is not what is claimed.
+            region = px["region_fnr"].dropna()
+            truth(99, "the same LAC rows miss most regions",
+                  bool(len(region)) and float(region.median()) > 0.5,
+                  f"median region FNR {float(region.median()):.3f}"
+                  if len(region) else "no region FNR on the LAC rows")
 
 
 def section_ablations():
