@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{Method comparison at $\alpha=0.2$ on Cityscapes (in-distribution), at both capture levels. LAC denotes a single global threshold tuned to an all-class pixel-coverage target, the marginal variant of the least-ambiguous set-valued classifier; the temperature-scaled rows use one scalar fitted by negative log-likelihood on the seed-0 calibration list and reused across the draws; refitting it on each draw's own list moves the tempered cells by at most $0.0007$ in FNR and $0.0002$ in area (Section~\ref{sec:exp_indist}). FNR is the mean region-miss loss over test images containing the class, averaged over the three critical classes; Area is the mean marked fraction over all test images.}
+\caption{Method comparison at $\alpha=0.2$ on Cityscapes (in-distribution), at both capture levels. The marginal LAC row is a single global threshold tuned to an all-class pixel-coverage target, the marginal variant of the least-ambiguous set-valued classifier; the temperature-scaled rows use one scalar fitted by negative log-likelihood on the seed-0 calibration list and reused across the draws; refitting it on each draw's own list moves the tempered cells by at most $0.0007$ in FNR and $0.0002$ in area (Section~\ref{sec:exp_indist}). FNR is the mean region-miss loss over test images containing the class, averaged over the three critical classes; Area is the mean marked fraction over all test images.}
 \label{tab:baselines}
 \scriptsize
 \setlength{\tabcolsep}{2.5pt}
@@ -14,7 +14,7 @@ SegFormer-B2 & Argmax & 0.586 & 0.007 & 0.676 & 0.007 \\
  & Uncorrected & 0.192 & 0.020 & 0.187 & 0.030 \\
  & Pixel CRC & 0.166 & 0.025 & 0.230 & 0.025 \\
  & Region CRC (ours) & 0.187 & 0.020 & 0.182 & 0.034 \\
- & LAC (global) & 0.871 & 0.003 & 0.958 & 0.003 \\
+ & LAC (marginal) & 0.871 & 0.003 & 0.958 & 0.003 \\
  & Uncorrected (temp.) & 0.197 & 0.020 & 0.196 & 0.024 \\
  & Region CRC (temp.) & 0.192 & 0.020 & 0.191 & 0.025 \\
 \addlinespace
@@ -22,7 +22,7 @@ SegFormer-B5 & Argmax & 0.376 & 0.007 & 0.470 & 0.007 \\
  & Uncorrected & 0.197 & 0.011 & 0.189 & 0.060 \\
  & Pixel CRC & 0.199 & 0.018 & 0.257 & 0.018 \\
  & Region CRC (ours) & 0.192 & 0.015 & 0.180 & 0.090 \\
- & LAC (global) & 0.807 & 0.003 & 0.960 & 0.003 \\
+ & LAC (marginal) & 0.807 & 0.003 & 0.960 & 0.003 \\
  & Uncorrected (temp.) & 0.197 & 0.012 & 0.197 & 0.014 \\
  & Region CRC (temp.) & 0.192 & 0.012 & 0.192 & 0.015 \\
 \addlinespace

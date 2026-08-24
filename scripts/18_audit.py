@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import glob
+import json
 import os
 import re
 
@@ -35,9 +36,9 @@ import traceback
 import numpy as np
 import pandas as pd
 
+from record.grid import FP_SUBGRID_INDICES, fp_subgrid_slot
 from record.paths import results_dir
 
-FP_SUBGRID = np.arange(0, 1001, 25)
 LAM_MAX = 1000
 
 
@@ -323,13 +324,16 @@ def section_baselines():
     # read at lambda_max, where the whole image is one component and the count
     # degenerates to the class-absence indicator. Guard against the column
     # silently returning to the text before the subgrid is fixed.
+    # The slot must never sit above the calibrated threshold. Computed with the
+    # shipped helper rather than a local copy of the subgrid, so that a change
+    # to the grid cannot leave this check certifying the old behaviour.
     for _mo in ("segformer_b2_cityscapes", "segformer_b5_cityscapes",
                 "segformer_b2_cityscapes_mcdrop8"):
         _d = sel(e1, method="region_crc", model=_mo, alpha=0.20, rho=0.5)
-        _snapped = float((np.abs(FP_SUBGRID - _d.lam_index.values[:, None])
-                          .argmin(axis=1).astype(float) * 25 > _d.lam_index.values).mean())
-        note(76, f"{_mo}: fraction of draws whose FP slot snaps UP",
-             f"{_snapped:.3f} (metric withdrawn from the text)")
+        _up = float(np.mean([FP_SUBGRID_INDICES[fp_subgrid_slot(int(_x))] > _x
+                             for _x in _d.lam_index.values]))
+        truth(76, f"{_mo}: no FP slot rounds above its calibrated threshold",
+              _up == 0.0, f"snap-up fraction {_up:.3f}")
     a_b2 = mean(sel(e1, method="region_crc", model="segformer_b2_cityscapes",
                     alpha=0.20, rho=0.5), "marked_area_fraction")
     a_b5 = mean(sel(e1, method="region_crc", model="segformer_b5_cityscapes",
@@ -510,6 +514,79 @@ def section_lac_detail():
     rng_claim(97, "LAC marked area at alpha=0.2 is 0.3% of the image",
               0.0026, 0.0027, a20)
     rng_claim(97, "LAC marked area at alpha=0.05 is 0.7-0.9%", 0.0070, 0.0090, a05)
+    _lac_classcond_and_pixel_fnr()
+
+
+def _x4_argv() -> list[dict]:
+    """The recorded argv of every x4_lac run, from the stage-5 meta sidecars."""
+    out = []
+    for path in sorted(glob.glob(str(results_dir("experiments") / "x4_lac__*.meta.json"))):
+        with open(path) as f:
+            out.append(json.load(f).get("argv", {}))
+    return out
+
+
+def _lac_classcond_and_pixel_fnr():
+    """The class-conditional LAC arm and the realized pixel FNR must be read.
+
+    Both are produced by stage 5 only when asked for, so this check has two
+    jobs. If a run recorded that it asked for them, they must be present --
+    a run that requested the arm and shipped without it is a silent hole in
+    the table, which is exactly the failure this check exists to catch. If no
+    run asked for them, that is reported as an outstanding item, not passed
+    over.
+    """
+    raw = load("x4_lac__*")
+    argv = _x4_argv()
+    asked_cc = any("class_conditional" in (a.get("lac_variants") or []) for a in argv)
+    asked_px = any(a.get("measure_pixel_fnr") for a in argv)
+
+    cc = raw[raw["method"] == "lac_classcond"]
+    if asked_cc:
+        truth(98, "class-conditional LAC rows present in x4_lac__*",
+              not cc.empty,
+              f"{len(cc)} rows" if not cc.empty
+              else "a run requested --lac-variants class_conditional but wrote no lac_classcond row")
+    elif not cc.empty:
+        truth(98, "class-conditional LAC rows present in x4_lac__*", True,
+              f"{len(cc)} rows")
+    else:
+        note(98, "class-conditional LAC arm not yet run",
+             "rerun stage 5 with --lac-variants marginal class_conditional; "
+             "the table row is written the moment the rows exist")
+
+    if not cc.empty:
+        # The point of the arm: given its own class's pixel target, LAC still
+        # misses regions. If it did not, the paper's comparison would be an
+        # artifact of which pixels set the threshold.
+        per = sel(cc).groupby(["model", "alpha", "rho"])["region_fnr"].mean()
+        v = [val for (m, a, rh), val in per.items()
+             if abs(a - 0.2) < 1e-9 and abs(rh - 0.5) < 1e-9]
+        truth(98, "class-conditional LAC still misses regions at alpha=0.2, rho=0.5",
+              bool(v) and min(v) > 0.20,
+              f"region FNR {min(v):.3f}-{max(v):.3f} over models" if v
+              else "no alpha=0.2, rho=0.5 cell")
+
+    has_px = "realized_pixel_fnr" in raw.columns
+    if asked_px:
+        truth(99, "realized_pixel_fnr column present in x4_lac__*", has_px,
+              "a run requested --measure-pixel-fnr but wrote no column"
+              if not has_px else "")
+    elif not has_px:
+        note(99, "realized pixel FNR not yet measured",
+             "rerun stage 5 with --measure-pixel-fnr")
+    if has_px:
+        lac_rows = sel(raw[raw["method"].isin(["lac_global", "lac_classcond"])])
+        px = lac_rows.dropna(subset=["realized_pixel_fnr"])
+        if px.empty:
+            fail(99, "realized_pixel_fnr is all-NaN on the LAC rows")
+        else:
+            over = px[px["realized_pixel_fnr"] > px["alpha"] + TOL]
+            truth(99, "LAC meets its own pixel target while missing regions",
+                  over.empty,
+                  f"{len(px)} rows, worst realized pixel FNR "
+                  f"{px['realized_pixel_fnr'].max():.4f}" if over.empty
+                  else f"{len(over)} of {len(px)} rows exceed their alpha")
 
 
 def section_ablations():

@@ -424,6 +424,13 @@ def main() -> int:
                              "checked against; pass the flag with no value to "
                              "skip the check, which is what a smoke test on "
                              "synthetic tables does")
+    parser.add_argument("--allow-unchecked", action="store_true",
+                        help="exit 0 even when a ceiling arm found no "
+                             "published reference to check itself against; "
+                             "without it an unchecked arm is a failure, "
+                             "because the other arms are only interpretable "
+                             "relative to a ceiling arm that has been shown "
+                             "to reproduce the published run")
     parser.add_argument("--out-name", default=None)
     args = parser.parse_args()
 
@@ -434,6 +441,7 @@ def main() -> int:
 
     rows: list[dict] = []
     references: list[dict] = []
+    unchecked: list[tuple[str, float]] = []
     for cond in args.conditions:
         test_datasets = [k.format(cond=cond)
                          for k in args.dataset_template.split(",")]
@@ -579,6 +587,7 @@ def main() -> int:
                       f"{clip}; its ceiling arm is unchecked")
                 references.append({"condition": cond, "kappa": clip[1],
                                    "reference": None, "n_rows": 0})
+                unchecked.append((cond, float(clip[1])))
                 continue
             n_rows, worst = check_reference(mine, published, name)
             unmatched = len(mine) - n_rows
@@ -596,6 +605,8 @@ def main() -> int:
     (out_dir / f"{name}.meta.json").write_text(json.dumps({
         "name": name, "argv": vars(args), "n_records": len(frame),
         "references": references,
+        "clips_without_reference": [{"condition": c, "kappa": k}
+                                    for c, k in unchecked],
         "completed_utc": datetime.now(timezone.utc).isoformat(),
     }, indent=1))
     print(f"\nwrote {path}  ({len(frame)} rows)")
@@ -632,6 +643,40 @@ def main() -> int:
           "Read the target-side ceiling fraction as an upper bound on how "
           "often the ceiling truly binds, and against the cross-fitted "
           "estimator of stage 15.")
+
+    # What the reference check has to establish is that this stage's
+    # recomputation reproduces the published procedure for a condition. That
+    # is settled by any one clip at which a published run exists; the article
+    # published a single clip for LoveDA and three for ACDC, so requiring a
+    # reference at every clip would fail on a sweep that is doing nothing
+    # wrong. A condition with no checked clip at all is the real failure: it
+    # means nothing in this table was ever tied to a published number.
+    checked_conditions = {r["condition"] for r in references if r["reference"]}
+    seen_conditions = {r["condition"] for r in references}
+    unreproduced = sorted(seen_conditions - checked_conditions)
+    if unchecked:
+        print("\n=== CLIPS WITH NO PUBLISHED COUNTERPART ===")
+        for cond, kappa in unchecked:
+            state = ("condition reproduced at another clip"
+                     if cond in checked_conditions else "CONDITION UNREPRODUCED")
+            print(f"  {cond} at kappa={kappa:g}: matched none of "
+                  f"{args.reference_templates}  [{state}]")
+
+    if unreproduced and args.reference_templates and not args.allow_unchecked:
+        print(f"\nRESULT: FAIL (no clip of {', '.join(unreproduced)} matched "
+              "a published run, so this table was never tied to the published "
+              "procedure; pass --allow-unchecked to accept this deliberately, "
+              "or --reference-templates with no value to skip the check "
+              "entirely, as a synthetic smoke test does)")
+        return 1
+    if unreproduced:
+        print(f"\nRESULT: PASS ({', '.join(unreproduced)} unreproduced, "
+              "accepted by request)")
+    else:
+        n_checked = sum(1 for r in references if r["reference"])
+        print(f"\nRESULT: PASS ({n_checked} ceiling arm(s) over "
+              f"{len(checked_conditions)} condition(s) reproduce a published "
+              f"run; {len(unchecked)} clip(s) have no published counterpart)")
     return 0
 
 

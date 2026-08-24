@@ -1,0 +1,30 @@
+\begin{table}[t]
+\centering
+\caption{In-distribution region FNR on Cityscapes, resolved per class over the 72 cells behind the class averages of Table~\ref{tab:validity_cityscapes}. No cell exceeds its level. $\ast$ marks the 26 cells where the level is met only by marking more than $99\%$ of the image, so the bound holds but the mask is uninformative. Model labels abbreviate those of Table~\ref{tab:validity_cityscapes}; means over 100 calibration draws.}
+\label{tab:perclass}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{llcccccc}
+\toprule
+Model & Class & \multicolumn{3}{c}{$\rho=0.5$} & \multicolumn{3}{c}{$\rho=0.1$} \\
+\midrule
+ & & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ \\
+\midrule
+B2 & person & 0.009 & 0.085 & 0.194 & 0.040 & 0.093 & 0.194 \\
+ & rider & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.163 & 0.000$^{\ast}$ & 0.026 & 0.174 \\
+ & bicycle & 0.000$^{\ast}$ & 0.023 & 0.189 & 0.002 & 0.085 & 0.192 \\
+\addlinespace
+B5 & person & 0.000$^{\ast}$ & 0.090 & 0.196 & 0.037 & 0.096 & 0.197 \\
+ & rider & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.149 & 0.000$^{\ast}$ & 0.005 & 0.182 \\
+ & bicycle & 0.000$^{\ast}$ & 0.067 & 0.194 & 0.003 & 0.091 & 0.197 \\
+\addlinespace
+M2F & person & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.167 \\
+ & rider & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ \\
+ & bicycle & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.005 \\
+\addlinespace
+B2-MC & person & 0.031 & 0.090 & 0.194 & 0.041 & 0.095 & 0.196 \\
+ & rider & 0.000$^{\ast}$ & 0.005 & 0.166 & 0.002 & 0.072 & 0.181 \\
+ & bicycle & 0.002 & 0.080 & 0.190 & 0.018 & 0.087 & 0.192 \\
+\bottomrule
+\end{tabular}
+\end{table}

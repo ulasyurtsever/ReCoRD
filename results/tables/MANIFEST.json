@@ -1,15 +1,18 @@
 {
  "tables": [
   "validity_cityscapes.tex",
+  "perclass.tex",
   "baselines.tex",
   "breakdown.tex",
   "tier_a.tex",
   "loveda.tex",
+  "loveda_perclass.tex",
+  "perclass_area.tex",
   "marida.tex",
   "ablations.tex"
  ],
  "rho": 0.5,
- "n_experiment_rows": 730650,
- "n_rows_at_rho": 365340,
- "completed_utc": "2026-08-23T09:13:23.228199+00:00"
+ "n_experiment_rows": 683694,
+ "n_rows_at_rho": 341847,
+ "completed_utc": "2026-08-24T01:22:39.294779+00:00"
 }

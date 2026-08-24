@@ -1,16 +1,18 @@
 {
  "tables": [
   "validity_cityscapes-rho0.tex",
+  "perclass-rho0.tex",
   "baselines-rho0.tex",
   "breakdown-rho0.tex",
   "tier_a-rho0.tex",
-  "vacuity-rho0.tex",
   "loveda-rho0.tex",
+  "loveda_perclass-rho0.tex",
+  "perclass_area-rho0.tex",
   "marida-rho0.tex",
   "ablations-rho0.tex"
  ],
  "rho": 0.1,
- "n_experiment_rows": 709128,
- "n_rows_at_rho": 354564,
- "completed_utc": "2026-08-10T19:05:05.736890+00:00"
+ "n_experiment_rows": 683694,
+ "n_rows_at_rho": 341847,
+ "completed_utc": "2026-08-24T01:22:26.806221+00:00"
 }

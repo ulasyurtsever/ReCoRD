@@ -461,19 +461,27 @@ def crosscheck_thresholds(path: Path, rows: list[dict]) -> dict:
         return {"experiment_csv": str(path), "available": False}
     frame = pd.read_csv(path)
     frame = frame[(frame["method"] == "region_crc") & (frame["seed"].astype(str) == "0")]
-    mismatches = []
+    mismatches, unmatched, n_matched = [], [], 0
     for row in rows:
         match = frame[np.isclose(frame["alpha"], row["alpha"])
                       & np.isclose(frame["rho"], row["rho"])]
         if match.empty:
+            # Not a benign skip: an operating point the paper reports has no
+            # counterpart in the committed CSV, so it is unchecked. Record it
+            # rather than quietly shrinking the comparison.
+            unmatched.append({"alpha": row["alpha"], "rho": row["rho"]})
             continue
+        n_matched += 1
         reported = int(match["lam_index"].iloc[0])
         if reported != row["lam_index"]:
             mismatches.append({"alpha": row["alpha"], "rho": row["rho"],
                                "reported_lam_index": reported,
                                "recomputed_lam_index": row["lam_index"]})
     return {"experiment_csv": str(path), "available": True,
-            "n_compared": int(len(rows)), "mismatches": mismatches}
+            "n_requested": int(len(rows)),
+            "n_compared": int(n_matched),
+            "unmatched": unmatched,
+            "mismatches": mismatches}
 
 
 # --------------------------------------------------------------------------
@@ -596,11 +604,33 @@ def main() -> int:
               f"{row['miss_rate_component_avg_any_high']:.3f} on any-High, "
               f"{row['miss_rate_component_avg_no_high']:.3f} on no-High "
               f"({row['n_test_components_no_high']}/{row['n_test_components']} components)")
-    if crosscheck.get("mismatches"):
-        print(f"WARNING: {len(crosscheck['mismatches'])} recomputed thresholds "
-              f"disagree with {crosscheck['experiment_csv']}")
     print(f"wrote {json_path}")
     print(f"wrote {csv_path}")
+
+    if not crosscheck.get("available"):
+        print(f"\nRESULT: FAIL (no experiment CSV at "
+              f"{crosscheck.get('experiment_csv')}; the recomputed thresholds "
+              "were never tied to the reported ones)")
+        return 1
+    if crosscheck.get("unmatched"):
+        for row in crosscheck["unmatched"]:
+            print(f"UNMATCHED: alpha={row['alpha']} rho={row['rho']} has no "
+                  f"row in {crosscheck['experiment_csv']}")
+        print(f"\nRESULT: FAIL ({len(crosscheck['unmatched'])} of "
+              f"{crosscheck['n_requested']} operating points unchecked)")
+        return 1
+    if crosscheck.get("mismatches"):
+        for row in crosscheck["mismatches"]:
+            print(f"MISMATCH: alpha={row['alpha']} rho={row['rho']}: "
+                  f"reported lam_index {row['reported_lam_index']} vs "
+                  f"recomputed {row['recomputed_lam_index']}")
+        print(f"\nRESULT: FAIL ({len(crosscheck['mismatches'])} recomputed "
+              f"thresholds disagree with {crosscheck['experiment_csv']}; this "
+              "stage and the reported experiment are not describing the same "
+              "operating point)")
+        return 1
+    print(f"\nRESULT: PASS ({crosscheck['n_compared']} operating points "
+          f"agree with {crosscheck['experiment_csv']})")
     return 0
 
 

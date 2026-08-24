@@ -165,21 +165,38 @@ def sequence_disjoint_split(pool, n_cal, base_seed, scheme, seed_index,
 
 
 def build_scheme(scheme_name, pool, n_cal, base_seed, n_seeds,
-                 whole_sequences=False):
-    """Build a full scheme dict plus its per-seed diagnostics."""
+                 whole_sequences=False, rng_scheme=None):
+    """Build a full scheme dict plus its per-seed diagnostics.
+
+    ``rng_scheme`` keys the draw. It defaults to ``scheme_name`` but is passed
+    separately for the ``--whole-sequences`` arm, whose file name carries a
+    ``_wholeseq`` suffix while its sequence draw must stay identical to the
+    size-matched arm's: the two rows are meant to differ only in whether the
+    consumed sequences are truncated to n_t, so they have to consume the same
+    sequences in the same order for every seed.
+    """
     seeds, diagnostics = {}, []
     for k in range(n_seeds):
         cal, test, diag = sequence_disjoint_split(
-            pool, n_cal, base_seed, scheme_name, k,
+            pool, n_cal, base_seed, rng_scheme or scheme_name, k,
             whole_sequences=whole_sequences)
         seeds[str(k)] = {"target_calibration": cal, "test": test}
         diagnostics.append(dict(diag, seed=str(k)))
+    realized = [len(seeds[str(k)]["target_calibration"]) for k in range(n_seeds)]
     scheme = {
         "schema_version": SCHEMA_VERSION,
         "scheme": scheme_name,
         "base_seed": base_seed,
         "n_items": len(pool),
-        "n_calibration": n_cal,
+        # The realized calibration size, not the requested one. Under
+        # --whole-sequences the consumed sequences are kept entire, so the
+        # size varies from seed to seed and is larger than n_cal; writing
+        # n_cal here would misdescribe every seed. When the sizes agree the
+        # field is that common value, as before.
+        "n_calibration": realized[0] if len(set(realized)) == 1 else None,
+        "n_calibration_requested": n_cal,
+        "n_calibration_per_seed": {str(k): realized[k] for k in range(n_seeds)},
+        "whole_sequences": bool(whole_sequences),
         "seeds": seeds,
     }
     return scheme, diagnostics
@@ -221,6 +238,8 @@ def main() -> int:
     conditions = args.conditions or cfg["datasets"]["acdc"]["conditions"]
     out_dir = splits_dir()
     warnings: list[str] = []
+    written: list[str] = []
+    skipped: list[tuple[str, int]] = []
 
     for cond in conditions:
         pool = acdc_ids(cond, "train", cfg) + acdc_ids(cond, "val", cfg)
@@ -242,15 +261,23 @@ def main() -> int:
             print(f"WARNING: {msg}")
 
         for n in sizes:
-            scheme_name = f"acdc_{cond}_targetcal{n}_seqdisjoint"
+            scheme_name = rng_scheme = f"acdc_{cond}_targetcal{n}_seqdisjoint"
+            if args.whole_sequences:
+                # A different scheme, not a variant of the same one: the
+                # calibration side is larger and seed-dependent. Without the
+                # suffix this run would overwrite the size-matched scheme
+                # file and its meta file under the same name.
+                scheme_name += "_wholeseq"
             try:
                 scheme, diagnostics = build_scheme(
                     scheme_name, pool, n, base_seed, n_seeds,
-                    whole_sequences=args.whole_sequences)
+                    whole_sequences=args.whole_sequences,
+                    rng_scheme=rng_scheme)
             except ValueError as exc:
                 msg = f"{scheme_name}: not written ({exc})"
                 warnings.append(msg)
                 print(f"WARNING: {msg}")
+                skipped.append((cond, n))
                 continue
 
             test_seqs = [d["n_test_sequences"] for d in diagnostics]
@@ -259,9 +286,11 @@ def main() -> int:
                        f"{min(test_seqs)} test sequence(s); scheme not written")
                 warnings.append(msg)
                 print(f"WARNING: {msg}")
+                skipped.append((cond, n))
                 continue
 
             path = write_scheme(scheme, out_dir)
+            written.append(scheme_name)
             cal_seqs = summarize([d["n_calibration_sequences"] for d in diagnostics])
             test_frames = summarize([d["n_test_frames"] for d in diagnostics])
             spent = summarize([d["n_frames_in_calibration_sequences"] for d in diagnostics])
@@ -274,6 +303,7 @@ def main() -> int:
                 "n_seeds": n_seeds,
                 "base_seed": base_seed,
                 "whole_sequences": bool(args.whole_sequences),
+                "rng_scheme_key": rng_scheme,
                 "n_pool_frames": len(pool),
                 "n_sequences": len(sequences),
                 "sequence_sizes": sizes_per_sequence,
@@ -305,6 +335,20 @@ def main() -> int:
         print("\n=== WARNINGS ===")
         for msg in warnings:
             print(f"WARNING: {msg}")
+
+    print(f"\nwrote {len(written)} scheme(s); "
+          f"{len(skipped)} (condition, size) pair(s) skipped")
+    if skipped:
+        # A skipped pair is a missing experimental arm, not a tolerable
+        # warning: the downstream stage-5 run would silently have one fewer
+        # row. Exit non-zero so a driver script stops here.
+        for cond, n in skipped:
+            print(f"NOT WRITTEN: {cond} at n_t={n}")
+        print("\nRESULT: FAIL")
+        return 1
+    if not written:
+        print("\nRESULT: FAIL (no scheme was written)")
+        return 1
     print("\nRESULT: PASS")
     return 0
 

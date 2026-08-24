@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{LoveDA in-domain region FNR resolved per class over the 24 cells behind the class averages of Table~\ref{tab:loveda}. Bold marks the 3 cells above their level; $\ast$ marks the 2 cells where the level is met only by marking more than $99\%$ of the image. Means over 100 calibration draws.}
+\label{tab:loveda_perclass}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{llcccccc}
+\toprule
+Domain & Class & \multicolumn{3}{c}{$\rho=0.5$} & \multicolumn{3}{c}{$\rho=0.1$} \\
+\midrule
+ & & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ \\
+\midrule
+Urban & building & 0.047 & 0.097 & 0.198 & 0.048 & 0.097 & 0.198 \\
+ & water & 0.037 & 0.095 & \textbf{0.201} & 0.044 & 0.100 & \textbf{0.203} \\
+\addlinespace
+Rural & building & 0.044 & 0.095 & 0.193 & 0.045 & 0.096 & 0.192 \\
+ & water & 0.000$^{\ast}$ & 0.000$^{\ast}$ & 0.196 & 0.031 & 0.096 & \textbf{0.201} \\
+\bottomrule
+\end{tabular}
+\end{table}

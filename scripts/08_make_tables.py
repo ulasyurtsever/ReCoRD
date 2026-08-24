@@ -78,7 +78,8 @@ def table_baselines(df: pd.DataFrame) -> str:
     # Baseline rows sourced from the x4/x5 runs: LAC-style global threshold
     # (pixel-coverage target) and the temperature-scaled posterior variants.
     extra_rows = [
-        ("lac_global", "", "LAC (global)"),
+        ("lac_global", "", "LAC (marginal)"),
+        ("lac_classcond", "", "LAC (class-cond.)"),
         ("heuristic", "_tempscaled", "Uncorrected (temp.)"),
         ("region_crc", "_tempscaled", "Region CRC (temp.)"),
     ]
@@ -91,6 +92,7 @@ def table_baselines(df: pd.DataFrame) -> str:
         return None if row.empty else row
 
     rows = []
+    emitted: set[str] = set()
     for model in CITYSCAPES_MODELS:
         for i, method in enumerate(methods):
             parts = [MODEL_LABELS[model] if i == 0 else "", labels[method]]
@@ -106,6 +108,7 @@ def table_baselines(df: pd.DataFrame) -> str:
                      for rho in (0.1, 0.5)}
             if all(v is None for v in found.values()):
                 continue
+            emitted.add(method)
             parts = ["", label]
             for rho in (0.1, 0.5):
                 row = found[rho]
@@ -119,12 +122,27 @@ def table_baselines(df: pd.DataFrame) -> str:
               r"\multicolumn{2}{c}{$\rho=0.5$}")
     subheader = " & & " + " & ".join(["FNR & Area"] * 2) + r" \\"
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows[:-1])
+    # The caption describes the rows that were actually written. The
+    # class-conditional LAC arm is produced only by a stage-5 run made with
+    # --lac-variants class_conditional, so its sentence appears only when its
+    # row does; describing an absent row would be a claim about nothing.
+    lac_caption = (
+        "The marginal LAC row is a single global threshold tuned to an "
+        "all-class pixel-coverage target, the marginal variant of the "
+        "least-ambiguous set-valued classifier; the class-conditional row "
+        "calibrates one threshold per critical class on that class's own "
+        "pixel miscoverage, so it is given the same class information the "
+        "method under test uses and the comparison is not decided by which "
+        "pixels set the threshold; "
+        if "lac_classcond" in emitted else
+        "The marginal LAC row is a single global threshold tuned to an "
+        "all-class pixel-coverage target, the marginal variant of the "
+        "least-ambiguous set-valued classifier; ")
     return latex_table(
         body,
         "Method comparison at $\\alpha=0.2$ on Cityscapes (in-distribution), "
-        "at both capture levels. LAC denotes a single global threshold tuned "
-        "to an all-class pixel-coverage target, the marginal variant of the "
-        "least-ambiguous set-valued classifier; the temperature-scaled rows "
+        "at both capture levels. " + lac_caption +
+        "the temperature-scaled rows "
         "use one scalar fitted by negative log-likelihood on the seed-0 "
         "calibration list and reused across the draws; refitting it on each "
         "draw's own list moves the tempered cells by at most $0.0007$ in FNR "

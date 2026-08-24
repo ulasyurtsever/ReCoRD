@@ -1,0 +1,30 @@
+\begin{table}[t]
+\centering
+\caption{Mean marked fraction of the image for the cells of Table~\ref{tab:perclass}. The class average understates what an operator pays, since the cost is set by the hardest class: on the SegFormer variants at $\alpha=0.2$ and $\rho=0.5$ the per-class area ranges from 0.013 to 0.236. Means over 100 calibration draws.}
+\label{tab:perclass_area}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\begin{tabular}{llcccccc}
+\toprule
+Model & Class & \multicolumn{3}{c}{$\rho=0.5$} & \multicolumn{3}{c}{$\rho=0.1$} \\
+\midrule
+ & & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ \\
+\midrule
+B2 & person & 0.868 & 0.051 & 0.035 & 0.064 & 0.041 & 0.029 \\
+ & rider & 1.000 & 1.000 & 0.047 & 1.000 & 0.804 & 0.013 \\
+ & bicycle & 1.000 & 0.825 & 0.020 & 0.981 & 0.037 & 0.017 \\
+\addlinespace
+B5 & person & 1.000 & 0.034 & 0.022 & 0.142 & 0.025 & 0.018 \\
+ & rider & 1.000 & 1.000 & 0.236 & 1.000 & 0.970 & 0.016 \\
+ & bicycle & 1.000 & 0.344 & 0.013 & 0.961 & 0.016 & 0.011 \\
+\addlinespace
+M2F & person & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 0.151 \\
+ & rider & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 \\
+ & bicycle & 1.000 & 1.000 & 1.000 & 1.000 & 1.000 & 0.981 \\
+\addlinespace
+B2-MC & person & 0.429 & 0.049 & 0.035 & 0.056 & 0.039 & 0.029 \\
+ & rider & 1.000 & 0.971 & 0.018 & 0.980 & 0.080 & 0.014 \\
+ & bicycle & 0.981 & 0.054 & 0.021 & 0.711 & 0.027 & 0.017 \\
+\bottomrule
+\end{tabular}
+\end{table}

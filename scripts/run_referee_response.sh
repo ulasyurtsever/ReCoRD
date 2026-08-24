@@ -4,9 +4,10 @@
 # ORDER MATTERS. Stage 4 must be rebuilt first: the false-positive subgrid was
 # densified (41 -> 80 points) after a review found that the old uniform subgrid
 # forced almost every calibrated threshold onto lambda_max, where the component
-# count degenerates. Stage 5 now refuses to read a cache built on the old
-# subgrid rather than silently reading the wrong slot, so nothing else runs
-# until this finishes.
+# count degenerates. Stage 5 does NOT stop on a stale cache: it warns and
+# records fp_components_per_image as NaN, so a run that skips this step still
+# produces results, just without that column. Run it first anyway -- the column
+# is the whole point of the rebuild.
 #
 # None of the steps below re-runs model inference. Every one is a CPU pass over
 # the caches that stage 3 already wrote, except step 5, which reads the MARIDA
@@ -36,23 +37,31 @@ python scripts/25_tierb_test_charge.py \
     --cal-datasets cityscapes_val --embedding dinov2_vitb14 \
     --conditions fog night rain snow --rhos 0.5 0.1 --max-seeds 25
 
-# LoveDA, both directions. These need --classes (the LoveDA tables carry
-# building and water, not the ACDC critical classes) and --out-name, because
-# the default output name is keyed on the model alone and the second direction
-# would otherwise overwrite the first.
+# LoveDA, both directions. These need --classes, because the LoveDA tables
+# carry building and water rather than the ACDC critical classes, and an
+# explicit --out-name: the default name is keyed on the model alone, so it is
+# the same for every embedding, and a later CLIP run would overwrite the
+# DINOv2 one. (The two directions use different models and would not have
+# collided with each other.) The name follows the convention in the stage's
+# own docstring, direction and embedding both spelled out.
+#
+# Only one clip was published for LoveDA (kappa=20, run l4_tierB), so the
+# sweep's kappa=2 and kappa=5 arms have no published counterpart to reproduce.
+# The stage reports them as gaps and still passes, because the condition is
+# reproduced at kappa=20; it fails only if a condition matches no clip at all.
 python scripts/25_tierb_test_charge.py \
     --model segformer_b2_loveda_urban --scheme loveda_urban_val_half \
     --cal-datasets loveda_Val_Urban --embedding dinov2_vitb14 \
     --conditions urban2rural --dataset-template loveda_Val_Rural \
     --classes building water --rhos 0.5 0.1 --max-seeds 25 \
-    --out-name x10_tierb_test_charge__loveda_urban2rural
+    --out-name x10_tierb_test_charge__loveda_urban2rural__dinov2_vitb14
 
 python scripts/25_tierb_test_charge.py \
     --model segformer_b2_loveda_rural --scheme loveda_rural_val_half \
     --cal-datasets loveda_Val_Rural --embedding dinov2_vitb14 \
     --conditions rural2urban --dataset-template loveda_Val_Urban \
     --classes building water --rhos 0.5 0.1 --max-seeds 25 \
-    --out-name x10_tierb_test_charge__loveda_rural2urban
+    --out-name x10_tierb_test_charge__loveda_rural2urban__dinov2_vitb14
 
 echo "############ 3. MARIDA annotation confidence"
 # MARIDA flags every annotation High/Moderate/Low and the pipeline ignored it.

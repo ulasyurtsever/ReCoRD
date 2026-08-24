@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{MARIDA marine-debris region FNR under region-level CRC (ensemble model unless noted; single fixed partitions). The official split is scene-disjoint, so even the nominal setting carries residual shift; held-out regions and seasons expose where the guarantee erodes (bold: FNR above the nominal level). Capture level $\rho=0.1$.}
+\caption{MARIDA marine-debris region FNR under region-level CRC. One model per held-out axis, fitted without that tile or season and without the calibration group; the official axis carries a single model and a five-member ensemble. The tile axis is a within-site hold-out (Section~\ref{sec:setup}). Partitions are fixed, so cells are single measurements. Bold marks the cells whose whole 95\% scene-level bootstrap interval lies above the level; intervals are in Table~\ref{tab:uncertainty_marida}. Capture level $\rho=0.1$.}
 \label{tab:marida}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
@@ -8,19 +8,19 @@
 \toprule
 Axis & $\alpha=0.05$ & $\alpha=0.1$ & $\alpha=0.2$ \\
 \midrule
-Official split (U-Net (single)) & 0.049 & \textbf{0.128} & \textbf{0.235} \\
-Official split (U-Net (ensemble-5)) & \textbf{0.074} & \textbf{0.119} & \textbf{0.275} \\
+Official split, U-Net single & 0.085 & 0.108 & 0.237 \\
+Official split, U-Net ensemble-5 & 0.069 & 0.103 & 0.278 \\
 \addlinespace
-Held-out region 16PCC & 0.009 & 0.017 & 0.068 \\
-Held-out region 16PDC & \textbf{0.201} & \textbf{0.357} & \textbf{0.471} \\
-Held-out region 16PEC & 0.033 & \textbf{0.185} & \textbf{0.410} \\
-Held-out region 18QYF & 0.001 & 0.002 & 0.052 \\
-Held-out region 48PZC & 0.000 & \textbf{0.125} & 0.125 \\
+Held-out tile 16PCC & 0.021 & 0.032 & 0.142 \\
+Held-out tile 16PDC & 0.009 & 0.027 & 0.142 \\
+Held-out tile 16PEC & 0.000 & 0.178 & 0.327 \\
+Held-out tile 18QYF & 0.001 & 0.069 & 0.229 \\
+Held-out tile 48PZC & 0.000 & 0.250 & 0.375 \\
 \addlinespace
-Held-out season (winter) & 0.008 & 0.038 & 0.083 \\
-Held-out season (spring) & \textbf{0.098} & \textbf{0.128} & \textbf{0.224} \\
-Held-out season (summer) & 0.016 & 0.056 & 0.190 \\
-Held-out season (autumn) & \textbf{0.078} & \textbf{0.180} & \textbf{0.256} \\
+Held-out season (winter) & 0.030 & 0.041 & 0.108 \\
+Held-out season (spring) & \textbf{0.217} & \textbf{0.314} & \textbf{0.424} \\
+Held-out season (summer) & 0.000 & 0.005 & 0.074 \\
+Held-out season (autumn) & 0.000 & 0.002 & 0.052 \\
 \bottomrule
 \end{tabular}
 \end{table}
