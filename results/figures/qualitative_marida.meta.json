@@ -1,0 +1,135 @@
+{
+ "figure": "qualitative_marida",
+ "path": "/home/aorus/Desktop/ReCoRD/03_kod/record-conformal/results/figures/qualitative_marida.pdf",
+ "benchmark": "loveda",
+ "model_key": "segformer_b2_loveda_urban",
+ "dataset_key": "loveda_Val_Urban",
+ "class_name": "building",
+ "patch_id": "Val/Urban/3595",
+ "selection_rule": "most regions recovered by the calibrated threshold among test scenes with at least 2 regions and a region of at least 2000 px; ties by region count then patch id",
+ "regions_recovered_vs_argmax": 19,
+ "ranking_top": [
+  {
+   "patch_id": "Val/Urban/3595",
+   "n_regions": 30,
+   "recovered": 19,
+   "missed_argmax": 23,
+   "missed_crc": 4,
+   "largest_region_px": 44344
+  },
+  {
+   "patch_id": "Val/Urban/3653",
+   "n_regions": 25,
+   "recovered": 12,
+   "missed_argmax": 14,
+   "missed_crc": 2,
+   "largest_region_px": 93271
+  },
+  {
+   "patch_id": "Val/Urban/3668",
+   "n_regions": 22,
+   "recovered": 10,
+   "missed_argmax": 12,
+   "missed_crc": 2,
+   "largest_region_px": 50682
+  },
+  {
+   "patch_id": "Val/Urban/3579",
+   "n_regions": 57,
+   "recovered": 7,
+   "missed_argmax": 9,
+   "missed_crc": 2,
+   "largest_region_px": 54234
+  },
+  {
+   "patch_id": "Val/Urban/4057",
+   "n_regions": 46,
+   "recovered": 7,
+   "missed_argmax": 11,
+   "missed_crc": 4,
+   "largest_region_px": 30174
+  },
+  {
+   "patch_id": "Val/Urban/3767",
+   "n_regions": 44,
+   "recovered": 7,
+   "missed_argmax": 10,
+   "missed_crc": 3,
+   "largest_region_px": 25853
+  },
+  {
+   "patch_id": "Val/Urban/3533",
+   "n_regions": 19,
+   "recovered": 7,
+   "missed_argmax": 8,
+   "missed_crc": 1,
+   "largest_region_px": 11842
+  },
+  {
+   "patch_id": "Val/Urban/3800",
+   "n_regions": 19,
+   "recovered": 7,
+   "missed_argmax": 10,
+   "missed_crc": 3,
+   "largest_region_px": 32138
+  },
+  {
+   "patch_id": "Val/Urban/3647",
+   "n_regions": 18,
+   "recovered": 7,
+   "missed_argmax": 10,
+   "missed_crc": 3,
+   "largest_region_px": 7176
+  },
+  {
+   "patch_id": "Val/Urban/3594",
+   "n_regions": 17,
+   "recovered": 7,
+   "missed_argmax": 10,
+   "missed_crc": 3,
+   "largest_region_px": 10926
+  }
+ ],
+ "alpha": 0.2,
+ "rho": 0.5,
+ "lambda": 0.786,
+ "lambda_source": "median feasible region_crc lam in l1_indist__urban.csv",
+ "n_regions": 30,
+ "missed_argmax": 23,
+ "missed_crc": 4,
+ "marked_area_argmax": 0.049,
+ "marked_area_crc": 0.1375,
+ "region_sizes_px": [
+  44344,
+  7635,
+  8206,
+  2222,
+  8118,
+  2078,
+  3786,
+  2621,
+  1659,
+  828,
+  4798,
+  1354,
+  934,
+  15891,
+  705,
+  21,
+  2580,
+  831,
+  2447,
+  1207,
+  1274,
+  3476,
+  1019,
+  1069,
+  831,
+  2186,
+  1,
+  11433,
+  2416,
+  2058
+ ],
+ "completed_utc": "2026-08-09T08:09:45.978038+00:00"
+}

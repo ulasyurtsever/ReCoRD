@@ -1,0 +1,23 @@
+{
+ "alpha": 0.2,
+ "rho": 0.5,
+ "n_permutations": 1000,
+ "settings": {
+  "official": "x3_triage__official__marida_unet_official_holdout_ens5",
+  "region_16PCC": "x3_triage__region_16PCC__marida_unet_holdout_region_16PCC",
+  "region_16PDC": "x3_triage__region_16PDC__marida_unet_holdout_region_16PDC",
+  "region_16PEC": "x3_triage__region_16PEC__marida_unet_holdout_region_16PEC",
+  "season_spring": "x3_triage__season_spring__marida_unet_holdout_season_spring",
+  "night_tierA50": "x3_triage__night_tierA50__segformer_b2_cityscapes"
+ },
+ "aggregate_class": "all_classes",
+ "quantiles": [
+  5.0,
+  50.0,
+  95.0
+ ],
+ "denominator": "full test-set size (images without components contribute zero loss, as in triage_curve)",
+ "aggregation": "mean over (seed, class) cells before dividing by the no-review rate, matching fig_triage_baselines",
+ "max_drift": 1e-09,
+ "completed_utc": "2026-08-24T04:32:27.001409+00:00"
+}

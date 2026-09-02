@@ -1,0 +1,84 @@
+{
+ "name": "x10_tierb_test_charge__loveda_rural2urban__dinov2_vitb14",
+ "argv": {
+  "model": "segformer_b2_loveda_rural",
+  "scheme": "loveda_rural_val_half",
+  "cal_datasets": [
+   "loveda_Val_Rural"
+  ],
+  "embedding": "dinov2_vitb14",
+  "conditions": [
+   "rural2urban"
+  ],
+  "dataset_template": "loveda_Val_Urban",
+  "classes": [
+   "building",
+   "water"
+  ],
+  "clips": [
+   [
+    0.05,
+    2.0
+   ],
+   [
+    0.05,
+    5.0
+   ],
+   [
+    0.05,
+    20.0
+   ]
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.5,
+   0.1
+  ],
+  "cal_split": "calibration",
+  "max_seeds": 25,
+  "reference_templates": [
+   "e4_tierB__{cond}__{model}__{embedding}",
+   "c1_clip{kappa}__{cond}__{model}__{embedding}",
+   "l4_tierB__{cond}__{embedding}"
+  ],
+  "allow_unchecked": false,
+  "out_name": "x10_tierb_test_charge__loveda_rural2urban__dinov2_vitb14"
+ },
+ "n_records": 3600,
+ "references": [
+  {
+   "condition": "rural2urban",
+   "kappa": 2.0,
+   "reference": null,
+   "n_rows": 0
+  },
+  {
+   "condition": "rural2urban",
+   "kappa": 5.0,
+   "reference": null,
+   "n_rows": 0
+  },
+  {
+   "condition": "rural2urban",
+   "kappa": 20.0,
+   "reference": "l4_tierB__rural2urban__dinov2_vitb14",
+   "n_rows": 300,
+   "worst_rel_dev": 4.574119157917177e-16
+  }
+ ],
+ "clips_without_reference": [
+  {
+   "condition": "rural2urban",
+   "kappa": 2.0
+  },
+  {
+   "condition": "rural2urban",
+   "kappa": 5.0
+  }
+ ],
+ "completed_utc": "2026-08-24T04:31:44.787748+00:00"
+}
