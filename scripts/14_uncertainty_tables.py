@@ -212,14 +212,8 @@ def main() -> int:
                   .sort_values(["_r", "alpha"], kind="stable")
                   .drop(columns="_r").reset_index(drop=True))
     emit(cells, ["Axis"],
-         f"MARIDA region FNR at $\\rho={args.rho}$ with 95\\% percentile "
-         "intervals over 4000 scene-level bootstrap resamples "
-         "(Section~\\ref{sec:setup}). Bold marks the cells whose whole "
-         "interval lies above the level. \\#\\,comp.\\ is the number of "
-         "ground-truth components in the test group, missed how many fall "
-         "below the capture level at the selected threshold, and pooled their "
-         "ratio; FNR is the controlled quantity and weights images equally, "
-         "pooled weights components equally and is not bounded.",
+         f"MARIDA region FNR at $\\rho={args.rho}$ with 95\\% scene-level "
+         "bootstrap intervals.",
          "tab:uncertainty_marida", tab_dir / "uncertainty_marida.tex",
          show_components=True)  # narrow columns: the row labels are long
 
