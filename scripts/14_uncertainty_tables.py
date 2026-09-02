@@ -212,21 +212,14 @@ def main() -> int:
                   .sort_values(["_r", "alpha"], kind="stable")
                   .drop(columns="_r").reset_index(drop=True))
     emit(cells, ["Axis"],
-         f"MARIDA region FNR at $\\rho={args.rho}$ with 95\\% scene-level "
-         "bootstrap intervals. These partitions are fixed, so the uncertainty "
-         "is not seed variance. The resampling unit is the acquisition scene: "
-         "the patches of one scene share illumination, sea state and "
-         "annotator, and a held-out tile can hold as few as three scenes, so "
-         "resampling patches would report a precision the design does not "
-         "carry; intervals are 95\\% percentile intervals over 4000 cluster "
-         "resamples. Bold marks the cells whose whole interval lies above the "
-         "level. \\#\\,comp.\\ is the number of ground-truth components in the "
-         "test group, missed is how many of them fall below the capture level "
-         "at the selected threshold, and pooled is their ratio. The FNR column "
-         "is the controlled quantity and weights images equally; the pooled "
-         "column weights components equally and is not the quantity the "
-         "guarantee bounds. The two differ whenever images carry unequal "
-         "component counts.",
+         f"MARIDA region FNR at $\\rho={args.rho}$ with 95\\% percentile "
+         "intervals over 4000 scene-level bootstrap resamples "
+         "(Section~\\ref{sec:setup}). Bold marks the cells whose whole "
+         "interval lies above the level. \\#\\,comp.\\ is the number of "
+         "ground-truth components in the test group, missed how many fall "
+         "below the capture level at the selected threshold, and pooled their "
+         "ratio; FNR is the controlled quantity and weights images equally, "
+         "pooled weights components equally and is not bounded.",
          "tab:uncertainty_marida", tab_dir / "uncertainty_marida.tex",
          show_components=True)  # narrow columns: the row labels are long
 

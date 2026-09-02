@@ -1,6 +1,6 @@
 \begin{table}[t]
 \centering
-\caption{MARIDA in-distribution control at $\rho=0.5$. A random patch-level split of the pooled MARIDA patches over 100 seeded draws. Every other MARIDA scheme assigns scenes disjointly; this one is exchangeable by construction, so the empirical region miss rate is expected to respect the requested level, and a violation here would indicate an implementation fault rather than a hard partition. The interval is over the seeded draws and covers the level in every row. Pixel CRC also respects the requested level here, unlike on Cityscapes: the median MARIDA component is two pixels wide, so the region-level and pixel-level formulations nearly coincide. The pooled split includes patches used to fit the models, so the marked areas in this table are not deployment costs and are not comparable with those of Table~\ref{tab:marida}.}
+\caption{MARIDA in-distribution control at $\rho=0.5$: a random patch-level split of the pooled patches over 100 seeded draws, exchangeable by construction unlike every other MARIDA scheme (Section~\ref{sec:exp_marine}). The interval is over the draws. The pooled split includes patches used to fit the models, so these marked areas are not deployment costs and are not comparable with Table~\ref{tab:marida}.}
 \label{tab:marida_indist}
 \footnotesize
 \setlength{\tabcolsep}{3pt}

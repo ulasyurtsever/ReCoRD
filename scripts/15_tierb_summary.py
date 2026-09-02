@@ -217,19 +217,13 @@ def marida_indist_table(rho: float) -> str:
               "\\cmidrule(lr){3-5} \\cmidrule(lr){6-7}\n"
               " &  & FNR & 95\\% CI & Area & FNR & Area")
     caption = (
-        f"MARIDA in-distribution control at $\\rho={rho}$. A random "
-        "patch-level split of the pooled MARIDA patches over 100 seeded draws. "
-        "Every other MARIDA scheme assigns scenes disjointly; this one is "
-        "exchangeable by construction, so the empirical region miss rate is "
-        "expected to respect the requested level, and a violation here would "
-        "indicate an implementation fault rather than a hard partition. The "
-        "interval is over the seeded draws and covers the level in every row. "
-        "Pixel CRC also respects the requested level here, unlike on "
-        "Cityscapes: the median MARIDA component is two pixels wide, so the "
-        "region-level and pixel-level formulations nearly coincide. The pooled "
-        "split includes patches used to fit the models, so the marked areas in "
-        "this table are not deployment costs and are not comparable with those "
-        "of Table~\\ref{tab:marida}.")
+        f"MARIDA in-distribution control at $\\rho={rho}$: a random "
+        "patch-level split of the pooled patches over 100 seeded draws, "
+        "exchangeable by construction unlike every other MARIDA scheme "
+        "(Section~\\ref{sec:exp_marine}). The interval is over the draws. The "
+        "pooled split includes patches used to fit the models, so these marked "
+        "areas are not deployment costs and are not comparable with "
+        "Table~\\ref{tab:marida}.")
     return latex_table("\n".join(rows), caption, "tab:marida_indist",
                        "lcccccc", header)
 
