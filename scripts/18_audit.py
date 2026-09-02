@@ -37,7 +37,7 @@ import numpy as np
 import pandas as pd
 
 from record.grid import FP_SUBGRID_INDICES, fp_subgrid_slot
-from record.paths import results_dir
+from record.paths import results_dir, splits_dir
 
 LAM_MAX = 1000
 
@@ -1142,6 +1142,85 @@ def _seqdisjoint_tier_a_claims():
           float(-area.min()) <= 0.175,
           f"largest reduction {float(-area.min()):.4f} at {area.idxmin()}")
 
+    _seqdisjoint_frame_cost()
+
+
+def _marida_confidence_size_strata():
+    """Section IV-H: the confidence gap is confounded by component size.
+
+    The paragraph claims that stratifying by size removes most of the apparent
+    confidence effect. That is a negative claim about the confidence layer, so
+    the stratum rates it prints are checked directly against the component
+    table rather than inferred from the pooled numbers.
+    """
+    path = results_dir("experiments") / "x11_marida_confidence__components.csv"
+    if not path.exists():
+        note(253, "MARIDA component table absent", str(path))
+        return
+    d = pd.read_csv(path)
+    t = d[d["official_group"] == "test"]
+    col = "missed__alpha0.2__rho0.5"
+    truth(253, "the official test group holds 223 components",
+          len(t) == 223, f"{len(t)} components")
+
+    hi, lo = t[t["any_high"]], t[~t["any_high"]]
+    truth(253, "91 of the 158 no-High components are a single pixel, "
+               "against 22 of the 65 any-High",
+          (int((lo["size_px"] == 1).sum()), len(lo),
+           int((hi["size_px"] == 1).sum()), len(hi)) == (91, 158, 22, 65),
+          f"{int((lo['size_px'] == 1).sum())} of {len(lo)} and "
+          f"{int((hi['size_px'] == 1).sum())} of {len(hi)}")
+
+    def rate(frame, lo_px, hi_px):
+        g = frame[(frame["size_px"] >= lo_px) & (frame["size_px"] <= hi_px)]
+        return (float(g[col].mean()) if len(g) else float("nan")), len(g)
+
+    for px, want_hi, want_lo in ((1, 0.227, 0.220), (2, 0.100, 0.143)):
+        rh, nh = rate(hi, px, px)
+        rl, nl = rate(lo, px, px)
+        near(253, f"any-High miss rate at {px} px", want_hi, rh, tol=5e-4)
+        near(253, f"no-High miss rate at {px} px", want_lo, rl, tol=5e-4)
+
+    big_hi, n_big_hi = rate(hi, 3, 10 ** 9)
+    big_lo, n_big_lo = rate(lo, 3, 10 ** 9)
+    truth(254, "at three pixels or more the any-High group misses none of its "
+               "13 components against one of the 11 others",
+          (n_big_hi, n_big_lo) == (13, 11)
+          and big_hi == 0.0 and abs(big_lo * n_big_lo - 1.0) < 1e-9,
+          f"any-High {big_hi:.3f} of {n_big_hi}, no-High {big_lo:.3f} of {n_big_lo}")
+
+    # The point of the paragraph: the pooled gap is much larger than any
+    # within-stratum gap, which is what "confounded by size" means.
+    pooled = float(lo[col].mean()) - float(hi[col].mean())
+    within = max(abs(rate(lo, px, px)[0] - rate(hi, px, px)[0]) for px in (1, 2))
+    truth(254, "the pooled confidence gap exceeds every within-stratum gap",
+          pooled > within,
+          f"pooled {pooled:+.3f} against a largest within-stratum gap of {within:.3f}")
+
+
+def _seqdisjoint_frame_cost():
+    """Section IV-E: what holding out whole drives costs in test frames."""
+    paths = sorted(glob.glob(str(splits_dir()
+                                 / "acdc_*_targetcal25_seqdisjoint.meta.json")))
+    if not paths:
+        note(248, "sequence-disjoint scheme metadata absent", str(splits_dir()))
+        return
+    lost = {}
+    for path in paths:
+        with open(path) as f:
+            m = json.load(f)
+        lost[m["condition"]] = (m["test_frames_in_published_scheme"]
+                                - m["test_frames"]["median"])
+    truth(248, "four conditions carry a sequence-disjoint scheme at n_t=25",
+          len(lost) == 4, ", ".join(f"{k} {v:.0f}" for k, v in sorted(lost.items())))
+    # A containment claim, not an endpoint claim: the text says the cost lies
+    # between 25 and 59 frames, and the largest is rain's 58.5.
+    v = list(lost.values())
+    truth(248, "holding out whole drives costs between 25 and 59 test frames "
+               "at the median",
+          bool(v) and min(v) >= 25 and max(v) <= 59,
+          "per condition: " + ", ".join(f"{k} {lost[k]:g}" for k in sorted(lost)))
+
 
 def _marida_confidence_claims():
     """Section IV-H: MARIDA annotation confidence.
@@ -1204,6 +1283,8 @@ def _marida_confidence_claims():
     else:
         note(251, "the ensemble confidence run is missing",
              "rerun stage 26 with --out-stem x11_marida_confidence__ens5")
+
+    _marida_confidence_size_strata()
 
     sz = d["size_by_any_high"]
     truth(252, "both confidence groups have a median size of two pixels",
@@ -1760,6 +1841,17 @@ def _permutation_band_claims():
     near(232, "official at beta=0.5: band lower end", 0.37, lo, tol=5e-3)
     near(232, "official at beta=0.5: band upper end", 0.64, hi, tol=5e-3)
     near(232, "official at beta=0.5: band median", 0.51, med, tol=5e-3)
+    # The width of the official band against the margin the score shows,
+    # which is what "cannot resolve an effect of the size at issue" means.
+    near(232, "the official band is 0.27 wide", 0.27, hi - lo, tol=5e-3)
+    closed = 0.50
+    near(232, "the score improves on the closed-form line by 0.015",
+         0.015, closed - a, tol=5e-4)
+    truth(232, "the official band is more than ten times that margin",
+          (hi - lo) > 10 * (closed - a),
+          f"width {hi - lo:.3f} against margin {closed - a:.4f}, "
+          f"a factor of {(hi - lo) / (closed - a):.1f}")
+
     a, lo, med, hi = cell("night_tierA50")
     near(232, "night at beta=0.5: score", 0.63, a, tol=5e-3)
     near(232, "night at beta=0.5: band lower end", 0.46, lo, tol=5e-3)
