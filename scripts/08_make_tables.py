@@ -141,10 +141,7 @@ def table_baselines(df: pd.DataFrame) -> str:
         "at both capture levels. " + lac_caption +
         "the temperature-scaled rows "
         "use one scalar fitted on the seed-0 calibration list and reused "
-        "across draws (Section~\\ref{sec:exp_indist}). FNR is the mean "
-        "region-miss loss over test images containing the class, averaged "
-        "over the three critical classes; Area is the mean marked fraction "
-        "over all test images.",
+        "across draws (Section~\\ref{sec:exp_indist}).",
         "tab:baselines", "llcccc", header, size="scriptsize", colsep="2.5pt")
 
 
@@ -179,12 +176,10 @@ def table_breakdown(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "Region FNR on ACDC conditions under source (Cityscapes) calibration. "
-        "Bold entries violate the nominal level: the in-distribution "
-        "guarantee does not survive the shift. $\\ast$ marks cells whose mean "
-        "marked area exceeds $99\\%$, where the level is met only by marking "
-        "the whole image. "
-        "Each cell averages the three critical classes; the guarantee is per "
-        "class, and Section~\\ref{sec:exp_indist} reports the per-class cells." + _rho_note(df),
+        "Bold entries violate the nominal level; $\\ast$ marks cells whose "
+        "mean marked area exceeds $99\\%$, where the level is met only by "
+        "marking the whole image. Each cell averages the three critical "
+        "classes." + _rho_note(df),
         "tab:breakdown", "l" + "cccc" * len(ALPHAS), header, star=True)
 
 
@@ -227,9 +222,8 @@ def table_tier_a(df: pd.DataFrame) -> str:
         "critical classes. FNR and marked area use feasible draws only; "
         "Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
         "because too few of the $n_t$ images contain the class, and the "
-        "parenthesised count is the number of feasible draws the pair rests "
-        "on -- where Inf.\\ approaches one it is small and the pair is "
-        "indicative only." + _rho_note(df),
+        "parenthesised count is the number of feasible draws behind the "
+        "pair." + _rho_note(df),
         # The feasible-draw counts widen the table past one IEEE column.
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
@@ -339,11 +333,9 @@ def table_marida(df: pd.DataFrame) -> str:
         "MARIDA marine-debris region FNR under region-level CRC. One model per "
         "held-out axis, fitted without that tile or season and without the "
         "calibration group; the official axis carries a single model and a "
-        "five-member ensemble. The tile axis is a within-site hold-out "
-        "(Section~\\ref{sec:setup}). Partitions are fixed, so cells are single "
-        "measurements. Bold marks the cells whose whole 95\\% scene-level "
-        "bootstrap interval lies above the level; intervals are in "
-        "Table~\\ref{tab:uncertainty_marida}." + _rho_note(df),
+        "five-member ensemble. Bold marks the cells whose whole 95\\% "
+        "scene-level bootstrap interval lies above the level; the intervals "
+        "are in Table~\\ref{tab:uncertainty_marida}." + _rho_note(df),
         "tab:marida", "lccc", header)
 
 
@@ -439,12 +431,9 @@ def table_perclass(df: pd.DataFrame) -> str:
     caption = (
         f"In-distribution region FNR on Cityscapes, resolved per class over "
         f"the {n_cells} cells behind the class averages of "
-        f"Table~\\ref{{tab:validity_cityscapes}}. No cell exceeds its level. "
-        f"$\\ast$ marks the {n_full} cells where the level is met only by "
-        f"marking more than $99\\%$ of the image, so the bound holds but the "
-        f"mask is uninformative. Model labels abbreviate those of "
-        f"Table~\\ref{{tab:validity_cityscapes}}; means over 100 calibration "
-        f"draws.")
+        f"Table~\\ref{{tab:validity_cityscapes}}. $\\ast$ marks the {n_full} "
+        f"cells where the level is met only by marking more than $99\\%$ of "
+        f"the image. Means over 100 calibration draws.")
     if n_over:
         caption += f" WARNING: {n_over} cells exceed their level."
     return latex_table(body, caption, "tab:perclass",
