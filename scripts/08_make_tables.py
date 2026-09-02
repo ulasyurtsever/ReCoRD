@@ -193,7 +193,8 @@ def table_tier_a(df: pd.DataFrame) -> str:
         rows.append(" & ".join(parts) + r" \\")
     header = "$n_t$ & " + " & ".join(
         rf"\multicolumn{{3}}{{c}}{{$\alpha={a:g}$}}" for a in ALPHAS)
-    subheader = " & " + " & ".join(["FNR & Area & Inf.\\ ($n$)"] * len(ALPHAS)) + r" \\"
+    # "Inf." reads as infinity or inference before it reads as infeasible.
+    subheader = " & " + " & ".join(["FNR & Area & Infeas.\\ ($n$)"] * len(ALPHAS)) + r" \\"
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
     return latex_table(
         body,
