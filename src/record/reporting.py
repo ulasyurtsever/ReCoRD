@@ -91,6 +91,22 @@ def load_experiments(pattern: str = "*") -> pd.DataFrame:
         if not is_stage5_experiment(name):
             skipped.append(name)
             continue
+        # Every stage-5 run is named by a driver as "<block>_<label>__<model>",
+        # so the separator is present in every table the pipeline writes. A
+        # stage-5-shaped CSV without it is a hand-made or superseded file that
+        # a wildcard load would pool with the published runs of its block: the
+        # block is parsed from the prefix alone, so a pilot named e1_* joins
+        # the e1 cells and reweights them. The audit selects on the full
+        # "<block>_<label>__" prefix and would not see it, so the generator and
+        # the audit would compute the same claim over different populations.
+        if "__" not in name:
+            raise ValueError(
+                f"{path} is stage-5-shaped but is not named by any driver "
+                f"('__' separator missing). Superseded or hand-made runs must "
+                "not sit in results/experiments, where a wildcard load pools "
+                f"them into block '{name.split('_')[0]}'. Move it out of the "
+                "directory, or register its prefix in "
+                "record.reporting.NON_STAGE5_PREFIXES if a new stage writes it.")
         frame = pd.read_csv(path)
         missing = STAGE5_COLUMNS - set(frame.columns)
         if missing:

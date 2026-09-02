@@ -53,6 +53,30 @@ echo "=== Phase 7: detector-level and calibration-level measurements ==="
 python scripts/10_marida_test_f1.py
 python scripts/20_temperature_seed_spread.py
 
+echo "=== Phase 7b: supplementary measurements quoted in the text ==="
+# Stages 21-24 write x6/x7/x8/x9, which carry nineteen quantities the article
+# reports: the leakage-free temperatures, the union of the per-class masks, the
+# tier-B target-pool diagnostics, and the MARIDA component-size statistics.
+# They were reachable only by hand until now, so a clean checkout produced a
+# results tree the audit accepted while those quantities were simply absent.
+for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes; do
+  python scripts/21_temperature_leakfree.py \
+    --model "$MODEL" --dataset cityscapes_val --scheme cityscapes_val_half
+done
+for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes \
+             segformer_b2_cityscapes_mcdrop8; do
+  python scripts/22_union_marked_area.py \
+    --model "$MODEL" --dataset cityscapes_val --scheme cityscapes_val_half \
+    --experiment "e1_indist__${MODEL}" --method region_crc --rho 0.5
+done
+python scripts/23_tierb_target_pool.py \
+  --model segformer_b2_cityscapes --scheme cityscapes_val_half \
+  --cal-datasets cityscapes_val --embedding dinov2_vitb14 \
+  --conditions fog night rain snow \
+  --classes person rider bicycle --max-seeds 25
+python scripts/24_marida_component_stats.py \
+  --model marida_unet_official_holdout
+
 echo "=== Phase 8: tables ==="
 python scripts/08_make_tables.py
 python scripts/14_uncertainty_tables.py --rho 0.5

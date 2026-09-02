@@ -15,6 +15,18 @@ from __future__ import annotations
 
 import numpy as np
 
+# Coverage curves are cached as float16, which cannot represent 0.1 exactly:
+# the nearest value is 0.0999756. The capture comparison below is nonetheless
+# exact at the boundary, because NumPy casts the Python scalar rho down to the
+# array's dtype rather than widening the array, so a component covered by
+# exactly one tenth of its pixels compares equal and is captured. That is the
+# intended semantics -- capture is decided at the precision the curves are
+# stored in -- but it holds only while the curves reach this function in their
+# stored dtype. Upcasting them first (``curves.astype(np.float32)``) turns
+# 0.0999756 into a value genuinely below 0.1 and silently reclassifies every
+# exactly-captured component as missed at rho = 0.1. test_losses_eval.py pins
+# both halves of that invariant.
+
 
 def component_miss_matrix(coverage_curves: np.ndarray, rho: float) -> np.ndarray:
     """Return the per-component miss indicator matrix at capture level ``rho``.
@@ -25,7 +37,7 @@ def component_miss_matrix(coverage_curves: np.ndarray, rho: float) -> np.ndarray
         Array of shape ``(n_components, n_grid)``.
     rho : float
         Capture threshold in ``(0, 1]``: a component is captured at ``lam``
-        iff its coverage is ``>= rho``.
+        iff its coverage is ``>= rho`` at the curves' stored precision.
     """
     if not 0.0 < rho <= 1.0:
         raise ValueError(f"rho must be in (0, 1], got {rho}")
