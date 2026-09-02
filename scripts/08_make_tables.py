@@ -127,13 +127,10 @@ def table_baselines(df: pd.DataFrame) -> str:
     # --lac-variants class_conditional, so its sentence appears only when its
     # row does; describing an absent row would be a claim about nothing.
     lac_caption = (
-        "The marginal LAC row is a single global threshold tuned to an "
-        "all-class pixel-coverage target, the marginal variant of the "
-        "least-ambiguous set-valued classifier; the class-conditional row "
-        "calibrates one threshold per critical class on that class's own "
-        "pixel miscoverage, so it is given the same class information the "
-        "method under test uses and the comparison is not decided by which "
-        "pixels set the threshold; "
+        "The marginal LAC row is a single global threshold on an all-class "
+        "pixel-coverage target; the class-conditional row calibrates one "
+        "threshold per critical class on that class's own pixel miscoverage "
+        "(Section~\\ref{sec:exp_indist}); "
         if "lac_classcond" in emitted else
         "The marginal LAC row is a single global threshold tuned to an "
         "all-class pixel-coverage target, the marginal variant of the "
@@ -143,13 +140,11 @@ def table_baselines(df: pd.DataFrame) -> str:
         "Method comparison at $\\alpha=0.2$ on Cityscapes (in-distribution), "
         "at both capture levels. " + lac_caption +
         "the temperature-scaled rows "
-        "use one scalar fitted by negative log-likelihood on the seed-0 "
-        "calibration list and reused across the draws; refitting it on each "
-        "draw's own list moves the tempered cells by at most $0.0007$ in FNR "
-        "and $0.0002$ in area (Section~\\ref{sec:exp_indist}). FNR is the "
-        "mean region-miss loss over test images containing the class, "
-        "averaged over the three critical classes; Area is "
-        "the mean marked fraction over all test images.",
+        "use one scalar fitted on the seed-0 calibration list and reused "
+        "across draws (Section~\\ref{sec:exp_indist}). FNR is the mean "
+        "region-miss loss over test images containing the class, averaged "
+        "over the three critical classes; Area is the mean marked fraction "
+        "over all test images.",
         "tab:baselines", "llcccc", header, size="scriptsize", colsep="2.5pt")
 
 
@@ -228,14 +223,13 @@ def table_tier_a(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "Tier A on ACDC: exact recalibration from $n_t$ labeled target "
-        "images. All three columns are averaged per class and then over the "
-        "three critical classes, so no column is dominated by whichever class "
-        "still has feasible draws. FNR and marked area use feasible draws "
-        "only; Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
-        "because too few of the $n_t$ images contain the class, and the count "
-        "in parentheses is the number of feasible draws the paired FNR and "
-        "area rest on. Where Inf.\\ approaches one that count is small and the "
-        "pair is indicative only." + _rho_note(df),
+        "images. Columns are averaged per class and then over the three "
+        "critical classes. FNR and marked area use feasible draws only; "
+        "Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
+        "because too few of the $n_t$ images contain the class, and the "
+        "parenthesised count is the number of feasible draws the pair rests "
+        "on -- where Inf.\\ approaches one it is small and the pair is "
+        "indicative only." + _rho_note(df),
         # The feasible-draw counts widen the table past one IEEE column.
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
