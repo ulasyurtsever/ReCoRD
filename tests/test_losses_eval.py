@@ -136,3 +136,31 @@ def test_monitor_flags_shift_and_not_null():
     shifted = RNG.normal(1.5, 1, size=400)
     assert not ks_drift_check(cal, same).flagged
     assert ks_drift_check(cal, shifted).flagged
+
+
+def test_exact_capture_holds_at_stored_precision():
+    """A component covered by exactly rho of its pixels is captured.
+
+    Coverage curves are cached as float16, which cannot represent 0.1: the
+    nearest value is 0.0999756. The comparison is still exact at the boundary
+    because NumPy casts the scalar rho down to the array dtype instead of
+    widening the array, so the exactly-captured component compares equal. The
+    second half of this test pins the fragility that makes the first half
+    true: upcasting the curves first reclassifies that component as missed, so
+    a refactor that inserts an astype upstream fails here rather than moving
+    every rho = 0.1 number by a silent amount.
+    """
+    for dtype in (np.float16, np.float32, np.float64):
+        curves = np.array([[1.0 / 10.0], [1.0 / 2.0]], dtype=dtype)
+        assert component_miss_matrix(curves, 0.1)[0, 0] == 0.0, dtype
+        assert component_miss_matrix(curves, 0.5)[1, 0] == 0.0, dtype
+
+    stored = np.array([[1.0 / 10.0]], dtype=np.float16)
+    assert component_miss_matrix(stored, 0.1)[0, 0] == 0.0
+    widened = stored.astype(np.float64)          # what must not happen upstream
+    assert component_miss_matrix(widened, 0.1)[0, 0] == 1.0
+
+    below = np.array([[np.float16(0.0999146)], [np.float16(0.49)]],
+                     dtype=np.float16)
+    assert component_miss_matrix(below, 0.1)[0, 0] == 1.0
+    assert component_miss_matrix(below, 0.5)[1, 0] == 1.0

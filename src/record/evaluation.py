@@ -87,6 +87,8 @@ def stratified_region_fnr(
     Component-level (not image-averaged) miss rates, reported per size
     stratum; NaN for empty strata.
     """
+    # The curves must arrive in their stored dtype; see component_miss_matrix
+    # for why upcasting them before this comparison changes the rho = 0.1 result.
     miss = coverage_curves[:, lam_index] < rho
     out: list[float] = []
     for s in range(n_strata):

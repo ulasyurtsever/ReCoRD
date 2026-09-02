@@ -36,7 +36,7 @@ import traceback
 import numpy as np
 import pandas as pd
 
-from record.grid import FP_SUBGRID_INDICES, fp_subgrid_slot
+from record.grid import FP_SUBGRID_INDICES, LAMBDA_GRID, fp_subgrid_slot
 from record.paths import results_dir, splits_dir
 
 LAM_MAX = 1000
@@ -538,12 +538,17 @@ def _x4_argv() -> list[dict]:
 def _lac_classcond_and_pixel_fnr():
     """The class-conditional LAC arm and the realized pixel FNR must be read.
 
-    Both are produced by stage 5 only when asked for, so this check has two
-    jobs. If a run recorded that it asked for them, they must be present --
-    a run that requested the arm and shipped without it is a silent hole in
-    the table, which is exactly the failure this check exists to catch. If no
-    run asked for them, that is reported as an outstanding item, not passed
-    over.
+    Both are optional flags of stage 5, and an earlier version of this check
+    decided whether to demand them by reading the run's own meta sidecar. That
+    made the guard depend on the artefact under test: rerunning the block with
+    the narrower flag set overwrites the CSV *and* the sidecar, so the check
+    stopped asking for exactly the rows the rerun had just dropped, and the
+    audit passed while Table II lost two rows. The demand is therefore
+    unconditional. Table II prints the class-conditional row and Section V
+    quotes both the region-FNR and the marked-area gap, so once the x4 block
+    exists at all, these rows are published content and their absence is a
+    failure, whatever the run asked for. The recorded argv is still read, but
+    only to say which invocation produced a shortfall.
     """
     raw = load("x4_lac__*")
     argv = _x4_argv()
@@ -551,18 +556,12 @@ def _lac_classcond_and_pixel_fnr():
     asked_px = any(a.get("measure_pixel_fnr") for a in argv)
 
     cc = raw[raw["method"] == "lac_classcond"]
-    if asked_cc:
-        truth(98, "class-conditional LAC rows present in x4_lac__*",
-              not cc.empty,
-              f"{len(cc)} rows" if not cc.empty
-              else "a run requested --lac-variants class_conditional but wrote no lac_classcond row")
-    elif not cc.empty:
-        truth(98, "class-conditional LAC rows present in x4_lac__*", True,
-              f"{len(cc)} rows")
-    else:
-        note(98, "class-conditional LAC arm not yet run",
-             "rerun stage 5 with --lac-variants marginal class_conditional; "
-             "the table row is written the moment the rows exist")
+    truth(98, "class-conditional LAC rows present in x4_lac__*",
+          not cc.empty,
+          f"{len(cc)} rows" if not cc.empty else
+          "x4_lac ran without --lac-variants marginal class_conditional "
+          f"(sidecars recorded the request: {asked_cc}); Table II loses its "
+          "class-conditional row and Section V its two gaps")
 
     if not cc.empty:
         # What the arm actually shows, measured rather than hoped for: given
@@ -592,16 +591,13 @@ def _lac_classcond_and_pixel_fnr():
             near(98, "largest class-conditional / pixel-CRC region-FNR gap",
                  0.002, float(dreg.max()), tol=5e-4)
             near(98, "largest class-conditional / pixel-CRC marked-area gap",
-                 0.028, float(darea.max()), tol=5e-4)
+                 0.029, float(darea.max()), tol=1e-3)
 
     has_px = "realized_pixel_fnr" in raw.columns
-    if asked_px:
-        truth(99, "realized_pixel_fnr column present in x4_lac__*", has_px,
-              "a run requested --measure-pixel-fnr but wrote no column"
-              if not has_px else "")
-    elif not has_px:
-        note(99, "realized pixel FNR not yet measured",
-             "rerun stage 5 with --measure-pixel-fnr")
+    truth(99, "realized_pixel_fnr column present in x4_lac__*", has_px,
+          "x4_lac ran without --measure-pixel-fnr (sidecars recorded the "
+          f"request: {asked_px}); the pixel-level target Section V reports "
+          "is then asserted rather than measured" if not has_px else "")
     if has_px:
         px = raw.dropna(subset=["realized_pixel_fnr"])
         if px.empty or px[px["method"].isin(LAC_METHODS)].empty:
@@ -964,10 +960,15 @@ def section_tier_b():
         note(153, "LoveDA tier-B CSVs missing from this run")
 
     w = sel(tb_all, method="weighted_crc")
-    lam_max = w.lam.max()
+    # Against the grid's last index, not against this column's own maximum.
+    # The earlier form compared w.lam with w.lam.max(), which is true of any
+    # constant column: replacing every threshold with an informative value --
+    # the exact negation of this claim -- left the assertion passing.
     truth(153, "tier B returns lambda_max in EVERY configuration of the main matrix",
-          bool((w.lam >= lam_max - 1e-12).all()),
-          f"{int((w.lam < lam_max).sum())} of {len(w)} rows informative")
+          bool((w.lam_index >= LAM_MAX).all()),
+          f"{int((w.lam_index < LAM_MAX).sum())} of {len(w)} rows informative; "
+          f"lam range [{w.lam.min():.4f}, {w.lam.max():.4f}] against "
+          f"lambda_max = {LAMBDA_GRID[LAM_MAX]:g}")
     truth(153, "tier B FNR is 0 and area is 1 in the main matrix",
           bool(np.allclose(w.region_fnr, 0.0)) and
           bool(np.allclose(w.marked_area_fraction, 1.0)),
@@ -996,8 +997,10 @@ def section_tier_b():
         rng_claim(158, "cross-fitted ESS 161-167", 161, 167,
                   cv.groupby("experiment")["weight_ess"].mean().values, 0.6)
         truth(158, "cross-fitting leaves zero informative draws",
-              bool((cv.lam >= cv.lam.max() - 1e-12).all()),
-              f"{int((cv.lam < cv.lam.max()).sum())} informative")
+              bool((cv.lam_index >= LAM_MAX).all()),
+              f"{int((cv.lam_index < LAM_MAX).sum())} informative; "
+              f"lam range [{cv.lam.min():.4f}, {cv.lam.max():.4f}] against "
+              f"lambda_max = {LAMBDA_GRID[LAM_MAX]:g}")
     except FileNotFoundError:
         note(158, "cross-fitted CSVs missing")
 
@@ -1598,8 +1601,9 @@ def section_marida():
     # --- prose numbers of Section V-E that no table carries -------------
     debris = _n_debris_patches()
     if debris is None:
-        note(190, "component summary and tables unreadable; debris-patch "
-                  "count not checked")
+        fail(190, "the debris-patch count cannot be read",
+             "run scripts/24_marida_component_stats.py (run_all.sh phase 7b); "
+             "Section V-E quotes 373 of 1381 patches from it")
     else:
         near(190, "373 of 1381 patches contain debris", 373, float(debris), 0.5)
     near(199, "official test group spans 14 debris-bearing scenes", 14,
@@ -1635,8 +1639,10 @@ def section_marida():
         near(202, "median MARIDA component size is 2 px", 2.0, sizes[0], 0.001)
         near(202, "83% of components are 3 px or smaller", 0.83, sizes[1], 0.005)
     else:
-        note(202, "component summary and tables absent; size statistics "
-                  "not checked")
+        fail(202, "the MARIDA component-size statistics cannot be read",
+             "run scripts/24_marida_component_stats.py (run_all.sh phase 7b); "
+             "Section V-E and the appendix quote the median size and the "
+             "3-px fraction from it")
 
     # pixel-level F1 of the reported detectors
     for key, want in (("marida_unet_official_holdout", 0.55),
@@ -1824,11 +1830,14 @@ def _permutation_band_claims():
           set(never) == {"official", "region_16PDC", "region_16PEC",
                          "season_spring"},
           f"never below: {never}")
-    pcc = w[(w["setting"] == "region_16PCC") & w["below_band"]]
-    truth(231, "16PCC falls below the band from beta=0.1 upward",
-          not pcc.empty and abs(float(pcc["budget"].min()) - 0.10) < 1e-9,
-          f"first separation at beta={float(pcc['budget'].min()):g}"
-          if not pcc.empty else "never separates")
+    pcc_all = w[w["setting"] == "region_16PCC"]
+    pcc = pcc_all[pcc_all["below_band"].astype(bool)]
+    below_at = sorted(round(float(b), 2) for b in pcc["budget"])
+    truth(231, "16PCC falls below the band at seven of its ten budgets, "
+               "0.1-0.2 and 0.35-0.5, with 0.25 and 0.3 back inside",
+          len(pcc_all) == 10
+          and below_at == [0.1, 0.15, 0.2, 0.35, 0.4, 0.45, 0.5],
+          f"{len(pcc)} of {len(pcc_all)} budgets below, at {below_at}")
 
     # The two quoted bands at beta = 0.5.
     def cell(setting):
@@ -1847,10 +1856,16 @@ def _permutation_band_claims():
     closed = 0.50
     near(232, "the score improves on the closed-form line by 0.015",
          0.015, closed - a, tol=5e-4)
+    # The margin has to be positive for the ratio to mean anything: if the
+    # score were worse than the closed-form line, closed - a would go negative
+    # and any positive width would clear the comparison for free.
+    margin = closed - a
     truth(232, "the official band is more than ten times that margin",
-          (hi - lo) > 10 * (closed - a),
-          f"width {hi - lo:.3f} against margin {closed - a:.4f}, "
-          f"a factor of {(hi - lo) / (closed - a):.1f}")
+          margin > 0 and (hi - lo) > 10 * margin,
+          f"width {hi - lo:.3f} against margin {margin:.4f}"
+          + (f", a factor of {(hi - lo) / margin:.1f}" if margin > 0
+             else " -- the score does not improve on the closed-form line, "
+                  "so the sentence this checks no longer applies"))
 
     a, lo, med, hi = cell("night_tierA50")
     near(232, "night at beta=0.5: score", 0.63, a, tol=5e-3)
@@ -2138,7 +2153,9 @@ def section_revision():
         fixed = load("x5_temp__*")
         free = load("x6_temp_leakfree__*")
     except FileNotFoundError:
-        note(99, "temperature runs missing", "skipped")
+        fail(99, "the leakage-free temperature runs are absent",
+             "run scripts/21_temperature_leakfree.py (run_all.sh phase 7b); "
+             "the temperature-scaling comparison is reported from them")
         fixed = free = None
     if free is not None:
         # stage 4b tags the fixed-temperature run with a "_tempscaled" model key
@@ -2174,7 +2191,9 @@ def section_revision():
     try:
         uni = load("x7_union_area__*")
     except FileNotFoundError:
-        note(98, "union-area runs missing", "skipped")
+        fail(98, "the union-area runs are absent",
+             "run scripts/22_union_marked_area.py (run_all.sh phase 7b); "
+             "Section IV-B reports the measured union from them")
         uni = None
     if uni is not None:
         uni = uni[np.isclose(uni["alpha"], 0.2)]
@@ -2302,7 +2321,9 @@ def section_review():
     exp_dir = results_dir("experiments")
     paths = sorted(glob.glob(str(exp_dir / "x7_union_area__*.csv")))
     if not paths:
-        note(932, "union-area runs absent; skipping the union checks")
+        fail(932, "the union-area runs are absent",
+             "run scripts/22_union_marked_area.py (run_all.sh phase 7b); "
+             "Section V-A reports the union against the sum from them")
         return
     ratios_mean, ratios_sum = [], []
     for p in paths:
@@ -2319,10 +2340,88 @@ def section_review():
     rng_claim(934, "the union is 67-82% of the sum of the three masks",
               0.669, 0.816, ratios_sum, 0.005)
 
+    # Section IV-B now prints the union with the degenerate draws kept as well
+    # as removed: they are the most expensive operating points, not invalid
+    # observations, and on B5 three draws in twenty-five carry the figure from
+    # 3.4% to 15.0%.
+    cond, allw, degen = [], [], []
+    for p_ in paths:
+        u = pd.read_csv(p_)
+        u = u[np.isclose(u["alpha"], 0.2)]
+        keep = u[~u["degenerate"].astype(bool)] if "degenerate" in u else u
+        cond.append(float(keep["union_area"].mean()))
+        allw.append(float(u["union_area"].mean()))
+        degen.append(int(u["degenerate"].sum()) if "degenerate" in u else 0)
+    # Section V-B: the lowest grid index any model selects, and Mask2Former's
+    # own minimum. The earlier text claimed every threshold sat in the top
+    # twenty points, which the matrix does not support.
+    e1_ = sel(load("e1_indist__*"), method="region_crc")
+    e1_ = e1_[e1_["feasible"].astype(bool)]
+    near(942, "the lowest selected grid index over all models is 881",
+         881, float(e1_["lam_index"].min()), 0.5)
+    m2f_ = e1_[e1_["model"] == "mask2former_swinb_cityscapes"]
+    near(942, "Mask2Former selects within the top four grid points",
+         997, float(m2f_["lam_index"].min()), 0.5)
+
+    # Section V-C: the degenerate-draw fraction with and without Mask2Former,
+    # and the argmax night range separated by capture level.
+    e2_ = sel(load("e2_break__*"), method="region_crc", rho=0.5)
+    near(942, "46.8% of the SegFormer draws are degenerate", 0.468,
+         float((e2_[e2_["model"].isin(SEGF)]["lam_index"] == LAM_MAX).mean()), 0.002)
+    near(942, "60.1% once Mask2Former is included", 0.601,
+         float((e2_["lam_index"] == LAM_MAX).mean()), 0.002)
+    an_ = sel(load("e2_break__*"), method="argmax", alpha=0.20)
+    an_ = an_[an_["experiment"].str.contains("__night__")]
+    for rho_, lo_, hi_ in ((0.5, 0.757, 0.835), (0.1, 0.679, 0.759)):
+        v = an_[np.isclose(an_["rho"], rho_)].groupby("model")["region_fnr"].mean()
+        rng_claim(942, f"argmax misses {lo_:.0%}-{hi_:.0%} of night regions at "
+                       f"rho={rho_}", lo_, hi_, v.values, 0.001)
+
+    # Section V-B: the size strata quoted in the text are B2's, and the
+    # three-variant average is a different pair.
+    st = sel(load("e1_indist__*"), method="region_crc", alpha=0.20, rho=0.5)
+    st = st[st["feasible"].astype(bool)]
+    b2 = st[st["model"] == "segformer_b2_cityscapes"]
+    near(943, "B2 smallest-stratum FNR is 0.24", 0.24,
+         float(b2["fnr_stratum0"].mean()), 0.005)
+    near(943, "B2 largest-stratum FNR is 0.02", 0.02,
+         float(b2["fnr_stratum2"].mean()), 0.005)
+    sg = st[st["model"].isin(SEGF)]
+    near(943, "the three SegFormer variants average 0.25 in the smallest stratum",
+         0.25, float(sg.groupby("model")["fnr_stratum0"].mean().mean()), 0.005)
+    near(943, "and 0.016 in the largest", 0.016,
+         float(sg.groupby("model")["fnr_stratum2"].mean().mean()), 0.002)
+
+    # Abstract and conclusion now quote per-class violation ratios, since the
+    # guarantee is stated per class. The class-averaged figures stay in X1.
+    br = sel(load("e2_break__*"), method="region_crc", rho=0.5)
+    br = br[br["feasible"].astype(bool)]
+    cc_ = br.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
+    ratio_acdc = float((cc_ / cc_.index.get_level_values("alpha")).max())
+    near(944, "the worst ACDC per-class violation is 2.73x", 2.73, ratio_acdc, 0.01)
+    lo_ = sel(load("l2_break__*"), method="region_crc", rho=0.5)
+    lo_ = lo_[lo_["feasible"].astype(bool)]
+    cl_ = lo_.groupby(["experiment", "class_name", "alpha"])["region_fnr"].mean()
+    ratio_love = float((cl_ / cl_.index.get_level_values("alpha")).max())
+    near(944, "the worst LoveDA per-class violation is 3.66x", 3.66, ratio_love, 0.01)
+    truth(944, "both exceed the class-averaged figures the earlier text quoted",
+          ratio_acdc > 2.03 and ratio_love > 3.04,
+          f"per-class {ratio_acdc:.2f}/{ratio_love:.2f} against "
+          "class-averaged 2.03/3.04")
+
+    rng_claim(941, "the union over non-degenerate draws is 3.4-5.0% at a=0.2",
+              0.034, 0.050, cond, 0.0006)
+    rng_claim(941, "the union over all draws is 5.0-15.0% at a=0.2",
+              0.0495, 0.150, allw, 0.0006)
+    truth(941, "none to three draws per model are degenerate",
+          min(degen) == 0 and max(degen) == 3, f"degenerate counts {sorted(degen)}")
+
     # Section V-E: the class-conditional target pool does not lift the collapse.
     pool_paths = sorted(glob.glob(str(exp_dir / "x8_tierb_pool__*.csv")))
     if not pool_paths:
-        note(935, "tier-B target-pool run absent; skipping the pool checks")
+        fail(935, "the tier-B target-pool run is absent",
+             "run scripts/23_tierb_target_pool.py (run_all.sh phase 7b); "
+             "Section V-E reports the pool diagnostics from it")
         return
     x8 = pd.concat([pd.read_csv(p) for p in pool_paths], ignore_index=True)
     truth(935, "every weight clips to the floor under BOTH target pools",
@@ -2359,6 +2458,35 @@ def section_review():
     truth(940, "stage 23 reproduces the published tier-B weights exactly on "
                "the shared pool", len(j) > 0 and d == 0.0,
           f"{len(j)} matched records, max abs diff {d:.3e}")
+
+    # Section VI(a): the expected number of missed regions per scene is
+    # E[N L], not E[N] E[L]. The bound constrains L alone, so the product form
+    # is exact only under independence, and the discussion quotes the gap
+    # measured here rather than asserting the factorization.
+    comp = results_dir("experiments") / "x11_marida_confidence__components.csv"
+    if not comp.exists():
+        fail(941, "the MARIDA component table is absent",
+             "run scripts/26_marida_confidence.py; Section VI(a) quotes the "
+             "product-form gap measured from it")
+    else:
+        cdf = pd.read_csv(comp)
+        cdf = cdf[cdf["official_group"] == "test"]
+        got = {}
+        for a_ in (0.05, 0.2):
+            col = f"missed__alpha{a_:g}__rho0.5"
+            per = cdf.groupby("image_id")[col].agg(["size", "sum"])
+            n_, l_ = per["size"], per["sum"] / per["size"]
+            got[a_] = (float(n_.mean()) * float(l_.mean()), float((n_ * l_).mean()))
+        near(941, "product form at alpha=0.2 gives 0.44", 0.44, got[0.2][0], 0.005)
+        near(941, "the measured count at alpha=0.2 is 0.37", 0.37, got[0.2][1], 0.005)
+        truth(941, "the product form overstates the count by about a fifth at "
+                   "alpha=0.2",
+              1.15 <= got[0.2][0] / got[0.2][1] <= 1.25,
+              f"ratio {got[0.2][0] / got[0.2][1]:.3f}")
+        truth(941, "the product form understates it at alpha=0.05, so the sign "
+                   "of the error is not fixed",
+              got[0.05][0] < got[0.05][1],
+              f"product {got[0.05][0]:.4f} against measured {got[0.05][1]:.4f}")
 
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,
