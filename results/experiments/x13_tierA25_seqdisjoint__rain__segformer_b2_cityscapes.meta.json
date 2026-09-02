@@ -1,18 +1,19 @@
 {
- "name": "e1_indist__segformer_b5_cityscapes",
+ "name": "x13_tierA25_seqdisjoint__rain__segformer_b2_cityscapes",
  "argv": {
-  "name": "e1_indist__segformer_b5_cityscapes",
-  "model": "segformer_b5_cityscapes",
-  "scheme": "cityscapes_val_half",
+  "name": "x13_tierA25_seqdisjoint__rain__segformer_b2_cityscapes",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "acdc_rain_targetcal25_seqdisjoint",
   "cal_datasets": [
-   "cityscapes_val"
+   "acdc_rain_train",
+   "acdc_rain_val"
   ],
   "test_datasets": [
-   "cityscapes_val"
+   "acdc_rain_train",
+   "acdc_rain_val"
   ],
   "methods": [
    "region_crc",
-   "pixel_crc",
    "heuristic",
    "argmax"
   ],
@@ -46,8 +47,8 @@
   "bootstrap_ci": 0,
   "max_seeds": null
  },
- "scheme_file": "cityscapes_val_half.json",
- "n_records": 7200,
+ "scheme_file": "acdc_rain_targetcal25_seqdisjoint.json",
+ "n_records": 5400,
  "git_revision": "unknown",
- "completed_utc": "2026-08-24T13:09:31.953858+00:00"
+ "completed_utc": "2026-08-24T13:37:37.958673+00:00"
 }

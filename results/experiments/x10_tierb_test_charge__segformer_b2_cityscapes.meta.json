@@ -1,0 +1,144 @@
+{
+ "name": "x10_tierb_test_charge__segformer_b2_cityscapes",
+ "argv": {
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "embedding": "dinov2_vitb14",
+  "conditions": [
+   "fog",
+   "night",
+   "rain",
+   "snow"
+  ],
+  "dataset_template": "acdc_{cond}_train,acdc_{cond}_val",
+  "classes": [
+   "person",
+   "rider",
+   "bicycle"
+  ],
+  "clips": [
+   [
+    0.05,
+    2.0
+   ],
+   [
+    0.05,
+    5.0
+   ],
+   [
+    0.05,
+    20.0
+   ]
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.5,
+   0.1
+  ],
+  "cal_split": "calibration",
+  "max_seeds": 25,
+  "reference_templates": [
+   "e4_tierB__{cond}__{model}__{embedding}",
+   "c1_clip{kappa}__{cond}__{model}__{embedding}",
+   "l4_tierB__{cond}__{embedding}"
+  ],
+  "allow_unchecked": false,
+  "out_name": null
+ },
+ "n_records": 21600,
+ "references": [
+  {
+   "condition": "fog",
+   "kappa": 2.0,
+   "reference": "c1_clip2__fog__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 4.884592236695322e-15
+  },
+  {
+   "condition": "fog",
+   "kappa": 5.0,
+   "reference": "c1_clip5__fog__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 5.084821791596396e-16
+  },
+  {
+   "condition": "fog",
+   "kappa": 20.0,
+   "reference": "e4_tierB__fog__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 4.404809977255251e-16
+  },
+  {
+   "condition": "night",
+   "kappa": 2.0,
+   "reference": "c1_clip2__night__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 2.0193252369688435e-15
+  },
+  {
+   "condition": "night",
+   "kappa": 5.0,
+   "reference": "c1_clip5__night__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 3.8136163436972977e-16
+  },
+  {
+   "condition": "night",
+   "kappa": 20.0,
+   "reference": "e4_tierB__night__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 3.3417715582316054e-16
+  },
+  {
+   "condition": "rain",
+   "kappa": 2.0,
+   "reference": "c1_clip2__rain__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 2.1578594045264504e-15
+  },
+  {
+   "condition": "rain",
+   "kappa": 5.0,
+   "reference": "c1_clip5__rain__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 5.084821791596396e-16
+  },
+  {
+   "condition": "rain",
+   "kappa": 20.0,
+   "reference": "e4_tierB__rain__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 4.404809977255251e-16
+  },
+  {
+   "condition": "snow",
+   "kappa": 2.0,
+   "reference": "c1_clip2__snow__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 7.249226344835749e-16
+  },
+  {
+   "condition": "snow",
+   "kappa": 5.0,
+   "reference": "c1_clip5__snow__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 5.084821791596396e-16
+  },
+  {
+   "condition": "snow",
+   "kappa": 20.0,
+   "reference": "e4_tierB__snow__segformer_b2_cityscapes__dinov2_vitb14",
+   "n_rows": 450,
+   "worst_rel_dev": 4.404809977255251e-16
+  }
+ ],
+ "clips_without_reference": [],
+ "completed_utc": "2026-08-24T04:25:05.447677+00:00"
+}
