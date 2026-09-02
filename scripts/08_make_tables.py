@@ -59,10 +59,7 @@ def table_validity_cityscapes(df: pd.DataFrame) -> str:
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
     return latex_table(
         body,
-        "In-distribution region-level risk control on Cityscapes. "
-        "Mean region FNR and marked-area fraction over 100 calibration draws. "
-        "Each cell averages the three critical classes; the guarantee is per "
-        "class, and Section~\\ref{sec:exp_indist} reports the per-class cells." + _rho_note(df),
+        "In-distribution region-level risk control on Cityscapes.",
         "tab:validity_cityscapes", "l" + "cc" * len(ALPHAS), header)
 
 
@@ -124,24 +121,10 @@ def table_baselines(df: pd.DataFrame) -> str:
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows[:-1])
     # The caption describes the rows that were actually written. The
     # class-conditional LAC arm is produced only by a stage-5 run made with
-    # --lac-variants class_conditional, so its sentence appears only when its
-    # row does; describing an absent row would be a claim about nothing.
-    lac_caption = (
-        "The marginal LAC row is a single global threshold on an all-class "
-        "pixel-coverage target; the class-conditional row calibrates one "
-        "threshold per critical class on that class's own pixel miscoverage "
-        "(Section~\\ref{sec:exp_indist}); "
-        if "lac_classcond" in emitted else
-        "The marginal LAC row is a single global threshold tuned to an "
-        "all-class pixel-coverage target, the marginal variant of the "
-        "least-ambiguous set-valued classifier; ")
     return latex_table(
         body,
         "Method comparison at $\\alpha=0.2$ on Cityscapes (in-distribution), "
-        "at both capture levels. " + lac_caption +
-        "the temperature-scaled rows "
-        "use one scalar fitted on the seed-0 calibration list and reused "
-        "across draws (Section~\\ref{sec:exp_indist}).",
+        "at both capture levels.",
         "tab:baselines", "llcccc", header, size="scriptsize", colsep="2.5pt")
 
 
@@ -175,11 +158,8 @@ def table_breakdown(df: pd.DataFrame) -> str:
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
     return latex_table(
         body,
-        "Region FNR on ACDC conditions under source (Cityscapes) calibration. "
-        "Bold entries violate the nominal level; $\\ast$ marks cells whose "
-        "mean marked area exceeds $99\\%$, where the level is met only by "
-        "marking the whole image. Each cell averages the three critical "
-        "classes." + _rho_note(df),
+        "Region FNR on ACDC conditions under source (Cityscapes) "
+        "calibration.",
         "tab:breakdown", "l" + "cccc" * len(ALPHAS), header, star=True)
 
 
@@ -218,12 +198,7 @@ def table_tier_a(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "Tier A on ACDC: exact recalibration from $n_t$ labeled target "
-        "images. Columns are averaged per class and then over the three "
-        "critical classes. FNR and marked area use feasible draws only; "
-        "Inf.\\ is the fraction of draws where $\\alpha$ is unattainable "
-        "because too few of the $n_t$ images contain the class, and the "
-        "parenthesised count is the number of feasible draws behind the "
-        "pair." + _rho_note(df),
+        "images.",
         # The feasible-draw counts widen the table past one IEEE column.
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
@@ -261,10 +236,7 @@ def table_loveda(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "LoveDA: in-domain validity and cross-domain breakdown under source "
-        "calibration. Bold entries violate the nominal level; the shift is "
-        "strongly directional. Each cell averages the two critical classes; "
-        "Section~\\ref{sec:exp_loveda} resolves the in-domain cells per "
-        "class." + _rho_note(df),
+        "calibration.",
         "tab:loveda", "l" + "cc" * len(ALPHAS), header)
 
 
@@ -330,12 +302,7 @@ def table_marida(df: pd.DataFrame) -> str:
     body = "\n".join(rows)
     return latex_table(
         body,
-        "MARIDA marine-debris region FNR under region-level CRC. One model per "
-        "held-out axis, fitted without that tile or season and without the "
-        "calibration group; the official axis carries a single model and a "
-        "five-member ensemble. Bold marks the cells whose whole 95\\% "
-        "scene-level bootstrap interval lies above the level; the intervals "
-        "are in Table~\\ref{tab:uncertainty_marida}." + _rho_note(df),
+        "MARIDA marine-debris region FNR under region-level CRC.",
         "tab:marida", "lccc", header)
 
 
@@ -367,12 +334,7 @@ def table_ablations(df: pd.DataFrame) -> str:
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
     return latex_table(
         body,
-        "Shared-threshold ablation on Cityscapes: mean marked area under "
-        "independent per-class thresholds (Area\\textsubscript{per}) versus a "
-        "single shared threshold (Area\\textsubscript{sh}), and the "
-        "max-over-classes FNR the shared threshold controls. Coupling to the "
-        "hardest class inflates the marked area by up to $3.0\\times$."
-        + _rho_note(df),
+        "Shared-threshold ablation on Cityscapes.",
         "tab:ablations", "l" + "ccc" * 2, header, size="scriptsize", colsep="2.5pt")
 
 
@@ -428,12 +390,7 @@ def table_perclass(df: pd.DataFrame) -> str:
                  + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
                  + r" \\")
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
-    caption = (
-        f"In-distribution region FNR on Cityscapes, resolved per class over "
-        f"the {n_cells} cells behind the class averages of "
-        f"Table~\\ref{{tab:validity_cityscapes}}. $\\ast$ marks the {n_full} "
-        f"cells where the level is met only by marking more than $99\\%$ of "
-        f"the image. Means over 100 calibration draws.")
+    caption = "In-distribution region FNR on Cityscapes, resolved per class."
     if n_over:
         caption += f" WARNING: {n_over} cells exceed their level."
     return latex_table(body, caption, "tab:perclass",
@@ -484,12 +441,7 @@ def table_loveda_perclass(df: pd.DataFrame) -> str:
                  + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
                  + r" \\")
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
-    caption = (
-        f"LoveDA in-domain region FNR resolved per class over the {n_cells} "
-        f"cells behind the class averages of Table~\\ref{{tab:loveda}}. Bold "
-        f"marks the {n_over} cells above their level; $\\ast$ marks the "
-        f"{n_full} cells where the level is met only by marking more than "
-        f"$99\\%$ of the image. Means over 100 calibration draws.")
+    caption = "LoveDA in-domain region FNR resolved per class."
     return latex_table(body, caption, "tab:loveda_perclass",
                        "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
 
@@ -532,13 +484,7 @@ def table_perclass_area(df: pd.DataFrame) -> str:
                  + " & " + " & ".join(rf"$\alpha={a:g}$" for a in ALPHAS)
                  + r" \\")
     body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
-    caption = (
-        "Mean marked fraction of the image for the cells of "
-        "Table~\\ref{tab:perclass}. The class average understates what an "
-        "operator pays, since the cost is set by the hardest class: on the "
-        "SegFormer variants at $\\alpha=0.2$ and $\\rho=0.5$ the per-class "
-        f"area ranges from {lo:.3f} to {hi:.3f}. Means over 100 calibration "
-        "draws.")
+    caption = "Mean marked fraction of the image, resolved per class."
     return latex_table(body, caption, "tab:perclass_area",
                        "ll" + "ccc" * 2, header, size="scriptsize", colsep="2pt")
 
