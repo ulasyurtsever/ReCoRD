@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: >-
+  If you use this software or the region-level conformal risk control
+  framework it implements, please cite both the software and the paper.
+title: >-
+  ReCoRD: Region-Level Conformal Risk Control for Semantic Segmentation
+  under Distribution Shift
+abstract: >-
+  Given a pretrained segmentation model, ReCoRD selects class-specific
+  thresholds on held-out calibration data so that the fraction of missed
+  ground-truth regions (connected components) of a designated critical class
+  within an image, averaged over the images containing that class, is bounded
+  by a chosen risk level, with finite-sample distribution-free validity.
+  Deployment under distribution shift is handled by a two-tier scheme: exact
+  recalibration from a small labeled target set, and a label-free
+  importance-weighted variant over foundation-model embeddings carrying an a
+  priori certificate that identifies vacuous calibration before any label is
+  read. The repository contains the full pipeline, the committed splits and
+  seeds, and the reporting scripts that produce every number, table and figure
+  in the paper.
+type: software
+authors:
+  - family-names: Yurtsever
+    given-names: Ulaş
+    orcid: https://orcid.org/0000-0003-3438-6872
+version: 0.1.0
+license: MIT
+repository-code: https://github.com/ulasyurtsever/ReCoRD
+keywords:
+  - conformal prediction
+  - conformal risk control
+  - semantic segmentation
+  - distribution shift
+  - uncertainty quantification
+  - remote sensing
+  - marine debris
+preferred-citation:
+  type: article
+  title: >-
+    Region-Level Conformal Risk Control for Semantic Segmentation under
+    Distribution Shift
+  authors:
+    - family-names: Yurtsever
+      given-names: Ulaş
+      orcid: https://orcid.org/0000-0003-3438-6872
+  journal: IEEE Transactions on Geoscience and Remote Sensing
+  year: 2026
