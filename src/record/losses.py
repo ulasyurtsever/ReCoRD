@@ -15,17 +15,25 @@ from __future__ import annotations
 
 import numpy as np
 
-# Coverage curves are cached as float16, which cannot represent 0.1 exactly:
-# the nearest value is 0.0999756. The capture comparison below is nonetheless
-# exact at the boundary, because NumPy casts the Python scalar rho down to the
-# array's dtype rather than widening the array, so a component covered by
-# exactly one tenth of its pixels compares equal and is captured. That is the
-# intended semantics -- capture is decided at the precision the curves are
-# stored in -- but it holds only while the curves reach this function in their
-# stored dtype. Upcasting them first (``curves.astype(np.float32)``) turns
-# 0.0999756 into a value genuinely below 0.1 and silently reclassifies every
-# exactly-captured component as missed at rho = 0.1. test_losses_eval.py pins
-# both halves of that invariant.
+#: Coverage curves are cached at this dtype by stages 4 and 4b, and capture is
+#: decided at that precision -- see :func:`capture_threshold`.
+CURVE_STORAGE_DTYPE = np.float16
+
+
+def capture_threshold(rho: float) -> float:
+    """Return ``rho`` rounded onto the grid the coverage curves are stored on.
+
+    float16 cannot represent 0.1; the nearest value is 0.0999756. A component
+    covered by exactly one tenth of its pixels is therefore cached as 0.0999756
+    and must still count as captured at ``rho = 0.1``. Rounding the threshold
+    the same way the coverage was rounded makes that hold whatever dtype the
+    curves arrive in, so an ``astype`` anywhere upstream can no longer move a
+    ``rho = 0.1`` number. Earlier revisions relied instead on NumPy casting the
+    scalar down to a float16 array, which was correct only while every caller
+    passed the curves through unwidened; two of them did not. ``rho = 0.5`` is
+    exact in float16 and is returned unchanged.
+    """
+    return float(CURVE_STORAGE_DTYPE(rho))
 
 
 def component_miss_matrix(coverage_curves: np.ndarray, rho: float) -> np.ndarray:
@@ -41,7 +49,8 @@ def component_miss_matrix(coverage_curves: np.ndarray, rho: float) -> np.ndarray
     """
     if not 0.0 < rho <= 1.0:
         raise ValueError(f"rho must be in (0, 1], got {rho}")
-    return (np.asarray(coverage_curves) < rho).astype(np.float32)
+    return (np.asarray(coverage_curves)
+            < capture_threshold(rho)).astype(np.float32)
 
 
 def image_loss_curves(

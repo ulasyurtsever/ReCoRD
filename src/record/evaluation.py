@@ -13,6 +13,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from record.crc import ThresholdSelection
+from record.losses import capture_threshold
 
 
 @dataclass(frozen=True)
@@ -87,9 +88,10 @@ def stratified_region_fnr(
     Component-level (not image-averaged) miss rates, reported per size
     stratum; NaN for empty strata.
     """
-    # The curves must arrive in their stored dtype; see component_miss_matrix
-    # for why upcasting them before this comparison changes the rho = 0.1 result.
-    miss = coverage_curves[:, lam_index] < rho
+    # Same capture rule as component_miss_matrix, and for the same reason: the
+    # threshold is rounded onto the storage grid so the comparison does not
+    # depend on the dtype the curves reached this function in.
+    miss = coverage_curves[:, lam_index] < capture_threshold(rho)
     out: list[float] = []
     for s in range(n_strata):
         sel = component_strata == s
