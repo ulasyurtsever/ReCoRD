@@ -2488,12 +2488,57 @@ def section_review():
               got[0.05][0] < got[0.05][1],
               f"product {got[0.05][0]:.4f} against measured {got[0.05][1]:.4f}")
 
+def section_capture_rule():
+    """The capture rule as the source actually implements it.
+
+    Every other section here re-checks committed CSVs against each other, which
+    makes this audit structurally blind to a change in how risk is computed: a
+    mutation of the capture comparison leaves all 550 checks green. That blind
+    spot is not hypothetical -- two stage-5 drivers widened the cached float16
+    curves before the comparison, which at rho = 0.1 reclassified every
+    exactly-captured component as missed, and neither this audit nor the test
+    suite saw it. These checks read the source and exercise the rule directly.
+    """
+    from record.losses import capture_threshold, component_miss_matrix
+    from record.paths import repo_root
+    head("P  Capture rule as implemented in src/record")
+
+    losses_src = (repo_root() / "src" / "record" / "losses.py").read_text()
+    eval_src = (repo_root() / "src" / "record" / "evaluation.py").read_text()
+
+    truth(950, "component_miss_matrix compares against the rounded threshold",
+          "< capture_threshold(rho)" in losses_src,
+          "a bare '< rho' here is the rho = 0.1 defect")
+    truth(951, "stratified_region_fnr uses the same rounded threshold",
+          "< capture_threshold(rho)" in eval_src,
+          "the one-column diagnostic must agree with the matrix")
+
+    # The rule is live, not merely named.
+    truth(952, "rho = 0.1 rounds strictly below itself on the storage grid",
+          capture_threshold(0.1) < 0.1,
+          f"{capture_threshold(0.1):.10f}")
+    truth(953, "rho = 0.5 is exact on the storage grid and is left alone",
+          capture_threshold(0.5) == 0.5, f"{capture_threshold(0.5)}")
+
+    # The property the drivers depend on: the answer cannot move with dtype.
+    stored = np.array([[1.0 / 10.0, 0.0999146], [0.5, 0.49]], dtype=np.float16)
+    outs = [component_miss_matrix(stored.astype(d), r)
+            for d in (np.float16, np.float32, np.float64) for r in (0.1, 0.5)]
+    ref = [component_miss_matrix(stored, r) for r in (0.1, 0.5)] * 3
+    truth(954, "the miss matrix is identical whatever dtype the curves arrive in",
+          all(np.array_equal(a, b) for a, b in zip(outs, ref)),
+          "an astype upstream can no longer move a rho = 0.1 number")
+    truth(955, "a component covered by exactly rho is captured, not missed",
+          component_miss_matrix(stored.astype(np.float32), 0.1)[0, 0] == 0.0,
+          "0.1 stored as float16 is 0.0999756")
+
+
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,
     "F2": section_lac_detail,
     "H": section_breakdown, "I": section_tier_a, "J": section_tier_b,
     "K": section_loveda, "L": section_marida, "M": section_triage,
-    "N": section_holdout, "R": section_revision, "S": section_review, "X": section_cross,
+    "N": section_holdout, "R": section_revision, "S": section_review, "P": section_capture_rule, "X": section_cross,
 }
 
 

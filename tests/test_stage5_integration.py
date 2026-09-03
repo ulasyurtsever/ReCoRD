@@ -322,3 +322,39 @@ def test_stage5_lac_global(synthetic_env):
     # but calibrate different losses; both produce valid records.
     assert lac["region_fnr"].notna().all()
     assert lac["marked_area_fraction"].between(0, 1).all()
+
+
+def test_stage5_captures_components_sitting_exactly_on_rho(synthetic_env):
+    """The loader must not be able to move a rho = 0.1 result by widening.
+
+    ``05_run_experiments.py`` upcasts the cached float16 curves to float32
+    before the capture comparison. float16 cannot represent 0.1 -- the nearest
+    value is 0.0999756 -- so for a while that upcast silently reclassified
+    every exactly-captured component as missed at rho = 0.1, and nothing in
+    this suite noticed: the unit test pinned ``component_miss_matrix`` and no
+    test ever exercised the driver that calls it. This one does. Every
+    component here is covered by exactly one tenth of its pixels from the
+    midpoint of the grid onward, so region CRC must find a finite threshold and
+    report a zero miss rate. Under the widening bug no lambda ever captures
+    anything, the search runs off the end of the grid, and the rate is 1.0.
+    """
+    from record.grid import LAMBDA_GRID
+
+    raw_dir = synthetic_env / "raw" / MODEL / DATASET
+    curves = np.load(raw_dir / "coverage_curves.npy")
+    mid = LAMBDA_GRID.size // 2
+    boundary = np.zeros_like(curves)
+    boundary[:, mid:] = np.float16(1.0 / 10.0)
+    np.save(raw_dir / "coverage_curves.npy", boundary)
+
+    frame = _run_stage5(synthetic_env, "boundary_run", [
+        "--scheme", "synthetic_half", "--methods", "region_crc",
+        "--rhos", "0.1",
+    ])
+    rows = frame[frame["method"] == "region_crc"]
+    assert len(rows) == 3
+    assert rows["feasible"].all()
+    assert (rows["region_fnr"] == 0.0).all(), rows["region_fnr"].tolist()
+    # A threshold strictly inside the grid: the boundary was reached, not
+    # stepped over to lambda_max.
+    assert (rows["lam"] < 1.0).all(), rows["lam"].tolist()
