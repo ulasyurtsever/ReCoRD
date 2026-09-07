@@ -111,10 +111,14 @@ for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes; do
   run python scripts/21_temperature_leakfree.py \
     --model "$MODEL" --dataset cityscapes_val --scheme cityscapes_val_half
 done
+# Published x7 run: 25 seeds at alpha = 0.2 only. The stage's defaults (one
+# seed, three levels) are NOT that run; the first pass of this driver used them
+# and produced three-row files (caught by audit 941 and the sidecar diff).
 for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes segformer_b2_cityscapes_mcdrop8; do
   run python scripts/22_union_marked_area.py \
     --model "$MODEL" --dataset cityscapes_val --scheme cityscapes_val_half \
-    --experiment "e1_indist__${MODEL}" --method region_crc --rho 0.5
+    --experiment "e1_indist__${MODEL}" --method region_crc --rho 0.5 \
+    --alphas 0.2 --seeds $(seq 0 24)
 done
 run python scripts/23_tierb_target_pool.py \
   --model segformer_b2_cityscapes --scheme cityscapes_val_half \

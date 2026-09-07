@@ -118,6 +118,47 @@ def compare_file(name: str, new: pd.DataFrame, old: pd.DataFrame) -> tuple[list[
     return rows, violations
 
 
+SIDECAR_SKIP = {"completed_utc", "git_revision", "n_records", "timestamp"}
+
+
+def _flatten(d: dict, prefix: str = "") -> dict:
+    out: dict = {}
+    for k, v in d.items():
+        if k in SIDECAR_SKIP:
+            continue
+        if isinstance(v, dict):
+            out.update(_flatten(v, prefix + k + "."))
+        else:
+            out[prefix + k] = v
+    return out
+
+
+def compare_sidecars(old_dir: Path, new_dir: Path, names: list[str]) -> list[tuple[str, dict]]:
+    """Return (csv name, {field: (old, new)}) for every pair whose recorded
+    arguments differ, ignoring fields the old sidecar left unset."""
+    import json
+
+    diffs: list[tuple[str, dict]] = []
+    for name in names:
+        stem = name[:-4]
+        # Companion files (…_triage.csv) share the main run's sidecar.
+        for cand in (stem, stem.rsplit("_", 1)[0]):
+            po, pn = old_dir / f"{cand}.meta.json", new_dir / f"{cand}.meta.json"
+            if po.exists() and pn.exists():
+                break
+        else:
+            continue
+        try:
+            fo = _flatten(json.load(open(po)))
+            fn = _flatten(json.load(open(pn)))
+        except Exception:  # noqa: BLE001
+            continue
+        d = {k: (fo[k], fn.get(k)) for k in fo if fo[k] is not None and fo[k] != fn.get(k)}
+        if d:
+            diffs.append((name, {k: (str(a)[:60], str(b)[:60]) for k, (a, b) in d.items()}))
+    return diffs
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--old", default="results/experiments_pre_p1")
@@ -143,10 +184,21 @@ def main() -> int:
             old = pd.read_csv(old_dir / name)
             r, v = compare_file(name, new, old)
         except Exception as exc:  # noqa: BLE001 - report and continue
+            # A file that cannot be compared is not "no difference"; it is a
+            # gap in the evidence, so under --strict it counts as a violation.
             unreadable.append(f"{name}: {exc}")
+            violations.append(f"{name}: not comparable ({exc})")
             continue
         rows.extend(r)
         violations.extend(v)
+
+    # Sidecar arguments. Two files with the same name can come from different
+    # invocations; the 2026-09-07 re-run produced x7 files with one seed where
+    # the published run had 25, and only the sidecar's `seeds` field showed it.
+    # Fields the old sidecar did not record (schema growth) are not differences.
+    arg_diffs = compare_sidecars(old_dir, new_dir, sorted(old_files & new_files))
+    for name, d in arg_diffs:
+        violations.append(f"{name}: run arguments differ from the old sidecar: {d}")
 
     report = pd.DataFrame(rows)
     Path(args.out).parent.mkdir(parents=True, exist_ok=True)
