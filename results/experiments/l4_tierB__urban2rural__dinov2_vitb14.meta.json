@@ -13,6 +13,10 @@
   "methods": [
    "weighted_crc"
   ],
+  "lac_variants": [
+   "marginal"
+  ],
+  "measure_pixel_fnr": false,
   "loss": "region",
   "triage": false,
   "triage_rankings": [
@@ -28,15 +32,19 @@
    0.5
   ],
   "embedding": "dinov2_vitb14",
+  "weight_source_holdout": 0.0,
+  "weight_holdout": 0.0,
   "weight_estimator": "logistic",
   "weight_clip_min": 0.05,
   "weight_clip_max": 20.0,
   "cal_split": null,
   "test_split": "test",
+  "bootstrap_clusters": null,
+  "bootstrap_ci": 0,
   "max_seeds": null
  },
  "scheme_file": "loveda_urban_val_half.json",
  "n_records": 1200,
  "git_revision": "unknown",
- "completed_utc": "2026-08-10T12:05:06.146719+00:00"
+ "completed_utc": "2026-09-07T00:18:38.657336+00:00"
 }

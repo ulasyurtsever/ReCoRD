@@ -234,9 +234,9 @@ def section_indist():
     lev = hi.index.get_level_values("alpha").values
     over = hi[hi.values > lev + 1e-12]
     lo_ = m - 1.959963984540054 * s / np.sqrt(n.clip(lower=1))
-    truth(52, "at most eight cells, all at alpha=0.2, sit within 0.004 of the "
+    truth(52, "nine cells, all at alpha=0.2, sit within 0.004 of the "
               "level at the upper end of the 95% interval",
-          len(over) <= 8 and all(np.isclose(k[2], 0.2) for k in over.index)
+          len(over) == 9 and all(np.isclose(k[2], 0.2) for k in over.index)
           and float((over.values - 0.2).max()) <= 0.004,
           f"{len(over)} cells, max excess {float((over.values - 0.2).max()):.4f}"
           if len(over) else "none")
@@ -431,8 +431,8 @@ def section_baselines():
         ("segformer_b5_cityscapes", "region_crc"): [(0.192, 0.015), (0.180, 0.090)],
         ("mask2former_swinb_cityscapes", "argmax"): [(0.548, 0.007), (0.633, 0.007)],
         ("mask2former_swinb_cityscapes", "heuristic"): [(0.062, 0.691), (0.000, 1.000)],
-        ("mask2former_swinb_cityscapes", "pixel_crc"): [(0.081, 0.635), (0.105, 0.635)],
-        ("mask2former_swinb_cityscapes", "region_crc"): [(0.058, 0.710), (0.000, 1.000)],
+        ("mask2former_swinb_cityscapes", "pixel_crc"): [(0.080, 0.635), (0.105, 0.635)],
+        ("mask2former_swinb_cityscapes", "region_crc"): [(0.058, 0.707), (0.000, 1.000)],
         ("segformer_b2_cityscapes_mcdrop8", "argmax"): [(0.592, 0.007), (0.684, 0.007)],
         ("segformer_b2_cityscapes_mcdrop8", "heuristic"): [(0.195, 0.020), (0.188, 0.024)],
         ("segformer_b2_cityscapes_mcdrop8", "pixel_crc"): [(0.166, 0.021), (0.236, 0.021)],
@@ -444,6 +444,19 @@ def section_baselines():
             near(90, f"baseline {mo}/{me} rho={rh} FNR", f_, mean(d, "region_fnr"))
             near(90, f"baseline {mo}/{me} rho={rh} area", a_,
                  mean(d, "marked_area_fraction"))
+    # 957: the abstract's scope for the pixel-CRC sentence (third panel, M3).
+    cs_models = sorted({mo for mo, _ in table3})
+    pix = {(mo, rh): mean(sel(e1, model=mo, method="pixel_crc", alpha=0.20, rho=rh))
+           for mo in cs_models for rh in (0.1, 0.5)}
+    segf = [m for m in cs_models if m.startswith("segformer")]
+    truth(957, "abstract: at rho=0.5 pixel CRC misses the region target on the "
+               "three SegFormer variants and not on Mask2Former",
+          all(pix[(m, 0.5)] > 0.20 for m in segf)
+          and pix[("mask2former_swinb_cityscapes", 0.5)] <= 0.20,
+          str({m.split("_")[1]: round(pix[(m, 0.5)], 3) for m in cs_models}))
+    truth(957, "abstract: at rho=0.1 no model's pixel CRC exceeds the level",
+          all(pix[(m, 0.1)] <= 0.20 for m in cs_models),
+          str({m.split("_")[1]: round(pix[(m, 0.1)], 3) for m in cs_models}))
 
     # 94/101: LAC rows; 95/96/102/103: tempered-posterior rows
     lacm = [m for m in lac.method.unique() if "lac" in m]
@@ -456,7 +469,7 @@ def section_baselines():
             near(94, f"baseline {key} LAC rho={rh} FNR", f_, mean(d))
             near(94, f"baseline {key} LAC rho={rh} area", a_,
                  mean(d, "marked_area_fraction"))
-    tmp_rows = {("segformer_b2", "heuristic"): [(0.197, 0.020), (0.196, 0.024)],
+    tmp_rows = {("segformer_b2", "heuristic"): [(0.198, 0.020), (0.196, 0.024)],
                 ("segformer_b2", "region_crc"): [(0.192, 0.020), (0.191, 0.025)],
                 ("segformer_b5", "heuristic"): [(0.197, 0.012), (0.197, 0.014)],
                 ("segformer_b5", "region_crc"): [(0.192, 0.012), (0.192, 0.015)]}
@@ -909,16 +922,24 @@ def section_tier_a():
     # Table VI is class-balanced: each column is averaged per class and then
     # over classes, so no cell is dominated by whichever class still has
     # feasible draws at a tight level.
-    def _balanced(n, alpha, col="region_fnr"):
+    # Table VI is also SegFormer-only since the third panel (M4): Mask2Former
+    # marks 91-100% of the image in every tier-A cell, so pooling it lowered
+    # the printed FNR and raised the printed area with a degenerate solution.
+    def _balanced(n, alpha, col="region_fnr", models=None):
         d = sel(r, n_target=n, alpha=alpha, rho=0.5)
         d = d[d.feasible.astype(bool)]
+        d = d[d.model.str.startswith("segformer")] if models is None else d[d.model.isin(models)]
         return float(d.groupby("class_name")[col].mean().mean())
 
     ar = [_balanced(n, 0.20, "marked_area_fraction") for n in (25, 50, 100)]
-    rng_claim(142, "tier-A marked area 67-73% at alpha=0.2 (class-balanced)",
-              0.668, 0.726, ar, 0.006)
-    truth(142, "area does not decrease from n_t=25 to 100",
-          not (ar[0] > ar[1] > ar[2]), str([round(x, 3) for x in ar]))
+    rng_claim(142, "tier-A marked area 58-66% at alpha=0.2 (class-balanced, SegFormer)",
+              0.578, 0.664, ar, 0.006)
+    # With Mask2Former out of the average the area does fall with n_t, by
+    # about nine points of the image between n_t=25 and 100; the text now says
+    # so instead of "does not decrease", which was true of the pooled table.
+    truth(142, "area falls from 66% to 58% between n_t=25 and 100 (8-9 points)",
+          0.08 <= ar[0] - ar[2] <= 0.09 and ar[0] > ar[1] > ar[2],
+          str([round(x, 3) for x in ar]))
 
     inf25 = 1 - sel(r, n_target=25, alpha=0.05).feasible.astype(bool).mean()
     inf100 = 1 - sel(r, n_target=100, alpha=0.05).feasible.astype(bool).mean()
@@ -926,9 +947,9 @@ def section_tier_a():
           inf25 > 0.99, f"{inf25:.4f}")
     near(145, "infeasible fraction at n_t=100, alpha=0.05 is 0.47", 0.47, inf100, 0.006)
 
-    table6 = {25: [(0.005, 0.940, 0.99), (0.011, 0.912, 0.74), (0.065, 0.726, 0.38)],
-              50: [(0.001, 0.980, 0.80), (0.015, 0.887, 0.45), (0.078, 0.668, 0.19)],
-              100: [(0.002, 0.972, 0.47), (0.014, 0.876, 0.27), (0.071, 0.670, 0.03)]}
+    table6 = {25: [(0.007, 0.920, 0.99), (0.015, 0.883, 0.74), (0.076, 0.664, 0.38)],
+              50: [(0.002, 0.974, 0.80), (0.019, 0.851, 0.45), (0.093, 0.586, 0.19)],
+              100: [(0.003, 0.962, 0.47), (0.019, 0.834, 0.27), (0.088, 0.578, 0.03)]}
     for n, rows in table6.items():
         for al, (f_, ar_, inf_) in zip(ALPHAS, rows):
             d = sel(r, n_target=n, alpha=al, rho=0.5)
@@ -941,6 +962,26 @@ def section_tier_a():
                 truth(149, f"tier A n_t=25 a=0.05 infeasible >0.99", got > 0.99, f"{got:.4f}")
             else:
                 near(149, f"tier A n_t={n} a={al} infeasible", inf_, got, 0.006)
+    # 958: the reason Mask2Former is kept out of Table VI (third panel, M4).
+    m2f = sel(r, model="mask2former_swinb_cityscapes", rho=0.5)
+    m2f = m2f[m2f.feasible.astype(bool)]
+    m2f_area = (m2f.groupby(["n_target", "alpha", "class_name"])["marked_area_fraction"]
+                .mean().groupby(level=[0, 1]).mean())
+    truth(958, "Mask2Former marks 91-100% of the image in every one of its nine "
+               "tier-A cells (class-balanced)",
+          len(m2f_area) == 9 and float(m2f_area.min()) >= 0.911 - 5e-4
+          and float(m2f_area.max()) <= 1.0 + 1e-9,
+          f"min {float(m2f_area.min()):.3f}, max {float(m2f_area.max()):.3f}, cells {len(m2f_area)}")
+    # 959: what the n_t=25, alpha=0.05 cell is made of (third panel, M5).
+    cell = sel(r, n_target=25, alpha=0.05, rho=0.5)
+    cell = cell[cell.feasible.astype(bool) & cell.model.str.startswith("segformer")]
+    truth(959, "n_t=25, alpha=0.05: twelve feasible SegFormer draws, all person "
+               "under snow, four seeds per variant",
+          len(cell) == 12 and set(cell.class_name) == {"person"}
+          and bool(cell.experiment.str.contains("snow").all())
+          and bool(cell.groupby("model").size().eq(4).all()),
+          f"{len(cell)} draws, classes {sorted(set(cell.class_name))}, "
+          f"conditions {sorted(set(cell.experiment.str.extract(r'__(\w+?)__')[0]))}")
 
 
 # --------------------------------------------------------------------------
@@ -1061,9 +1102,25 @@ def section_tier_b():
     truth(167, "at alpha=0.1 only ratios <=10 return anything",
           bool((active.index <= 10).all()) if len(active) else False,
           str({round(k, 1): round(v, 3) for k, v in active.items()}))
-    truth(167, "and every such ratio is valid at alpha=0.1",
+    truth(167, "and every such ratio is valid at alpha=0.1 when the risk is "
+               "averaged over ALL draws",
           bool((risk_by_ratio[active.index] <= 0.10 + 1e-12).all()) if len(active) else False,
           str({round(k, 1): round(risk_by_ratio[k], 4) for k in active.index}))
+    # Conditioned on the informative draws, as the released clip table is, the
+    # verdict splits by condition (third panel, M7): fog violates, night holds.
+    inf10 = a10[(a10.lam < a10.lam.max() - 1e-12) & np.isclose(a10.rho, 0.5)]
+    fog10 = inf10[inf10.cond == "fog"].groupby("ratio")["region_fnr"].mean()
+    night10 = inf10[inf10.cond == "night"].groupby("ratio")["region_fnr"].mean()
+    rng_claim(167, "conditioned on informative draws (rho=0.5) the fog cells at "
+                   "alpha=0.1 run 0.149-0.156", 0.149, 0.156, list(fog10.values), 0.001)
+    truth(167, "and every fog cell violates the level",
+          len(fog10) == 3 and bool((fog10 > 0.10).all()),
+          str({round(k, 1): round(v, 3) for k, v in fog10.items()}))
+    rng_claim(167, "the night cells run 0.060-0.070", 0.060, 0.070,
+              list(night10.values), 0.001)
+    truth(167, "and every night cell holds",
+          len(night10) == 3 and bool((night10 <= 0.10).all()),
+          str({round(k, 1): round(v, 3) for k, v in night10.items()}))
 
     a05 = p3[np.isclose(p3.alpha, 0.05) & np.isclose(p3.rho, 0.5)]
     truth(168, "at alpha=0.05 nothing is informative at any ratio (rho=0.5)",
@@ -1146,6 +1203,7 @@ def _seqdisjoint_tier_a_claims():
           f"largest reduction {float(-area.min()):.4f} at {area.idxmin()}")
 
     _seqdisjoint_frame_cost()
+    _sequence_overlap_claims()
 
 
 def _marida_confidence_size_strata():
@@ -1199,6 +1257,35 @@ def _marida_confidence_size_strata():
     truth(254, "the pooled confidence gap exceeds every within-stratum gap",
           pooled > within,
           f"pooled {pooled:+.3f} against a largest within-stratum gap of {within:.3f}")
+
+
+def _sequence_overlap_claims():
+    """Section IV-A: at n_t=25, the share of test frames whose driving sequence
+    also supplied a calibration frame. The text once said 91-96%; measured from
+    the committed schemes it is a median of 92-100% by condition over a per-draw
+    range that reaches down to 70% (third panel, M2)."""
+    stats = {}
+    for cond in ("fog", "night", "rain", "snow"):
+        path = splits_dir() / f"acdc_{cond}_targetcal25.json"
+        if not path.exists():
+            note(956, f"{cond} target-calibration scheme absent", str(path))
+            return
+        with open(path) as f:
+            seeds = json.load(f)["seeds"]
+        fr = []
+        for v in seeds.values():
+            cal = {i.split("/")[2] for i in v["target_calibration"]}
+            fr.append(float(np.mean([i.split("/")[2] in cal for i in v["test"]])))
+        stats[cond] = (float(np.median(fr)), float(min(fr)), float(max(fr)))
+    meds = [v[0] for v in stats.values()]
+    mins = [v[1] for v in stats.values()]
+    rng_claim(956, "median sequence overlap at n_t=25 is 92-100% by condition",
+              0.922, 1.000, meds, 0.005)
+    truth(956, "no draw falls below 70% overlap", min(mins) >= 0.70,
+          "per-condition minima " + str({k: round(v[1], 3) for k, v in stats.items()}))
+    truth(956, "the retired 91-96% range was wrong at both ends",
+          max(meds) > 0.96 and min(mins) < 0.91,
+          f"max median {max(meds):.3f}, min draw {min(mins):.3f}")
 
 
 def _seqdisjoint_frame_cost():
@@ -1399,9 +1486,26 @@ def section_loveda():
     rng_claim(180, "urban->rural violates by 2.5-3.0x", 2.46, 3.04, ratios, 0.01)
     r2u = cellmean(sel(b, method="region_crc", experiment="l2_break__rural2urban",
                        rho=0.5), ["alpha"])
-    truth(181, "rural->urban transfers almost intact (FNR <= alpha everywhere)",
+    truth(181, "rural->urban stays within the level when the two classes are "
+               "averaged (rho=0.5)",
           bool(all(r2u[a_] <= a_ + 1e-12 for a_ in ALPHAS if a_ in r2u.index)),
           str({k: round(v, 3) for k, v in r2u.items()}))
+    # Per class the same direction is not intact (third panel, M6): the text
+    # now says four of twelve cells, all water, worst 1.27x at a=0.1, rho=0.1.
+    pc = sel(b, method="region_crc", experiment="l2_break__rural2urban")
+    if "feasible" in pc.columns:
+        pc = pc[pc.feasible.astype(bool)]
+    pcells = pc.groupby(["class_name", "alpha", "rho"])["region_fnr"].mean()
+    pratio = pcells / pcells.index.get_level_values("alpha")
+    pover = pratio[pratio > 1 + 1e-9]
+    truth(181, "per class, rural->urban exceeds its level in four of the twelve "
+               "cells, all of them water",
+          len(pcells) == 12 and len(pover) == 4
+          and all(k[0] == "water" for k in pover.index),
+          f"{len(pover)} of {len(pcells)}: " + str([(k[0], k[1], k[2], round(v, 3)) for k, v in pover.items()]))
+    near(181, "the worst rural->urban class cell is 1.27x", 1.269, float(pratio.max()), 0.005)
+    truth(181, "and it sits at alpha=0.1, rho=0.1",
+          tuple(pratio.idxmax()[1:]) == (0.1, 0.1), str(pratio.idxmax()))
 
     try:
         t = load("l3_tierA*")

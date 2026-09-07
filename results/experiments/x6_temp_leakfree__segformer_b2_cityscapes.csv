@@ -47,7 +47,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.981,981,True,0.137147924458296,0.04362865164875984,204,1338,198,1.6,1,person,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9550000000000001,955,True,0.25185847702708625,0.03171846270561218,204,1338,198,1.6,1,person,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9540000000000001,954,True,0.25880292147153067,0.031454481184482574,204,1338,198,1.6,1,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.997,997,True,0.07414529914529915,0.029254140332341194,120,336,133,1.6,1,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.08186355311355313,0.025688903406262398,120,336,133,1.6,1,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.08186355311355313,0.025688903406262398,120,336,133,1.6,1,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.10188949938949939,0.01960419863462448,120,336,133,1.6,1,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.10188949938949939,0.01960419863462448,120,336,133,1.6,1,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -72,10 +72,10 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.974,974,True,0.22132850915318444,0.018747486174106598,154,790,191,1.6,1,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.22132850915318444,0.018747486174106598,154,790,191,1.6,1,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.05202918811898635,0.05351519212126732,207,1445,195,1.55,2,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.06526233178691264,0.05212954059243202,207,1445,195,1.55,2,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.06491726622445576,0.05212954059243202,207,1445,195,1.55,2,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.1085190795122594,0.04148406162858009,207,1445,195,1.55,2,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.1085190795122594,0.04148406162858009,207,1445,195,1.55,2,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9440000000000001,944,True,0.19148995744974714,0.03214314207434654,207,1445,195,1.55,2,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9440000000000001,944,True,0.19127037027363822,0.03214314207434654,207,1445,195,1.55,2,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9410000000000001,941,True,0.19777302623281595,0.03157627582550049,207,1445,195,1.55,2,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.05758446688398379,0.06373387575149536,207,1445,195,1.55,2,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.05758446688398379,0.06373387575149536,207,1445,195,1.55,2,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -111,7 +111,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.984,984,True,0.07034374397590738,0.04664815589785576,196,1317,206,1.65,3,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.97,970,True,0.10944967250852765,0.0365019291639328,196,1317,206,1.65,3,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.97,970,True,0.10944967250852765,0.0365019291639328,196,1317,206,1.65,3,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9380000000000001,938,True,0.1964653579912315,0.02732780948281288,196,1317,206,1.65,3,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9380000000000001,938,True,0.1960401879232043,0.02732780948281288,196,1317,206,1.65,3,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.934,934,True,0.204724077481154,0.026633907109498978,196,1317,206,1.65,3,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.053400393764249834,0.060540955513715744,196,1317,206,1.65,3,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.0632836411317014,0.05574104189872742,196,1317,206,1.65,3,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -179,7 +179,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.994,994,True,0.08395455338312481,0.033323515206575394,175,862,170,1.55,4,bicycle,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.15623179994608566,0.021211188286542892,175,862,170,1.55,4,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.16234901606330177,0.020787714049220085,175,862,170,1.55,4,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.992,992,True,0.021824409697544025,0.0642281100153923,201,1373,201,1.6,5,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.991,991,True,0.02646200602960919,0.061739347875118256,201,1373,201,1.6,5,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.03122811907341273,0.057668473571538925,201,1373,201,1.6,5,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.07171864888051756,0.04697060212492943,201,1373,201,1.6,5,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.07171864888051756,0.045442625880241394,201,1373,201,1.6,5,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -205,7 +205,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.19041218637992832,0.016599606722593307,124,356,129,1.6,5,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.035797616466221115,0.043148573487997055,172,849,173,1.6,5,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.035797616466221115,0.043148573487997055,172,849,173,1.6,5,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.10135126501405571,0.026863420382142067,172,849,173,1.6,5,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.09989777664196269,0.026863420382142067,172,849,173,1.6,5,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.10839938485287323,0.025364549830555916,172,849,173,1.6,5,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9580000000000001,958,True,0.23392174685779335,0.01685764081776142,172,849,173,1.6,5,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9560000000000001,956,True,0.24008176900618763,0.016561118885874748,172,849,173,1.6,5,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -339,8 +339,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.998,998,True,0.033428571428571426,0.03256925195455551,125,317,128,1.55,9,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.08563809523809525,0.019775021821260452,125,317,128,1.55,9,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.08563809523809525,0.019775021821260452,125,317,128,1.55,9,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.27016854256854256,0.010225389152765274,125,317,128,1.55,9,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.977,977,True,0.2875018759018759,0.009731416590511799,125,317,128,1.55,9,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.979,979,True,0.26816854256854256,0.010225389152765274,125,317,128,1.55,9,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.977,977,True,0.2848352092352092,0.009731416590511799,125,317,128,1.55,9,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.033428571428571426,0.04299900680780411,125,317,128,1.55,9,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.033428571428571426,0.04299900680780411,125,317,128,1.55,9,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.11230476190476192,0.024040577933192253,125,317,128,1.55,9,rider,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -399,7 +399,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.032219286557117525,0.05771481618285179,201,1415,201,1.6,11,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.08001791781346024,0.045599523931741714,201,1415,201,1.6,11,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.975,975,True,0.09180284837948531,0.04362848773598671,201,1415,201,1.6,11,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9490000000000001,949,True,0.1572630703944337,0.034071020781993866,201,1415,201,1.6,11,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9490000000000001,949,True,0.15664117984717002,0.034071020781993866,201,1415,201,1.6,11,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9470000000000001,947,True,0.1599433822852719,0.033608436584472656,201,1415,201,1.6,11,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.02746043112958536,0.0749339908361435,201,1415,201,1.6,11,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.03427819416625387,0.07060844451189041,201,1415,201,1.6,11,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -516,7 +516,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.962,962,True,0.20237247328694696,0.03582232818007469,200,1391,202,1.6,14,person,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.961,961,True,0.2032058066202803,0.035488128662109375,200,1391,202,1.6,14,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.040397102897102896,0.036879464983940125,132,382,121,1.6,14,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.996,996,True,0.0745115995115995,0.02736387588083744,132,382,121,1.6,14,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.07072372072372071,0.02736387588083744,132,382,121,1.6,14,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.1338966588966589,0.019786875694990158,132,382,121,1.6,14,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.13649406149406149,0.018654221668839455,132,382,121,1.6,14,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.18745004995004994,0.013863734900951385,132,382,121,1.6,14,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -529,7 +529,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.985,985,True,0.2613831034285579,0.014344926923513412,132,382,121,1.6,14,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03819727891156462,0.044563889503479004,175,807,170,1.6,14,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.04692743764172336,0.04088409245014191,175,807,170,1.6,14,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.988,988,True,0.08678726035868893,0.029039893299341202,175,807,170,1.6,14,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.09560358688930116,0.028147932142019272,175,807,170,1.6,14,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.09560358688930116,0.028147932142019272,175,807,170,1.6,14,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.967,967,True,0.1706497629354772,0.01979745551943779,175,807,170,1.6,14,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.965,965,True,0.18330777159348588,0.019374853000044823,175,807,170,1.6,14,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -543,7 +543,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.991,991,True,0.029680611055611053,0.05617668107151985,200,1341,202,1.55,15,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.0572197938513728,0.04545417055487633,200,1341,202,1.55,15,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.0572197938513728,0.04545417055487633,200,1341,202,1.55,15,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9430000000000001,943,True,0.19517312793988492,0.030057374387979507,200,1341,202,1.55,15,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9430000000000001,943,True,0.19494585521261218,0.030057374387979507,200,1341,202,1.55,15,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9420000000000001,942,True,0.1959667787335357,0.029873637482523918,200,1341,202,1.55,15,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.028876352813852812,0.06805680692195892,200,1341,202,1.55,15,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.028876352813852812,0.06805680692195892,200,1341,202,1.55,15,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -591,7 +591,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.08299031476997579,0.02375764213502407,118,328,135,1.55,16,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.14134382566585957,0.016900600865483284,118,328,135,1.55,16,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.14134382566585957,0.016900600865483284,118,328,135,1.55,16,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.98,980,True,0.26084880279795536,0.010293851606547832,118,328,135,1.55,16,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.979,979,True,0.26750739843960186,0.010011287406086922,118,328,135,1.55,16,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.26750739843960186,0.010011287406086922,118,328,135,1.55,16,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06991525423728813,0.0324200838804245,118,328,135,1.55,16,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06991525423728813,0.0324200838804245,118,328,135,1.55,16,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -599,7 +599,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.995,995,True,0.14013317191283292,0.02134494110941887,118,328,135,1.55,16,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.2610505784234598,0.01309786643832922,118,328,135,1.55,16,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.2610505784234598,0.01309786643832922,118,328,135,1.55,16,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.06303439656040812,0.03692127391695976,173,846,172,1.55,16,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.06250891048578909,0.03692127391695976,173,846,172,1.55,16,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.06519326851696794,0.03435094654560089,173,846,172,1.55,16,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.1116112692702288,0.025252604857087135,173,846,172,1.55,16,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.1116112692702288,0.02451159432530403,173,846,172,1.55,16,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -611,12 +611,12 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.993,993,True,0.1092898912263074,0.032318733632564545,173,846,172,1.55,16,bicycle,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.973,973,True,0.24079650000107403,0.018911493942141533,173,846,172,1.55,16,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.2415190433536752,0.0186465997248888,173,846,172,1.55,16,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.0755117323590746,0.04508286342024803,201,1275,201,1.55,17,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.07515636633206678,0.04508286342024803,201,1275,201,1.55,17,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.07675551345360195,0.04389948397874832,201,1275,201,1.55,17,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.969,969,True,0.14289766777983587,0.032908741384744644,201,1275,201,1.55,17,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.968,968,True,0.14455604257253904,0.032534655183553696,201,1275,201,1.55,17,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.932,932,True,0.2421590556796108,0.02460414171218872,201,1275,201,1.55,17,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.931,931,True,0.24564953976710985,0.02446606755256653,201,1275,201,1.55,17,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.93,930,True,0.24730791455981296,0.02432946488261223,201,1275,201,1.55,17,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.0690606470522679,0.053573738783597946,201,1275,201,1.55,17,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.0690606470522679,0.053573738783597946,201,1275,201,1.55,17,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.13770137153876352,0.040947623550891876,201,1275,201,1.55,17,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -661,7 +661,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.965,965,True,0.17152623488797353,0.03950652852654457,202,1374,200,1.6,18,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.013020833333333332,0.04944860562682152,128,363,125,1.6,18,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.022135416666666664,0.03789607062935829,128,363,125,1.6,18,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.997,997,True,0.02734375,0.03203688561916351,128,363,125,1.6,18,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.031901041666666664,0.028262149542570114,128,363,125,1.6,18,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.031901041666666664,0.028262149542570114,128,363,125,1.6,18,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.08999255952380952,0.017413510009646416,128,363,125,1.6,18,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.10327380952380952,0.01599137671291828,128,363,125,1.6,18,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -722,9 +722,9 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.993,993,True,0.03394083753239985,0.059100911021232605,201,1398,201,1.45,20,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.03796831917182178,0.05676626041531563,201,1398,201,1.45,20,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.06453399550183432,0.04783589765429497,201,1398,201,1.45,20,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.985,985,True,0.06746379096894323,0.04682174697518349,201,1398,201,1.45,20,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9510000000000001,951,True,0.17974438205319404,0.03224931284785271,201,1398,201,1.45,20,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9500000000000001,950,True,0.18277018869251205,0.03203822299838066,201,1398,201,1.45,20,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.985,985,True,0.06718739517015937,0.04682174697518349,201,1398,201,1.45,20,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9510000000000001,951,True,0.17951824003600725,0.03224931284785271,201,1398,201,1.45,20,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9500000000000001,950,True,0.18254404667532526,0.03203822299838066,201,1398,201,1.45,20,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03641953424946355,0.0697111114859581,201,1398,201,1.45,20,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03641953424946355,0.0697111114859581,201,1398,201,1.45,20,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.0560934129253523,0.05676626041531563,201,1398,201,1.45,20,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -743,8 +743,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.997,997,True,0.09688644688644689,0.02574731968343258,130,374,123,1.45,20,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.23561660561660563,0.01518479734659195,130,374,123,1.45,20,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.2703235653235654,0.013960503041744232,130,374,123,1.45,20,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.997,997,True,0.04492306862996518,0.04298969730734825,174,946,171,1.45,20,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.07444965634620807,0.03607608750462532,174,946,171,1.45,20,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.997,997,True,0.04428449902587834,0.04298969730734825,174,946,171,1.45,20,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.06870252990942646,0.03607608750462532,174,946,171,1.45,20,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.14320361949672294,0.025331756100058556,174,946,171,1.45,20,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.14320361949672294,0.025331756100058556,174,946,171,1.45,20,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.968,968,True,0.215797564504461,0.019168445840477943,174,946,171,1.45,20,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -768,7 +768,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.9590000000000001,959,True,0.2129733052121309,0.03350725397467613,199,1396,203,1.6,21,person,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9580000000000001,958,True,0.22074988653142583,0.033209994435310364,199,1396,203,1.6,21,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.041901188242651655,0.0351288802921772,123,366,130,1.6,21,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.997,997,True,0.06217427558890973,0.029617952182888985,123,366,130,1.6,21,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.07165937043985825,0.026087962090969086,123,366,130,1.6,21,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.08326037106524911,0.020103739574551582,123,366,130,1.6,21,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.08326037106524911,0.020103739574551582,123,366,130,1.6,21,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.14282289526191963,0.013709981925785542,123,366,130,1.6,21,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -830,7 +830,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.987,987,True,0.05297164497320059,0.05315171182155609,203,1439,199,1.6,23,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.05297164497320059,0.05315171182155609,203,1439,199,1.6,23,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.975,975,True,0.0954872569599041,0.042616188526153564,203,1439,199,1.6,23,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.975,975,True,0.0954872569599041,0.042616188526153564,203,1439,199,1.6,23,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.974,974,True,0.09630827502230146,0.042050011456012726,203,1439,199,1.6,23,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9380000000000001,938,True,0.20303681846686167,0.031279683113098145,203,1439,199,1.6,23,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.936,936,True,0.20736315715280623,0.030935198068618774,203,1439,199,1.6,23,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.061441992359804125,0.0625171959400177,203,1439,199,1.6,23,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -852,7 +852,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.18607331821617537,0.015491348691284657,126,360,127,1.6,23,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.21829176114890403,0.014165068045258522,126,360,127,1.6,23,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.05323981573981574,0.038647085428237915,174,881,171,1.6,23,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06151219470184987,0.03586754947900772,174,881,171,1.6,23,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06098972866214245,0.03586754947900772,174,881,171,1.6,23,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.10958307337617681,0.025291772559285164,174,881,171,1.6,23,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.11129352767283801,0.02458283305168152,174,881,171,1.6,23,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.963,963,True,0.20995195736575045,0.01704859733581543,174,881,171,1.6,23,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -891,8 +891,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.997,997,True,0.01897651151794798,0.04754616320133209,181,872,164,1.55,24,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.05943821371998167,0.03309416025876999,181,872,164,1.55,24,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.05943821371998167,0.03309416025876999,181,872,164,1.55,24,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.97,970,True,0.15731403341900577,0.020270762965083122,181,872,164,1.55,24,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.97,970,True,0.15731403341900577,0.020270762965083122,181,872,164,1.55,24,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.97,970,True,0.1562090610433152,0.020270762965083122,181,872,164,1.55,24,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.97,970,True,0.1562090610433152,0.020270762965083122,181,872,164,1.55,24,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.01138097629810337,0.06990455836057663,181,872,164,1.55,24,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.018424025330102678,0.05494676157832146,181,872,164,1.55,24,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.04918885595681176,0.04281691834330559,181,872,164,1.55,24,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -904,7 +904,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.98,980,True,0.07490137735653124,0.043706610798835754,204,1412,198,1.55,25,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.07490137735653124,0.043706610798835754,204,1412,198,1.55,25,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9470000000000001,947,True,0.1733332887215377,0.0314096063375473,204,1412,198,1.55,25,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18088764884942723,0.031012291088700294,204,1412,198,1.55,25,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.18066483245014026,0.031012291088700294,204,1412,198,1.55,25,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.03295945814973163,0.069025419652462,204,1412,198,1.55,25,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.03295945814973163,0.069025419652462,204,1412,198,1.55,25,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.07970549686008314,0.05186113342642784,204,1412,198,1.55,25,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -995,7 +995,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.09694125825512687,0.02493654191493988,137,370,116,1.55,27,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.1859865600741513,0.016201205551624298,137,370,116,1.55,27,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.1859865600741513,0.016201205551624298,137,370,116,1.55,27,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.06524915354395124,0.03721287474036217,173,858,172,1.55,27,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.06472366746933221,0.03721287474036217,173,858,172,1.55,27,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.06607491737549541,0.03467291221022606,173,858,172,1.55,27,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.0964334798149827,0.026445992290973663,173,858,172,1.55,27,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.11026043641650579,0.02488761581480503,173,858,172,1.55,27,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1011,7 +1011,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.03538470970128472,0.05567454546689987,201,1363,201,1.6,28,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.10724897448908968,0.04042794182896614,201,1363,201,1.6,28,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.971,971,True,0.11379955492026715,0.03994065150618553,201,1363,201,1.6,28,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9420000000000001,942,True,0.1897603293210397,0.03148568794131279,201,1363,201,1.6,28,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9420000000000001,942,True,0.18953418730385288,0.03148568794131279,201,1363,201,1.6,28,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9380000000000001,938,True,0.20074896730627367,0.030755864456295967,201,1363,201,1.6,28,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.042274931385955214,0.0681770071387291,201,1363,201,1.6,28,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.043826627098425996,0.06478763371706009,201,1363,201,1.6,28,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1023,8 +1023,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.997,997,True,0.06178160919540229,0.029254136607050896,116,357,137,1.6,28,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.1651272577996716,0.016338443383574486,116,357,137,1.6,28,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.18667898193760263,0.015544556081295013,116,357,137,1.6,28,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.977,977,True,0.27994352390904115,0.010425405576825142,116,357,137,1.6,28,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.977,977,True,0.27994352390904115,0.010425405576825142,116,357,137,1.6,28,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.977,977,True,0.27778835149524805,0.010425405576825142,116,357,137,1.6,28,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.977,977,True,0.27778835149524805,0.010425405576825142,116,357,137,1.6,28,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.043821839080459765,0.04612976685166359,116,357,137,1.6,28,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.0639367816091954,0.034852076321840286,116,357,137,1.6,28,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.1437807881773399,0.02113889902830124,116,357,137,1.6,28,rider,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1083,7 +1083,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.987,987,True,0.04801948810154648,0.05493387207388878,206,1458,196,1.6,30,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.973,973,True,0.10226025315605708,0.043086692690849304,206,1458,196,1.6,30,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.10387837613340332,0.042561888694763184,206,1458,196,1.6,30,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9420000000000001,942,True,0.1907741340220525,0.033232681453228,206,1458,196,1.6,30,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9420000000000001,942,True,0.19055348088877802,0.033232681453228,206,1458,196,1.6,30,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9380000000000001,938,True,0.19789526687772804,0.0324808731675148,206,1458,196,1.6,30,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.03211202653588959,0.07507362216711044,206,1458,196,1.6,30,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.038680450021788805,0.07076629996299744,206,1458,196,1.6,30,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1239,7 +1239,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.995,995,True,0.10172466422466422,0.022878052666783333,120,333,133,1.6,34,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.16575854700854703,0.016369782388210297,120,333,133,1.6,34,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.16575854700854703,0.016369782388210297,120,333,133,1.6,34,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.25633394383394387,0.011213800869882107,120,333,133,1.6,34,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.978,978,True,0.25692918192918196,0.010947639122605324,120,333,133,1.6,34,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.25692918192918196,0.010947639122605324,120,333,133,1.6,34,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.07821275946275946,0.03425164893269539,120,333,133,1.6,34,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.09964133089133088,0.028800344094634056,120,333,133,1.6,34,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1247,8 +1247,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.994,994,True,0.15762362637362637,0.020994270220398903,120,333,133,1.6,34,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.2643696581196581,0.013827857561409473,120,333,133,1.6,34,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.27131410256410254,0.012908493168652058,120,333,133,1.6,34,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06338489941431118,0.03555244579911232,170,823,175,1.6,34,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06338489941431118,0.03555244579911232,170,823,175,1.6,34,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06285014005602241,0.03555244579911232,170,823,175,1.6,34,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06285014005602241,0.03555244579911232,170,823,175,1.6,34,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.12234031491384431,0.024061933159828186,170,823,175,1.6,34,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.13772780324250913,0.022956177592277527,170,823,175,1.6,34,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.963,963,True,0.20514143536202362,0.01735014282166958,170,823,175,1.6,34,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1288,7 +1288,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.10334937378476702,0.027936892583966255,178,934,167,1.5,35,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.11047885479065252,0.026284456253051758,178,934,167,1.5,35,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.965,965,True,0.22131012713877884,0.018550008535385132,178,934,167,1.5,35,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.963,963,True,0.2232608137804767,0.018202168866991997,178,934,167,1.5,35,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.963,963,True,0.22263659405513342,0.018202168866991997,178,934,167,1.5,35,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.03985106653645979,0.05149856582283974,178,934,167,1.5,35,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.03985106653645979,0.05149856582283974,178,934,167,1.5,35,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.10129090634708612,0.03484071418642998,178,934,167,1.5,35,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1299,7 +1299,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.0501290220451818,0.04876430332660675,199,1306,203,1.55,36,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.10767286011665807,0.03748754784464836,199,1306,203,1.55,36,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.11853271494636214,0.036543771624565125,199,1306,203,1.55,36,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18452929836822987,0.028863416984677315,199,1306,203,1.55,36,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9440000000000001,944,True,0.19080608272290367,0.028679925948381424,199,1306,203,1.55,36,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9410000000000001,941,True,0.19794661341871075,0.028151364997029305,199,1306,203,1.55,36,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.03325667539235379,0.06509149074554443,199,1306,203,1.55,36,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.043362691409504425,0.06133219972252846,199,1306,203,1.55,36,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1343,7 +1343,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.982,982,True,0.12930688641506163,0.04847925901412964,202,1418,200,1.6,37,person,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9560000000000001,956,True,0.24328255639385826,0.03545840457081795,202,1418,200,1.6,37,person,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9550000000000001,955,True,0.24548277641586042,0.03517359122633934,202,1418,200,1.6,37,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.996,996,True,0.08996453282167569,0.025993047282099724,126,364,127,1.6,37,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.08599627885342172,0.025993047282099724,126,364,127,1.6,37,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.09516105587534159,0.02340065687894821,126,364,127,1.6,37,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.14286150357578928,0.017485789954662323,126,364,127,1.6,37,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.14749113320541893,0.016570838168263435,126,364,127,1.6,37,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1371,7 +1371,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.054215780090812495,0.05199868604540825,203,1352,199,1.55,38,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.07890063273133018,0.043691400438547134,203,1352,199,1.55,38,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.977,977,True,0.08486290162463353,0.041635192930698395,203,1352,199,1.55,38,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18779125784112896,0.030762482434511185,203,1352,199,1.55,38,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.1875673438241115,0.030762482434511185,203,1352,199,1.55,38,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9420000000000001,942,True,0.19385274309628805,0.030188683420419693,203,1352,199,1.55,38,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.05086554521348403,0.06548995524644852,203,1352,199,1.55,38,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.0562116359044023,0.06225559860467911,203,1352,199,1.55,38,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1443,8 +1443,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.06484969837025349,0.05077962204813957,201,1393,201,1.5,40,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.09631812835269236,0.04263030365109444,201,1393,201,1.5,40,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.976,976,True,0.10139591402749296,0.04088280349969864,201,1393,201,1.5,40,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9470000000000001,947,True,0.1876026397556518,0.031932421028614044,201,1393,201,1.5,40,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9460000000000001,946,True,0.18952286319983438,0.03174327686429024,201,1393,201,1.5,40,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9470000000000001,947,True,0.18737649773846501,0.031932421028614044,201,1393,201,1.5,40,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9460000000000001,946,True,0.1892967211826476,0.03174327686429024,201,1393,201,1.5,40,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.06591232654730952,0.05992123484611511,201,1393,201,1.5,40,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.06591232654730952,0.05992123484611511,201,1393,201,1.5,40,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.10698544126535747,0.04953600466251373,201,1393,201,1.5,40,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1475,7 +1475,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.994,994,True,0.09041355469926898,0.032831788063049316,168,838,177,1.5,40,bicycle,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.19181616994116996,0.020416604354977608,168,838,177,1.5,40,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.20013163919413918,0.020073620602488518,168,838,177,1.5,40,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.992,992,True,0.018144463255849393,0.061456795781850815,202,1371,200,1.6,41,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.991,991,True,0.02484464307775315,0.05904737859964371,202,1371,200,1.6,41,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.03142080206727848,0.055131424218416214,202,1371,200,1.6,41,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.08081781136527787,0.04330029338598251,202,1371,200,1.6,41,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.976,976,True,0.0837684040435933,0.041989151388406754,202,1371,200,1.6,41,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1611,8 +1611,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.027203099930372655,0.04387577995657921,176,844,169,1.6,44,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.09082265587947407,0.028338667005300522,176,844,169,1.6,44,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.09296010176691995,0.027446668595075607,176,844,169,1.6,44,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.968,968,True,0.15683483183483185,0.019173404201865196,176,844,169,1.6,44,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.968,968,True,0.15683483183483185,0.019173404201865196,176,844,169,1.6,44,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.968,968,True,0.1556984681984682,0.019173404201865196,176,844,169,1.6,44,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.968,968,True,0.1556984681984682,0.019173404201865196,176,844,169,1.6,44,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.01972634373202555,0.05725756660103798,176,844,169,1.6,44,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.03713767293312748,0.04904979094862938,176,844,169,1.6,44,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.10864618336209246,0.03334015980362892,176,844,169,1.6,44,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1659,8 +1659,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.05047786069498,0.05092073231935501,193,1336,209,1.5,46,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.08842262558275005,0.04155724495649338,193,1336,209,1.5,46,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.08842262558275005,0.04155724495649338,193,1336,209,1.5,46,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9490000000000001,949,True,0.17661617659091147,0.031272586435079575,193,1336,209,1.5,46,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9480000000000001,948,True,0.17841525546252926,0.031069286167621613,193,1336,209,1.5,46,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9490000000000001,949,True,0.17638066081135426,0.031272586435079575,193,1336,209,1.5,46,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9480000000000001,948,True,0.17817973968297202,0.031069286167621613,193,1336,209,1.5,46,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.04802340217529746,0.06505087018013,193,1336,209,1.5,46,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.0537874951155562,0.06151149049401283,193,1336,209,1.5,46,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.07957838979550909,0.05092073231935501,193,1336,209,1.5,46,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1695,7 +1695,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.987,987,True,0.05188303104380612,0.056437406688928604,201,1471,201,1.6,47,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.976,976,True,0.08524588568840989,0.04605269804596901,201,1471,201,1.6,47,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.973,973,True,0.0983621825111744,0.04427735134959221,201,1471,201,1.6,47,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9410000000000001,941,True,0.1941099402437064,0.034052129834890366,201,1471,201,1.6,47,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9410000000000001,941,True,0.1938837982265196,0.034052129834890366,201,1471,201,1.6,47,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9390000000000001,939,True,0.19559721287525764,0.03365769237279892,201,1471,201,1.6,47,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.04815250001228006,0.06897574663162231,201,1471,201,1.6,47,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.05479326343165044,0.06607910245656967,201,1471,201,1.6,47,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1731,7 +1731,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.06392435019037752,0.05168917402625084,205,1479,197,1.5,48,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.976,976,True,0.11387957539592365,0.041436102241277695,205,1479,197,1.5,48,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.12745121556576666,0.03943237289786339,205,1479,197,1.5,48,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9470000000000001,947,True,0.1894798929846502,0.03204653784632683,205,1479,197,1.5,48,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9470000000000001,947,True,0.18925816349462804,0.03204653784632683,205,1479,197,1.5,48,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9440000000000001,944,True,0.19511298594123486,0.031462326645851135,205,1479,197,1.5,48,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.043989229355724864,0.06772062182426453,205,1479,197,1.5,48,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.04972128411216986,0.06409726291894913,205,1479,197,1.5,48,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1788,9 +1788,9 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.986,986,True,0.26949050949050946,0.012318908236920834,130,329,123,1.55,49,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.28533300033300035,0.011469942517578602,130,329,123,1.55,49,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.04991694465378675,0.03878298029303551,171,801,174,1.55,49,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.05943406820599803,0.035444535315036774,171,801,174,1.55,49,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.05890243609541855,0.035444535315036774,171,801,174,1.55,49,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.1147866347427751,0.023390591144561768,171,801,174,1.55,49,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.985,985,True,0.11704655805533,0.022755036130547523,171,801,174,1.55,49,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.984,984,True,0.1292901299480247,0.022179121151566505,171,801,174,1.55,49,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.961,961,True,0.2292608544801527,0.01576395519077778,171,801,174,1.55,49,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9580000000000001,958,True,0.23486767456065702,0.015340928919613361,171,801,174,1.55,49,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.05873317715422978,0.04346395656466484,171,801,174,1.55,49,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1823,8 +1823,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.995,995,True,0.10567490153956319,0.023434288799762726,133,372,120,1.6,50,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.12228786251342641,0.018767407163977623,133,372,120,1.6,50,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.1268826828977205,0.01771698333323002,133,372,120,1.6,50,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06716906759279641,0.035745710134506226,177,861,168,1.6,50,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06716906759279641,0.035745710134506226,177,861,168,1.6,50,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.0666554569096942,0.035745710134506226,177,861,168,1.6,50,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.0666554569096942,0.035745710134506226,177,861,168,1.6,50,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.11112323803001768,0.025573188439011574,177,861,168,1.6,50,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.11112323803001768,0.02488463558256626,177,861,168,1.6,50,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9520000000000001,952,True,0.26375426989833767,0.015826677903532982,177,861,168,1.6,50,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1838,8 +1838,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.05586106925275565,0.0556955449283123,204,1453,198,1.5,51,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.05586106925275565,0.0556955449283123,204,1453,198,1.5,51,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.08277444726907485,0.047049541026353836,204,1453,198,1.5,51,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.08569416734565767,0.045605771243572235,204,1453,198,1.5,51,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9460000000000001,946,True,0.1912018488250049,0.03393103927373886,204,1453,198,1.5,51,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.978,978,True,0.09549808891428511,0.044949889183044434,204,1453,198,1.5,51,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9460000000000001,946,True,0.19097903242571793,0.03393103927373886,204,1453,198,1.5,51,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9450000000000001,945,True,0.1923171097441874,0.033729180693626404,204,1453,198,1.5,51,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.056466371534095984,0.06699325889348984,204,1453,198,1.5,51,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.056466371534095984,0.06699325889348984,204,1453,198,1.5,51,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1909,7 +1909,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.978,978,True,0.18878322781831552,0.02371237985789776,171,876,174,1.55,52,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.05419956205616007,0.055425990372896194,207,1406,195,1.55,53,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.05419956205616007,0.055425990372896194,207,1406,195,1.55,53,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.976,976,True,0.10083101208196556,0.04456638917326927,207,1406,195,1.55,53,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.976,976,True,0.10034792029452594,0.04456638917326927,207,1406,195,1.55,53,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.10313144916501134,0.04345374554395676,207,1406,195,1.55,53,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9420000000000001,942,True,0.1987781542751929,0.033717937767505646,207,1406,195,1.55,53,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9410000000000001,941,True,0.1987781542751929,0.03353129327297211,207,1406,195,1.55,53,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -1932,7 +1932,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.99,990,True,0.19033328811106587,0.017741043120622635,135,403,118,1.55,53,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.19033328811106587,0.017741043120622635,135,403,118,1.55,53,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.04434134363111635,0.04230303317308426,176,898,169,1.55,53,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.05945930647635192,0.038872361183166504,176,898,169,1.55,53,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.058942777550732094,0.038872361183166504,176,898,169,1.55,53,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.11585131251324432,0.026210710406303406,176,898,169,1.55,53,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.11760997052190234,0.025520311668515205,176,898,169,1.55,53,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.965,965,True,0.2121944737711783,0.018409766256809235,176,898,169,1.55,53,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -1969,8 +1969,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.1880770628862232,0.016119392588734627,131,396,122,1.6,54,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03568536473160751,0.04064939171075821,173,828,172,1.6,54,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.04506967021417889,0.037060461938381195,173,828,172,1.6,54,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.09974097033345587,0.024707237258553505,173,828,172,1.6,54,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.09974097033345587,0.024707237258553505,173,828,172,1.6,54,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.09829588362825356,0.024707237258553505,173,828,172,1.6,54,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.09829588362825356,0.024707237258553505,173,828,172,1.6,54,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.966,966,True,0.17766511747725622,0.016469262540340424,173,828,172,1.6,54,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.966,966,True,0.17766511747725622,0.016469262540340424,173,828,172,1.6,54,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.0476620681822994,0.045704275369644165,173,828,172,1.6,54,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2007,7 +2007,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.034340659340659344,0.04158193990588188,179,909,166,1.55,55,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.056110354574041725,0.03157813474535942,179,909,166,1.55,55,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.06347268498106487,0.030116494745016098,179,909,166,1.55,55,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.97,970,True,0.15697543455923346,0.018456116318702698,179,909,166,1.55,55,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.97,970,True,0.15585811612347925,0.018456116318702698,179,909,166,1.55,55,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.968,968,True,0.16831730497931613,0.017986714839935303,179,909,166,1.55,55,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.02875406716188839,0.053943101316690445,179,909,166,1.55,55,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.02875406716188839,0.053943101316690445,179,909,166,1.55,55,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2055,8 +2055,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.04797941845212101,0.05567300692200661,205,1413,197,1.55,57,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.977,977,True,0.0901217110950555,0.04493783414363861,205,1413,197,1.55,57,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.977,977,True,0.0901217110950555,0.04493783414363861,205,1413,197,1.55,57,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18640192177543985,0.033445052802562714,205,1413,197,1.55,57,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9430000000000001,943,True,0.19156760297770642,0.033034615218639374,205,1413,197,1.55,57,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.18618019228541768,0.033445052802562714,205,1413,197,1.55,57,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9430000000000001,943,True,0.19134587348768423,0.033034615218639374,205,1413,197,1.55,57,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.04777809113816816,0.06946953386068344,205,1413,197,1.55,57,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.04777809113816816,0.06946953386068344,205,1413,197,1.55,57,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.07808346051380106,0.05567300692200661,205,1413,197,1.55,57,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2127,8 +2127,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.99,990,True,0.03342652316069361,0.05894953012466431,197,1346,205,1.55,59,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.973,973,True,0.1172804483985355,0.043028928339481354,197,1346,205,1.55,59,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.12146349484714432,0.04253580421209335,197,1346,205,1.55,59,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9460000000000001,946,True,0.17776759581893872,0.03449014946818352,197,1346,205,1.55,59,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18273093479243,0.034283656626939774,197,1346,205,1.55,59,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9460000000000001,946,True,0.17753686208566694,0.03449014946818352,197,1346,205,1.55,59,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.18250020105915818,0.034283656626939774,197,1346,205,1.55,59,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.0302560193489929,0.0730549618601799,197,1346,205,1.55,59,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.0302560193489929,0.0730549618601799,197,1346,205,1.55,59,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.10813691730736882,0.053020767867565155,197,1346,205,1.55,59,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2163,8 +2163,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.06504276665886573,0.047144096344709396,200,1282,202,1.5,60,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.09073285873053674,0.039028383791446686,200,1282,202,1.5,60,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.977,977,True,0.09832214444482246,0.03783142939209938,200,1282,202,1.5,60,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9490000000000001,949,True,0.17671241863571585,0.028729086741805077,200,1282,202,1.5,60,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9480000000000001,948,True,0.1780318630801603,0.028530064970254898,200,1282,202,1.5,60,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9490000000000001,949,True,0.17648514590844314,0.028729086741805077,200,1282,202,1.5,60,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9480000000000001,948,True,0.17780459035288756,0.028530064970254898,200,1282,202,1.5,60,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.05586278049435944,0.05931371822953224,200,1282,202,1.5,60,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.05586278049435944,0.05931371822953224,200,1282,202,1.5,60,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.09250894813820511,0.047144096344709396,200,1282,202,1.5,60,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2222,8 +2222,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.03688315883083325,0.04119362309575081,172,817,173,1.55,61,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03688315883083325,0.04119362309575081,172,817,173,1.55,61,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.10092662505453202,0.026840267702937126,172,817,173,1.55,61,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.985,985,True,0.11601312124567939,0.024610091000795364,172,817,173,1.55,61,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9540000000000001,954,True,0.267589096949562,0.016124607995152473,172,817,173,1.55,61,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.984,984,True,0.12915450182892044,0.02400125376880169,172,817,173,1.55,61,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9540000000000001,954,True,0.26662010470150005,0.016124607995152473,172,817,173,1.55,61,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9530000000000001,953,True,0.267589096949562,0.015997476875782013,172,817,173,1.55,61,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.02293407496895869,0.05345021188259125,172,817,173,1.55,61,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.02293407496895869,0.05345021188259125,172,817,173,1.55,61,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2236,7 +2236,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.984,984,True,0.06118359576334871,0.04270040988922119,196,1309,206,1.5,62,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.06118359576334871,0.04270040988922119,196,1309,206,1.5,62,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9590000000000001,959,True,0.1318827043585368,0.030818624421954155,196,1309,206,1.5,62,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9580000000000001,958,True,0.13417862272588374,0.030558792874217033,196,1309,206,1.5,62,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9570000000000001,957,True,0.13811466684049928,0.030307194218039513,196,1309,206,1.5,62,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.02794784580498866,0.06745802611112595,196,1309,206,1.5,62,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.02794784580498866,0.06745802611112595,196,1309,206,1.5,62,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.06917380119582053,0.05007551237940788,196,1309,206,1.5,62,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2330,7 +2330,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.992,992,True,0.10608922123628005,0.029499078169465065,170,840,175,1.55,64,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.1184476797712092,0.026919972151517868,170,840,175,1.55,64,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.13171784098254688,0.02277107536792755,170,840,175,1.55,64,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.984,984,True,0.13417603638191872,0.022175973281264305,170,840,175,1.55,64,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.984,984,True,0.13364127702362996,0.022175973281264305,170,840,175,1.55,64,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.963,963,True,0.2204948809360574,0.015821922570466995,170,840,175,1.55,64,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.962,962,True,0.22123017505370446,0.015660451725125313,170,840,175,1.55,64,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.09576448061742181,0.039066072553396225,170,840,175,1.55,64,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2365,7 +2365,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.99,990,True,0.17096099421680816,0.01554504968225956,129,360,124,1.55,65,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.07226582485203174,0.03428589180111885,174,836,171,1.55,65,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.07226582485203174,0.03428589180111885,174,836,171,1.55,65,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.984,984,True,0.14126001712208608,0.023264378309249878,174,836,171,1.55,65,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.984,984,True,0.14073755108237868,0.023264378309249878,174,836,171,1.55,65,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.14788289615875824,0.022707810625433922,174,836,171,1.55,65,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.963,963,True,0.21818470482263586,0.016757609322667122,174,836,171,1.55,65,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9590000000000001,959,True,0.2287255209669003,0.01612553931772709,174,836,171,1.55,65,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2388,7 +2388,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.9580000000000001,958,True,0.22308697095150606,0.03281327709555626,194,1261,208,1.6,66,person,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9580000000000001,958,True,0.22308697095150606,0.03281327709555626,194,1261,208,1.6,66,person,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.04492349048800662,0.036201439797878265,124,345,129,1.6,66,rider,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.997,997,True,0.06637717121588088,0.03074338100850582,124,345,129,1.6,66,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.996,996,True,0.0717535153019024,0.02722978964447975,124,345,129,1.6,66,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.08769644334160463,0.021254582330584526,124,345,129,1.6,66,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.08769644334160463,0.021254582330584526,124,345,129,1.6,66,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.1973162590098074,0.013905662111938,124,345,129,1.6,66,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2436,7 +2436,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.99,990,True,0.19139045236606214,0.01609347015619278,123,335,130,1.55,67,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.19139045236606214,0.01609347015619278,123,335,130,1.55,67,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03980691927120498,0.039747390896081924,168,745,177,1.55,67,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.057633999598285315,0.03643662855029106,168,745,177,1.55,67,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.057092874057159765,0.03643662855029106,168,745,177,1.55,67,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.10097177954320813,0.025769179686903954,168,745,177,1.55,67,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.10488592095734954,0.024956149980425835,168,745,177,1.55,67,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.968,968,True,0.17763773924488208,0.0175782460719347,168,745,177,1.55,67,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2463,7 +2463,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.998,998,True,0.05853994490358126,0.030837927013635635,121,337,132,1.5,68,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.12321920503738686,0.019325990229845047,121,337,132,1.5,68,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.13423848878394334,0.017990725114941597,121,337,132,1.5,68,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.981,981,True,0.2662209461796239,0.011059381067752838,121,337,132,1.5,68,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.981,981,True,0.2641548304771445,0.011059381067752838,121,337,132,1.5,68,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.27015640466053686,0.010774200782179832,121,337,132,1.5,68,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.05647382920110192,0.04017254710197449,121,337,132,1.5,68,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.05647382920110192,0.04017254710197449,121,337,132,1.5,68,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2629,7 +2629,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.982,982,True,0.1452345813292559,0.023396944627165794,169,843,176,1.55,72,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.038099747474747474,0.053359467536211014,192,1317,210,1.6,73,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.04280653759820426,0.051723361015319824,192,1317,210,1.6,73,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.975,975,True,0.0972801306271701,0.03957096487283707,192,1317,210,1.6,73,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.974,974,True,0.10010131118272565,0.03900015726685524,192,1317,210,1.6,73,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.10583047784939233,0.037951044738292694,192,1317,210,1.6,73,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9420000000000001,942,True,0.1881788204947954,0.028931865468621254,192,1317,210,1.6,73,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9390000000000001,939,True,0.1951988909914284,0.02837701141834259,192,1317,210,1.6,73,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2656,7 +2656,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.991,991,True,0.059328572661905984,0.03147685155272484,180,940,165,1.6,73,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.0628873749707083,0.03018784150481224,180,940,165,1.6,73,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.971,971,True,0.14631495048161713,0.019858485087752342,180,940,165,1.6,73,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.969,969,True,0.14865181115181114,0.019363367930054665,180,940,165,1.6,73,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.968,968,True,0.1513138481888482,0.019131267443299294,180,940,165,1.6,73,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.023489704739704742,0.05652373656630516,180,940,165,1.6,73,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.023489704739704742,0.05652373656630516,180,940,165,1.6,73,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.06882686757686758,0.03693941608071327,180,940,165,1.6,73,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2703,7 +2703,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.988,988,True,0.05522386124940304,0.05175778642296791,192,1405,210,1.55,75,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.977,977,True,0.08942107749157542,0.04161461815237999,192,1405,210,1.55,75,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.975,975,True,0.09896968860268653,0.040455590933561325,192,1405,210,1.55,75,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9450000000000001,945,True,0.18675543068973796,0.03090369515120983,192,1405,210,1.55,75,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.18651868826549553,0.03090369515120983,192,1405,210,1.55,75,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9400000000000001,940,True,0.20043832861742758,0.02997637540102005,192,1405,210,1.55,75,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.03785438712522046,0.06889715790748596,192,1405,210,1.55,75,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.04567645966768774,0.06496850401163101,192,1405,210,1.55,75,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2735,7 +2735,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.995,995,True,0.06323629262225754,0.03649025782942772,171,831,174,1.55,75,bicycle,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.15643117441363055,0.021373936906456947,171,831,174,1.55,75,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.160835347238856,0.02093641459941864,171,831,174,1.55,75,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.991,991,True,0.028096654519412945,0.0618809349834919,206,1397,196,1.6,76,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.991,991,True,0.023242285587374113,0.0618809349834919,206,1397,196,1.6,76,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.033135908897578926,0.05786837637424469,206,1397,196,1.6,76,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.978,978,True,0.07946667223140816,0.04574809595942497,206,1397,196,1.6,76,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.103178361477078,0.04212512820959091,206,1397,196,1.6,76,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2759,9 +2759,9 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.996,996,True,0.09384729853479853,0.02704777754843235,128,376,125,1.6,76,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.19321485805860805,0.016862547025084496,128,376,125,1.6,76,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.19321485805860805,0.016862547025084496,128,376,125,1.6,76,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06547727496003358,0.03603944554924965,174,864,171,1.6,76,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06547727496003358,0.03603944554924965,174,864,171,1.6,76,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.987,987,True,0.10333000333000333,0.02616257034242153,174,864,171,1.6,76,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06495480892032617,0.03603944554924965,174,864,171,1.6,76,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06495480892032617,0.03603944554924965,174,864,171,1.6,76,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.10189322172080793,0.02616257034242153,174,864,171,1.6,76,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.10841824203893169,0.024658728390932083,174,864,171,1.6,76,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.961,961,True,0.2165903381420623,0.016618894413113594,174,864,171,1.6,76,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9580000000000001,958,True,0.22783586145655113,0.01613544672727585,174,864,171,1.6,76,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2771,12 +2771,12 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.992,992,True,0.11618598515150239,0.03198343887925148,174,864,171,1.6,76,bicycle,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.974,974,True,0.22000902992282304,0.019596366211771965,174,864,171,1.6,76,bicycle,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.972,972,True,0.22811886389472597,0.01900392957031727,174,864,171,1.6,76,bicycle,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.986,986,True,0.06834871605403006,0.051145534962415695,207,1392,195,1.6,77,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.986,986,True,0.0680036504915732,0.051145534962415695,207,1392,195,1.6,77,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.0690294362999677,0.04993509501218796,207,1392,195,1.6,77,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.971,971,True,0.11761013632994309,0.03962558135390282,207,1392,195,1.6,77,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.967,967,True,0.13075922556598882,0.03788584843277931,207,1392,195,1.6,77,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.921,921,True,0.2781682513715387,0.027932289987802505,207,1392,195,1.6,77,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.92,920,True,0.27843663569789406,0.027805425226688385,207,1392,195,1.6,77,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.919,919,True,0.286315423576682,0.027682334184646606,207,1392,195,1.6,77,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.07184044261338948,0.059552911669015884,207,1392,195,1.6,77,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.07184044261338948,0.059552911669015884,207,1392,195,1.6,77,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.984,984,True,0.11706401489010185,0.04882623255252838,207,1392,195,1.6,77,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2896,14 +2896,14 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.993,993,True,0.08182743182743182,0.018462760373950005,117,317,136,1.6,80,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.08182743182743182,0.018462760373950005,117,317,136,1.6,80,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.2319630986297653,0.010650888085365295,117,317,136,1.6,80,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.978,978,True,0.2533102699769366,0.009800647385418415,117,317,136,1.6,80,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.978,978,True,0.2511735178401845,0.009800647385418415,117,317,136,1.6,80,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06613756613756613,0.033363327383995056,117,317,136,1.6,80,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06613756613756613,0.033363327383995056,117,317,136,1.6,80,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.08976393976393977,0.024450011551380157,117,317,136,1.6,80,rider,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.08976393976393977,0.024450011551380157,117,317,136,1.6,80,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.19604531271197936,0.014456436038017273,117,317,136,1.6,80,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.22290733957400624,0.013179134577512741,117,317,136,1.6,80,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.995,995,True,0.055970307810798606,0.03714665770530701,163,814,182,1.6,80,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06287929861549493,0.034370049834251404,163,814,182,1.6,80,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.06287929861549493,0.034370049834251404,163,814,182,1.6,80,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.15652009033910874,0.021374883130192757,163,814,182,1.6,80,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.15652009033910874,0.021374883130192757,163,814,182,1.6,80,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -2920,7 +2920,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.977,977,True,0.09199899468537866,0.04353715479373932,198,1438,204,1.55,81,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.975,975,True,0.09861275129913527,0.042375318706035614,198,1438,204,1.55,81,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9460000000000001,946,True,0.1760609283023831,0.032837990671396255,198,1438,204,1.55,81,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9460000000000001,946,True,0.1760609283023831,0.032837990671396255,198,1438,204,1.55,81,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9450000000000001,945,True,0.1800873031620913,0.03263184428215027,198,1438,204,1.55,81,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.01995854407470569,0.07604853063821793,198,1438,204,1.55,81,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.025187687359404527,0.07091917097568512,198,1438,204,1.55,81,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.10753737512274898,0.05113862454891205,198,1438,204,1.55,81,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2931,8 +2931,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.998,998,True,0.047428571428571424,0.03396894037723541,125,374,128,1.55,81,rider,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.992,992,True,0.14580952380952383,0.018192559480667114,125,374,128,1.55,81,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.14940952380952385,0.017165085300803185,125,374,128,1.55,81,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.2682796536796537,0.01109289564192295,125,374,128,1.55,81,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.2682796536796537,0.01109289564192295,125,374,128,1.55,81,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.979,979,True,0.26627965367965367,0.01109289564192295,125,374,128,1.55,81,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.979,979,True,0.26627965367965367,0.01109289564192295,125,374,128,1.55,81,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.047428571428571424,0.04455314949154854,125,374,128,1.55,81,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.999,999,True,0.047428571428571424,0.04455314949154854,125,374,128,1.55,81,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.13373333333333332,0.022779451683163643,125,374,128,1.55,81,rider,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2940,7 +2940,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.987,987,True,0.26201904761904765,0.014252525754272938,125,374,128,1.55,81,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.26201904761904765,0.014252525754272938,125,374,128,1.55,81,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.03760693730753611,0.04151267558336258,167,814,178,1.55,81,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.996,996,True,0.03760693730753611,0.04151267558336258,167,814,178,1.55,81,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.05612235402654564,0.038088370114564896,167,814,178,1.55,81,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.09589395966641477,0.02717210166156292,167,814,178,1.55,81,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.11610302538446252,0.02495027706027031,167,814,178,1.55,81,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.967,967,True,0.1934099333799933,0.018557922914624214,167,814,178,1.55,81,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2980,7 +2980,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.991,991,True,0.06426724212868791,0.02952740527689457,166,844,179,1.55,82,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.0682582059841096,0.028345689177513123,166,844,179,1.55,82,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.971,971,True,0.14560634312140336,0.01886068843305111,166,844,179,1.55,82,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.97,970,True,0.14721276882421458,0.01862131804227829,166,844,179,1.55,82,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.97,970,True,0.14600794954710616,0.01862131804227829,166,844,179,1.55,82,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.018014916810097533,0.05248374491930008,166,844,179,1.55,82,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.018014916810097533,0.05248374491930008,166,844,179,1.55,82,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.06734166101635981,0.03708544373512268,166,844,179,1.55,82,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -2992,7 +2992,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.981,981,True,0.07123696779351875,0.04155540466308594,188,1319,214,1.55,83,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.979,979,True,0.07590145224523724,0.04010874032974243,188,1319,214,1.55,83,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9480000000000001,948,True,0.1692970235568714,0.029000595211982727,188,1319,214,1.55,83,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9460000000000001,946,True,0.17292371601335108,0.028602706268429756,188,1319,214,1.55,83,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9460000000000001,946,True,0.1726819365162524,0.028602706268429756,188,1319,214,1.55,83,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.04236059940847174,0.06573116779327393,188,1319,214,1.55,83,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.994,994,True,0.043469459027969656,0.06184135377407074,188,1319,214,1.55,83,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.09248720593205474,0.04745940491557121,188,1319,214,1.55,83,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3016,7 +3016,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.985,985,True,0.12162118258609486,0.022786805406212807,171,817,174,1.55,83,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.985,985,True,0.12162118258609486,0.022786805406212807,171,817,174,1.55,83,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9560000000000001,956,True,0.25650468764503853,0.0151238227263093,171,817,174,1.55,83,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9540000000000001,954,True,0.26140604035340875,0.01487439963966608,171,817,174,1.55,83,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9540000000000001,954,True,0.260431381484013,0.01487439963966608,171,817,174,1.55,83,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.062257495590828923,0.04302472621202469,171,817,174,1.55,83,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.997,997,True,0.062257495590828923,0.04302472621202469,171,817,174,1.55,83,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.1160563445651165,0.03085877187550068,171,817,174,1.55,83,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3027,8 +3027,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.03178437925625878,0.05659758672118187,199,1382,203,1.6,84,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.06259004297649536,0.04716605320572853,199,1382,203,1.6,84,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.98,980,True,0.06426508485254226,0.046362124383449554,199,1382,203,1.6,84,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9420000000000001,942,True,0.1879916807022537,0.032244350761175156,199,1382,203,1.6,84,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9410000000000001,941,True,0.19048330549287346,0.03205098584294319,199,1382,203,1.6,84,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9420000000000001,942,True,0.18776326590097459,0.032244350761175156,199,1382,203,1.6,84,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9410000000000001,941,True,0.19025489069159432,0.03205098584294319,199,1382,203,1.6,84,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.026144572193897767,0.07329147309064865,199,1382,203,1.6,84,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.026144572193897767,0.07329147309064865,199,1382,203,1.6,84,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.0810959322110278,0.053549446165561676,199,1382,203,1.6,84,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3155,7 +3155,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.995,995,True,0.11690342178147056,0.02430233173072338,123,348,130,1.6,87,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.23773191578069627,0.015182855539023876,123,348,130,1.6,87,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.24663629053872954,0.014611686579883099,123,348,130,1.6,87,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06906522770159133,0.03553544729948044,165,860,180,1.6,87,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06851426351426351,0.03553544729948044,165,860,180,1.6,87,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.07806277897186988,0.03334706276655197,165,860,180,1.6,87,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.1459101084101084,0.02262783981859684,165,860,180,1.6,87,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.1459101084101084,0.02262783981859684,165,860,180,1.6,87,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -3192,7 +3192,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.21808170296542387,0.014769472181797028,129,353,124,1.55,88,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.988,988,True,0.2225113818137074,0.01411744300276041,129,353,124,1.55,88,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.045134179545944245,0.039397597312927246,170,760,175,1.55,88,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.996,996,True,0.045134179545944245,0.039397597312927246,170,760,175,1.55,88,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.995,995,True,0.055606550312432654,0.036066390573978424,170,760,175,1.55,88,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.08717899747311512,0.02628418244421482,170,760,175,1.55,88,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.10584167466520408,0.024569040164351463,170,760,175,1.55,88,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.968,968,True,0.1756118391412509,0.01711706817150116,170,760,175,1.55,88,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3280,7 +3280,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.984,984,True,0.06274684063499852,0.04572901874780655,200,1337,202,1.5,91,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.0711635073016652,0.04405076429247856,200,1337,202,1.5,91,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9520000000000001,952,True,0.16272558104233797,0.03223784267902374,200,1337,202,1.5,91,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.9490000000000001,949,True,0.17104809186484882,0.031611472368240356,200,1337,202,1.5,91,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.9490000000000001,949,True,0.17082081913757613,0.031611472368240356,200,1337,202,1.5,91,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.996,996,True,0.037762415824915824,0.07023157924413681,200,1337,202,1.5,91,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.04205955387205387,0.06560130417346954,200,1337,202,1.5,91,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.06345320858478753,0.05473713204264641,200,1337,202,1.5,91,person,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3335,8 +3335,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.997,997,True,0.06440872560275546,0.031973596662282944,134,399,119,1.6,92,rider,0.1,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.1441583292329561,0.01910725235939026,134,399,119,1.6,92,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.18209365261604066,0.017241094261407852,134,399,119,1.6,92,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06253597312919348,0.03890133276581764,177,931,168,1.6,92,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.06253597312919348,0.03890133276581764,177,931,168,1.6,92,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06202236244609125,0.03890133276581764,177,931,168,1.6,92,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.06202236244609125,0.03890133276581764,177,931,168,1.6,92,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.12468745159423125,0.025950120761990547,177,931,168,1.6,92,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.12468745159423125,0.025950120761990547,177,931,168,1.6,92,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9590000000000001,959,True,0.22743852976903822,0.01852572150528431,177,931,168,1.6,92,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3351,7 +3351,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.03856504786372559,0.05501912161707878,203,1443,199,1.6,93,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.06308681279254263,0.045538827776908875,203,1443,199,1.6,93,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.981,981,True,0.06308681279254263,0.045538827776908875,203,1443,199,1.6,93,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.9420000000000001,942,True,0.18865400760332054,0.030654286965727806,203,1443,199,1.6,93,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.9420000000000001,942,True,0.18843009358630308,0.030654286965727806,203,1443,199,1.6,93,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9390000000000001,939,True,0.19337160345392135,0.0300933588296175,203,1443,199,1.6,93,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.021905682564873644,0.07185441255569458,203,1443,199,1.6,93,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.021905682564873644,0.07185441255569458,203,1443,199,1.6,93,person,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -3372,7 +3372,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.989,989,True,0.19622531939605115,0.016242602840065956,123,345,130,1.6,93,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.2220480061943477,0.014903940260410309,123,345,130,1.6,93,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.050295151114823244,0.03964734822511673,183,961,162,1.6,93,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.057180418245992015,0.03680220618844032,183,961,162,1.6,93,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.056683647257417744,0.03680220618844032,183,961,162,1.6,93,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.989,989,True,0.08077453815158733,0.028682146221399307,183,961,162,1.6,93,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.986,986,True,0.1043956043956044,0.025960031896829605,183,961,162,1.6,93,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9560000000000001,956,True,0.24266836684869475,0.016410699114203453,183,961,162,1.6,93,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3448,7 +3448,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.99,990,True,0.07300850664487028,0.02744896523654461,165,745,180,1.55,95,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.99,990,True,0.07300850664487028,0.02744896523654461,165,745,180,1.55,95,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.971,971,True,0.1459537432264705,0.01812291145324707,165,745,180,1.55,95,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.97,970,True,0.14756990484263213,0.01789258047938347,165,745,180,1.55,95,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.97,970,True,0.14635778363051088,0.01789258047938347,165,745,180,1.55,95,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.028063603063603063,0.05112931504845619,165,745,180,1.55,95,bicycle,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.028063603063603063,0.05112931504845619,165,745,180,1.55,95,bicycle,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.06856406220042584,0.03602616861462593,165,745,180,1.55,95,bicycle,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3472,7 +3472,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.994,994,True,0.10353902507748662,0.020953474566340446,130,352,123,1.55,96,rider,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.993,993,True,0.1200225415610031,0.01947028934955597,130,352,123,1.55,96,rider,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.983,983,True,0.22785859439705597,0.012490272521972656,130,352,123,1.55,96,rider,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.98,980,True,0.24789522443368597,0.011473922990262508,130,352,123,1.55,96,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.979,979,True,0.2561003526388142,0.011183158494532108,130,352,123,1.55,96,rider,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06933925049309664,0.0337945781648159,130,352,123,1.55,96,rider,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.998,998,True,0.06933925049309664,0.0337945781648159,130,352,123,1.55,96,rider,0.05,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.12963792617638772,0.022791307419538498,130,352,123,1.55,96,rider,0.1,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
@@ -3552,8 +3552,8 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.992,992,True,0.11097659402744146,0.01886088214814663,118,354,135,1.6,98,rider,0.2,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.12180521926284638,0.017780616879463196,118,354,135,1.6,98,rider,0.2,0.5,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.053298028438477876,0.04079175740480423,178,877,167,1.6,98,bicycle,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.994,994,True,0.05939781192590181,0.03787313774228096,178,877,167,1.6,98,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
-0.988,988,True,0.09170067604056366,0.028452331200242043,178,877,167,1.6,98,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
+0.994,994,True,0.05888708669607545,0.03787313774228096,178,877,167,1.6,98,bicycle,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.987,987,True,0.09615492965212065,0.027523569762706757,178,877,167,1.6,98,bicycle,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.987,987,True,0.09615492965212065,0.027523569762706757,178,877,167,1.6,98,bicycle,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.967,967,True,0.16748512879130856,0.01878640428185463,178,877,167,1.6,98,bicycle,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.966,966,True,0.17282220744299392,0.018563739955425262,178,877,167,1.6,98,bicycle,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
@@ -3566,7 +3566,7 @@ lam,lam_index,feasible,region_fnr,marked_area_fraction,n_test_images,n_test_comp
 0.992,992,True,0.03731025524183419,0.052514221519231796,200,1286,202,1.5,99,person,0.05,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.991,991,True,0.03754835047992943,0.050468672066926956,200,1286,202,1.5,99,person,0.05,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.982,982,True,0.07624236479894375,0.039838485419750214,200,1286,202,1.5,99,person,0.1,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
-0.979,979,True,0.08594462087619982,0.03775642439723015,200,1286,202,1.5,99,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
+0.978,978,True,0.09511128754286649,0.03714810684323311,200,1286,202,1.5,99,person,0.1,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.9410000000000001,941,True,0.21092290392356183,0.026184989139437675,200,1286,202,1.5,99,person,0.2,0.1,region_crc,segformer_b2_cityscapes,cityscapes_val_half
 0.9400000000000001,940,True,0.21764085264151053,0.026023387908935547,200,1286,202,1.5,99,person,0.2,0.1,heuristic,segformer_b2_cityscapes,cityscapes_val_half
 0.995,995,True,0.046401018645097596,0.061379242688417435,200,1286,202,1.5,99,person,0.05,0.5,region_crc,segformer_b2_cityscapes,cityscapes_val_half
