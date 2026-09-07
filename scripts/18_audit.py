@@ -2636,6 +2636,22 @@ def section_capture_rule():
           component_miss_matrix(stored.astype(np.float32), 0.1)[0, 0] == 0.0,
           "0.1 stored as float16 is 0.0999756")
 
+    # The drivers, not only the library. The fourth panel (H2 #1) found three
+    # bare comparisons in 05_run_experiments.py and one in
+    # 26_marida_confidence.py that the two source checks above could not see,
+    # because they only read src/record. Every "< rho" outside
+    # capture_threshold's own definition is a repeat of the defect.
+    import re
+    bare = []
+    for path in sorted((repo_root() / "scripts").glob("*.py")):
+        if path.name == "18_audit.py":
+            continue  # this file carries the pattern itself
+        for lineno, line in enumerate(path.read_text().splitlines(), 1):
+            if re.search(r"[<>]=?\s*rho\b", line) and "capture_threshold" not in line:
+                bare.append(f"{path.name}:{lineno}")
+    truth(960, "no script under scripts/ compares a coverage against a bare rho",
+          not bare, ", ".join(bare) if bare else "all comparisons go through capture_threshold")
+
 
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,

@@ -7,11 +7,40 @@ remain exact re-tabulations of cached statistics rather than recomputations.
 
 from __future__ import annotations
 
+import os
+
 import numpy as np
 
 N_POINTS = 1001
 
-LAMBDA_GRID: np.ndarray = np.linspace(0.0, 1.0, N_POINTS)
+
+def _build_grid(kind: str) -> np.ndarray:
+    """Return the threshold grid named by ``kind``.
+
+    ``uniform`` (default) is the published grid: 1001 equally spaced points on
+    [0, 1]. ``logtail`` keeps the same count but spaces the cutoff 1 - lambda
+    logarithmically over six decades, so the top of the grid, where the
+    calibrated thresholds of Mask2Former sit, is resolved to 1e-6 instead of
+    1e-3: lambda_k = 1 - 10^(-6 k / (N-1)) for k < N-1, and lambda_{N-1} = 1
+    exactly so the last point still marks the whole image and the loss still
+    vanishes there (Lemma 1 needs that endpoint). The grid is selected with the
+    RECORD_GRID environment variable at import time; every cached statistic is
+    tabulated on it, so tables and experiments built under one grid must never
+    be read under another. The referee-response arm that uses ``logtail``
+    therefore also redirects RECORD_RESULTS_ROOT.
+    """
+    if kind == "uniform":
+        return np.linspace(0.0, 1.0, N_POINTS)
+    if kind == "logtail":
+        k = np.arange(N_POINTS, dtype=np.float64)
+        grid = 1.0 - 10.0 ** (-6.0 * k / (N_POINTS - 1))
+        grid[-1] = 1.0
+        return grid
+    raise ValueError(f"unknown RECORD_GRID={kind!r}; use 'uniform' or 'logtail'")
+
+
+GRID_KIND: str = os.environ.get("RECORD_GRID", "uniform")
+LAMBDA_GRID: np.ndarray = _build_grid(GRID_KIND)
 
 # Coarser subgrid for statistics that require per-threshold connected-component
 # labeling (e.g. false-positive component counts), which is too expensive to
