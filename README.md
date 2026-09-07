@@ -78,6 +78,9 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
+`pyproject.toml` declares the same dependencies, so `pip install -e .` alone
+also resolves them; `requirements.txt` carries the rationale for each pin.
+
 Dataset acquisition is documented in `configs/datasets.yaml`. All datasets are
 publicly available from their original providers and are not redistributed
 here.
@@ -92,14 +95,22 @@ nohup bash scripts/run_all.sh > run_all.log 2>&1 &
 tail -f run_all.log
 ```
 
-It runs ten phases in dependency order: environment and dataset verification,
+It runs the phases in dependency order: environment and dataset verification,
 split generation, inference caching and region tables, LoveDA and MARIDA
 training, the experiment matrix on all three benchmarks, the positive control
-on a random patch-level split, the detector-level and temperature measurements,
-the tables, the figures, and finally `18_audit.py`, which recomputes every
-published quantity from the CSVs on a code path independent of the table and
-figure builders. A nonzero exit from that last phase means the pipeline has
-stopped reproducing a published value.
+on a random patch-level split, the detector-level and temperature measurements
+(phase 7), the supplementary measurements the text quotes (phase 7b, stages
+21--24), the referee-response arms (phase 7c, stages 25--28), the tables at
+both capture levels, the figures, and finally `18_audit.py`, which recomputes
+every published quantity from the CSVs on a code path independent of the table
+and figure builders. A nonzero exit from that last phase means the pipeline
+has stopped reproducing a published value.
+
+Re-deriving stage 5 alone, without training or inference, is what
+`run_p1_rerun.sh` does: it backs up `results/experiments/`, rewrites every
+experiment CSV from the existing caches and region tables, compares the two
+trees with `compare_experiments.py` (which stops the run if a quantity that
+cannot move has moved), and rebuilds the tables, figures and audit.
 
 All stages are idempotent. Caching and table stages skip completed work, and
 experiment outputs are rewritten deterministically, so an interrupted run is
@@ -135,6 +146,13 @@ restarts from scratch and overwrites its checkpoints.
 | 21 | `21_temperature_leakfree.py` | CPU | Leak-free temperature scaling: refits the scalar on each draw's own calibration list and recalibrates that draw against tables built from its own temperature, so the tempered baseline never sees its test half |
 | 22 | `22_union_marked_area.py` | CPU | Marked area of the union of the critical-class masks at the selected thresholds, measuring the cost of monitoring several classes at once |
 | 23 | `23_tierb_target_pool.py` | CPU | Refits the tier-B density ratio with the target side restricted to class-bearing target images, so the conditioning of the two populations matches the weighted statement, and reports both fits side by side |
+| 24 | `24_marida_component_stats.py` | CPU | Size distribution of the MARIDA debris components (`x9_marida_component_stats.json`) |
+| 25 | `25_tierb_test_charge.py` | CPU | Tier B with the test point charged its own estimated weight instead of the ceiling, plus the weight distribution on the target embeddings; reproduces the published ceiling arm and aborts if it cannot (`x10`) |
+| 26 | `26_marida_confidence.py` | CPU | MARIDA annotation confidence (High/Moderate/Low): pixel composition and the region miss rate by confidence and component size (`x11`) |
+| 27 | `27_triage_permutation_band.py` | CPU | Permutation band (1000 random orderings) for the budgeted-review comparison (`x12`) |
+| 28 | `28_acdc_sequence_schemes.py` | CPU | Sequence-disjoint tier-A schemes on ACDC: whole driving sequences held out of the target calibration draw (`x13`, run through stage 5) |
+| -- | `compare_experiments.py` | CPU | Row-aligned comparison of two `results/experiments/` trees, per file and capture level; `--strict` fails on a moved quantity that cannot move, on a file that cannot be aligned, and on a sidecar whose recorded arguments differ from the reference run |
+| -- | `write_revision.sh` | -- | Writes `REVISION` (the mirror's short commit hash) for copies of the tree that are not git checkouts |
 
 Orchestrators: `run_all.sh` (every phase in dependency order; this is the
 only script a reproducer needs to run),
@@ -152,7 +170,44 @@ per region and season, then caching, tables and experiments),
 `run_stage5_supplementary.sh` (the area-matched sweep, the clip-ratio grid,
 the cross-fitted weights, the tier-B holdout controls and the MARIDA
 in-distribution control: the `p1`--`p7` blocks under
-`results/experiments/`).
+`results/experiments/`),
+`run_referee_response.sh` (stages 25--28 preceded by a stage-4 rebuild on the
+densified false-positive subgrid; `run_all.sh` reaches the same stages as
+phase 7c without the rebuild),
+`run_p1_rerun.sh` and `run_p1_x7_fix.sh` (stage 5 re-derived in full from
+existing caches, with the comparison and the audit; the second redoes the
+union-area block alone).
+
+## Tests and audit
+
+`pytest` and `18_audit.py` check different things, and a change to the
+library needs both.
+
+The tests under `tests/` exercise `src/record` on synthetic inputs: the loss
+and its monotonicity, the CRC selection rule, the weight estimators, the
+evaluation metrics, and one stage-5 integration test that drives
+`05_run_experiments.py` end to end on a small fabricated cache. They run in
+seconds and need no data. They say whether the code computes what its
+docstrings claim.
+
+The audit reads the released result files and recomputes every quantity the
+article prints, on a code path that does not share the table and figure
+builders. It says whether the released numbers still follow from the released
+CSVs, and whether the article's sentences still follow from the numbers; it
+also checks a handful of source-level invariants (section P) that the result
+files cannot reveal. It does not import most of the library, so a defect in
+the library shows up in the audit only once it has changed a result file.
+
+The float16 capture-rule defect fixed in commit `448e186` fell between the
+two: the unit test of the loss passed because it tested the function in
+isolation with the same dtype the callers used, and the audit passed because
+every result file had been produced by the same defective code. The
+stage-5 integration test and audit section P were added for that gap. When a
+finding touches a published number, the sequence is: fix the library, extend
+the tests so the defect fails, re-derive the affected result files
+(`run_p1_rerun.sh` or the relevant driver), update the audit constants to the
+measured values, and inject the defect once more to confirm both layers catch
+it.
 
 GPU inference runs once and is cached; downstream analyses, tables, and
 figures are pure arithmetic over the cached statistics.
@@ -200,7 +255,10 @@ All randomness is seeded. Split files are generated deterministically from the
 base seed in `configs/datasets.yaml` and committed to version control; every
 experiment references splits by file, never by re-sampling. Each result file
 is accompanied by a `.meta.json` sidecar recording the producing script,
-configuration, and git revision.
+configuration, and git revision. Copies of the tree that are not git checkouts
+record the revision from a `REVISION` file at the repository root, written by
+`scripts/write_revision.sh` from the mirror after each commit and suffixed
+`+file` in the sidecar; without it the field reads `unknown`.
 
 ## License
 
