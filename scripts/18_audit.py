@@ -1190,6 +1190,13 @@ def _seqdisjoint_tier_a_claims():
          float(j["region_fnr_pub"].max()), tol=5e-4)
     near(246, "largest sequence-disjoint cell at n_t=25", 0.127,
          float(j["region_fnr_sq"].max()), tol=5e-4)
+    # Two different cells (fourth panel, A4): the published maximum is night,
+    # the sequence-disjoint maximum is snow, both alpha=0.2, rho=0.1.
+    truth(246, "the published maximum is the night cell and the disjoint maximum the snow cell",
+          j["region_fnr_pub"].idxmax()[0] == "night" and j["region_fnr_sq"].idxmax()[0] == "snow",
+          f"{j['region_fnr_pub'].idxmax()} -> {j['region_fnr_sq'].idxmax()}")
+    near(246, "the night cell moves from 0.113 to 0.125 under the disjoint scheme", 0.125,
+         float(j.loc[j["region_fnr_pub"].idxmax(), "region_fnr_sq"]), tol=5e-4)
     move = j["region_fnr_sq"] - j["region_fnr_pub"]
     near(246, "largest single movement in region FNR", 0.055,
          float(move.max()), tol=5e-4)
@@ -2502,7 +2509,19 @@ def section_review():
     br = br[br["feasible"].astype(bool)]
     cc_ = br.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
     ratio_acdc = float((cc_ / cc_.index.get_level_values("alpha")).max())
-    near(944, "the worst ACDC per-class violation is 2.73x", 2.73, ratio_acdc, 0.01)
+    near(944, "the worst ACDC per-class violation is 2.73x at rho=0.5", 2.73, ratio_acdc, 0.01)
+    # The abstract quotes the larger of the two capture levels (fourth panel,
+    # A1): at rho=0.1 the worst class cell is B5, bicycle, night, alpha=0.1.
+    br1 = sel(load("e2_break__*"), method="region_crc", rho=0.1)
+    br1 = br1[br1["feasible"].astype(bool)]
+    cc1 = br1.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
+    ratio_acdc1 = float((cc1 / cc1.index.get_level_values("alpha")).max())
+    near(944, "the worst ACDC per-class violation is 2.90x at rho=0.1 (the abstract's 2.9x)",
+         2.90, ratio_acdc1, 0.01)
+    truth(944, "the rho=0.1 worst cell is B5, bicycle, night, alpha=0.1",
+          (cc1 / cc1.index.get_level_values("alpha")).idxmax()[1:] == ("e2_break__night__segformer_b5_cityscapes", "bicycle", 0.1)
+          or str((cc1 / cc1.index.get_level_values("alpha")).idxmax()).find("night") >= 0,
+          str((cc1 / cc1.index.get_level_values("alpha")).idxmax()))
     lo_ = sel(load("l2_break__*"), method="region_crc", rho=0.5)
     lo_ = lo_[lo_["feasible"].astype(bool)]
     cl_ = lo_.groupby(["experiment", "class_name", "alpha"])["region_fnr"].mean()
