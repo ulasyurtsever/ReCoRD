@@ -12,7 +12,9 @@ two-tier calibration scheme (exact recalibration on a small labeled target set;
 importance-weighted calibration over foundation-model embeddings otherwise)
 together with a score-distribution drift monitor.
 
-> Paper in preparation. Citation information will be added upon publication.
+> The accompanying article is under review. `CITATION.cff` carries the
+> citation for the software and the preferred citation for the paper; it will
+> be updated on publication.
 
 ## Repository layout
 
@@ -68,7 +70,8 @@ checkpoints 1 GB, results under 1 GB.
 
 ## Setup
 
-Requires Python 3.11 or later. The inference and training stages require a
+Requires Python 3.11 or later and, for the shell drivers, bash 4 or later
+(they use associative arrays; macOS ships bash 3.2). The inference and training stages require a
 CUDA GPU; the experiment stages run on CPU.
 
 ```bash
@@ -138,7 +141,7 @@ restarts from scratch and overwrites its checkpoints.
 | 11 | `11_make_schematic.py` | CPU | Method schematic (synthetic illustration, no data) |
 | 12 | `12_make_qualitative.py` | CPU | Qualitative panel on one test scene: argmax versus region CRC at the calibrated threshold (`--benchmark loveda\|marida`) |
 | 13 | `13_pareto_tradeoff.py` | CPU | Area-matched comparison of region and pixel CRC over a level sweep |
-| 14 | `14_uncertainty_tables.py` | CPU | Standard errors and Clopper--Pearson intervals for the validity tables |
+| 14 | `14_uncertainty_tables.py` | CPU | Standard errors (and, on MARIDA, scene-bootstrap intervals) for the validity tables |
 | 15 | `15_tierb_summary.py` | CPU | Tier-B weight diagnostics: conservative test mass, effective sample size, informative-draw fraction |
 | 16 | `16_clip_window.py` | CPU | Tier-B behaviour as a function of the clip ratio |
 | 18 | `18_audit.py` | CPU | Regression suite over the released result files: every published numeric and qualitative quantity, recomputed on an independent code path. `--section holdout` additionally checks each experiment's test group against the data its model was fitted on |
@@ -150,7 +153,8 @@ restarts from scratch and overwrites its checkpoints.
 | 25 | `25_tierb_test_charge.py` | CPU | Tier B with the test point charged its own estimated weight instead of the ceiling, plus the weight distribution on the target embeddings; reproduces the published ceiling arm and aborts if it cannot (`x10`) |
 | 26 | `26_marida_confidence.py` | CPU | MARIDA annotation confidence (High/Moderate/Low): pixel composition and the region miss rate by confidence and component size (`x11`) |
 | 27 | `27_triage_permutation_band.py` | CPU | Permutation band (1000 random orderings) for the budgeted-review comparison (`x12`) |
-| 28 | `28_acdc_sequence_schemes.py` | CPU | Sequence-disjoint tier-A schemes on ACDC: whole driving sequences held out of the target calibration draw (`x13`, run through stage 5) |
+| 28 | `28_acdc_sequence_schemes.py` | CPU | Sequence-disjoint tier-A schemes on ACDC: whole driving sequences held out of the target calibration draw (`x13`, run through stage 5; `--sizes 50 100` for the larger budgets) |
+| 30 | `30_build_dilation_tables.py` | CPU | Stage-4 tables for the dilation family: the argmax mask dilated by a radius, mapped onto the lambda grid through an EDT pseudo-probability (`record.dilation`); stage 5 on `<model>__dilation` is then dilation CRC (`x16`) |
 | -- | `compare_experiments.py` | CPU | Row-aligned comparison of two `results/experiments/` trees, per file and capture level; `--strict` fails on a moved quantity that cannot move, on a file that cannot be aligned, and on a sidecar whose recorded arguments differ from the reference run |
 | -- | `write_revision.sh` | -- | Writes `REVISION` (the mirror's short commit hash) for copies of the tree that are not git checkouts |
 
@@ -176,7 +180,16 @@ densified false-positive subgrid; `run_all.sh` reaches the same stages as
 phase 7c without the rebuild),
 `run_p1_rerun.sh` and `run_p1_x7_fix.sh` (stage 5 re-derived in full from
 existing caches, with the comparison and the audit; the second redoes the
-union-area block alone).
+union-area block alone),
+`run_panel4.sh` (the same re-derivation plus the fourth panel's arms: `x13`
+at $n_t = 50, 100$, `x14` tier B without shift, `x15` source CRC at the
+reduced level, `x16` dilation CRC, `x17` Mask2Former on the log-tail grid).
+
+The threshold grid is selected at import time by `RECORD_GRID` (`uniform`,
+the published 1001-point grid, or `logtail`, which spaces the cutoff
+$1-\lambda$ over six decades). Tables and experiments built under one grid
+must never be read under another; `run_panel4.sh` therefore builds the
+`logtail` arm under a separate `RECORD_RESULTS_ROOT`.
 
 ## Tests and audit
 
