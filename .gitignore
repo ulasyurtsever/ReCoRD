@@ -34,4 +34,6 @@ results/environment_report.txt
 
 # Retired artifacts kept outside the published tree
 _to_delete/
-\n\n# Written by scripts/write_revision.sh for non-git copies of the tree\nREVISION\n
+
+# Written by scripts/write_revision.sh for non-git copies of the tree
+REVISION
