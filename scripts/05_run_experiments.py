@@ -76,7 +76,7 @@ from record.cache import embeddings_path
 from record.crc import ThresholdSelection, crc_threshold, heuristic_threshold, weighted_crc_threshold
 from record.evaluation import evaluate_at_threshold, index_rows, stratified_region_fnr
 from record.grid import FP_SUBGRID_INDICES, LAMBDA_GRID, fp_subgrid_slot
-from record.losses import enforce_nonincreasing, image_loss_curves
+from record.losses import capture_threshold, enforce_nonincreasing, image_loss_curves
 from record.monitor import ks_drift_check
 from record.paths import results_dir, splits_dir
 from record.splits import load_scheme
@@ -211,7 +211,9 @@ class TableStore:
         pixel_fnr[defined] = 1.0 - num[defined] / den[defined, None]
 
         # Size-weighted region-miss curves: components weighted by pixel area.
-        ind = (curves < rho).astype(np.float64)
+        # Same capture rule as record.losses: decided at the storage precision
+        # of the curves, never on the widened float32 copy (third panel, P1).
+        ind = (curves < capture_threshold(rho)).astype(np.float64)
         num_sw = np.zeros((n, LAMBDA_GRID.size))
         np.add.at(num_sw, img_idx, ind * sizes[:, None])
         losses_sw = np.full((n, LAMBDA_GRID.size), np.nan)
@@ -786,7 +788,7 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
         # use the same estimand or the comparison is not like-for-like; the
         # rate is therefore image-averaged here, with the component-weighted
         # rate kept alongside as a diagnostic.
-        miss = cov < rho
+        miss = cov < capture_threshold(rho)
         rows_of_comp = comp_rows[comp_in_test]
         per_image = [
             miss[rows_of_comp == r].mean()
@@ -931,7 +933,7 @@ def run_method(method, alpha, rho, cal_view, test_view, cal_def, test_rows,
     # whenever images carry unequal component counts, so the count is recorded
     # rather than inferred from the rate.
     comp_cov = test_view["curves"][comp_in_test][:, selection.lam_index]
-    comp_missed = int(np.count_nonzero(comp_cov < rho))
+    comp_missed = int(np.count_nonzero(comp_cov < capture_threshold(rho)))
     comp_total = int(comp_cov.size)
 
     drift = ks_drift_check(

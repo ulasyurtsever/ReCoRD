@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Patch
 
+from record.losses import capture_threshold
 from record.paths import results_dir
 
 PALETTE = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7"]
@@ -69,12 +70,12 @@ def _panel_masks(axes) -> None:
             covered = (mask & region).sum() / region.sum()
             labels.append(covered)
             ys, xs = np.nonzero(region)
-            captured = covered >= rho
+            captured = covered >= capture_threshold(rho)
             ax.text(xs.mean(), ys.min() - 4,
                     f"{covered:.0%}", ha="center", va="bottom", fontsize=7,
                     color=PALETTE[2] if captured else PALETTE[3],
                     fontweight="bold")
-        missed = sum(c < rho for c in labels)
+        missed = sum(c < capture_threshold(rho) for c in labels)
         ax.set_title(rf"$\lambda={lam:.2f}$" "\n" rf"$L = {missed}/2$",
                      fontsize=7.5, linespacing=1.1)
         ax.set_xticks([])

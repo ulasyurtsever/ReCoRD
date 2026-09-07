@@ -358,3 +358,25 @@ def test_stage5_captures_components_sitting_exactly_on_rho(synthetic_env):
     # A threshold strictly inside the grid: the boundary was reached, not
     # stepped over to lambda_max.
     assert (rows["lam"] < 1.0).all(), rows["lam"].tolist()
+    # The driver's own component tally and its size-weighted curve must use
+    # the same rounded rule as the controlled loss. Both compared the widened
+    # float32 copy against a bare rho until the fourth panel (H2 #1), so the
+    # count said "every component missed" while the controlled risk said
+    # "none": two answers to one question, in one CSV row.
+    assert (rows["n_missed_components"] == 0).all(), rows["n_missed_components"].tolist()
+    assert (rows["region_fnr_component_avg"] == 0.0).all()
+    sw = _run_stage5(synthetic_env, "boundary_sw", [
+        "--scheme", "synthetic_half", "--methods", "region_crc",
+        "--rhos", "0.1", "--loss", "size_weighted",
+    ])
+    assert (sw["controlled_risk"] == 0.0).all(), sw["controlled_risk"].tolist()
+    # And the argmax baseline scores its coverages with the same rule: with
+    # every component's argmax coverage set to exactly one tenth, it misses
+    # nothing at rho = 0.1.
+    comps = pd.read_parquet(raw_dir / "components.parquet")
+    comps["argmax_coverage"] = np.float32(np.float16(1.0 / 10.0))
+    comps.to_parquet(raw_dir / "components.parquet", index=False)
+    am = _run_stage5(synthetic_env, "boundary_argmax", [
+        "--scheme", "synthetic_half", "--methods", "argmax", "--rhos", "0.1",
+    ])
+    assert (am["region_fnr"] == 0.0).all(), am["region_fnr"].tolist()

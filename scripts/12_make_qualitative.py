@@ -46,6 +46,7 @@ import numpy as np
 import pandas as pd
 
 from record.cache import image_cache_path, is_complete
+from record.losses import capture_threshold
 from record.components import extract_components
 from record.gt import (list_ids, load_image_array, load_label_array,
                        parse_dataset_key)
@@ -152,8 +153,8 @@ def patch_statistics(model: str, dataset_key: str, patch_id: str,
         "patch_id": patch_id,
         "n_regions": len(rows),
         "regions": rows,
-        "missed_argmax": sum(r["cov_argmax"] < rho for r in rows),
-        "missed_crc": sum(r["cov_crc"] < rho for r in rows),
+        "missed_argmax": sum(r["cov_argmax"] < capture_threshold(rho) for r in rows),
+        "missed_crc": sum(r["cov_crc"] < capture_threshold(rho) for r in rows),
         "area_argmax": float(mask_argmax.mean()),
         "area_crc": float(mask_crc.mean()),
         "labels": labels,
@@ -179,7 +180,7 @@ def rank_patches(model: str, dataset_key: str, gt_value: int, channel: int,
             continue
         recovered = sum(
             1 for r in stats["regions"]
-            if r["cov_argmax"] < rho <= r["cov_crc"])
+            if r["cov_argmax"] < capture_threshold(rho) <= r["cov_crc"])
         stats["recovered"] = recovered
         ranked.append(stats)
     ranked.sort(key=lambda s: (-s["recovered"], -s["n_regions"], s["patch_id"]))
@@ -228,7 +229,7 @@ def render(stats: dict, spec: dict, rho: float, out_name: str) -> str:
                   alpha=0.55, vmin=0, vmax=1)
         missed = 0
         for row in stats["regions"]:
-            captured = row[cov_key] >= rho
+            captured = row[cov_key] >= capture_threshold(rho)
             missed += not captured
             _outline(ax, stats["labels"], row["component_id"],
                      PALETTE["captured"] if captured else PALETTE["missed"])

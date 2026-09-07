@@ -116,7 +116,7 @@ from record.crc import crc_threshold
 from record.evaluation import index_rows
 from record.grid import LAMBDA_GRID
 from record.labelmaps import critical_classes_for
-from record.losses import enforce_nonincreasing, image_loss_curves
+from record.losses import capture_threshold, enforce_nonincreasing, image_loss_curves
 from record.marida import load_class_mask, patch_paths
 from record.paths import results_dir, splits_dir
 from record.splits import load_scheme
@@ -420,7 +420,7 @@ def official_split_rates(sel: pd.DataFrame, curves: np.ndarray, image_ids: list[
         for alpha in alphas:
             selection = crc_threshold(losses[cal_defined], alpha, LAMBDA_GRID)
             col = selection.lam_index
-            miss = comp_curves[in_test][:, col] < rho
+            miss = comp_curves[in_test][:, col] < capture_threshold(rho)
             rows_of_comp = comp_image_rows[in_test]
             high = any_high[in_test]
 
