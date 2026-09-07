@@ -83,8 +83,49 @@ python scripts/23_tierb_target_pool.py \
 python scripts/24_marida_component_stats.py \
   --model marida_unet_official_holdout
 
+echo "=== Phase 7c: referee-response arms ==="
+# Stages 25-28 write x10-x13, which the article quotes: the tier-B test charge
+# and target-weight distribution, the MARIDA annotation-confidence split, the
+# triage permutation band, and the sequence-disjoint tier-A arm. They were
+# reachable only through run_referee_response.sh, whose first step rebuilds
+# stage 4 and is not needed on a tree this script has just built.
+python scripts/25_tierb_test_charge.py \
+    --model segformer_b2_cityscapes --scheme cityscapes_val_half \
+    --cal-datasets cityscapes_val --embedding dinov2_vitb14 \
+    --conditions fog night rain snow --rhos 0.5 0.1 --max-seeds 25
+python scripts/25_tierb_test_charge.py \
+    --model segformer_b2_loveda_urban --scheme loveda_urban_val_half \
+    --cal-datasets loveda_Val_Urban --embedding dinov2_vitb14 \
+    --conditions urban2rural --dataset-template loveda_Val_Rural \
+    --classes building water --rhos 0.5 0.1 --max-seeds 25 \
+    --out-name x10_tierb_test_charge__loveda_urban2rural__dinov2_vitb14
+python scripts/25_tierb_test_charge.py \
+    --model segformer_b2_loveda_rural --scheme loveda_rural_val_half \
+    --cal-datasets loveda_Val_Rural --embedding dinov2_vitb14 \
+    --conditions rural2urban --dataset-template loveda_Val_Urban \
+    --classes building water --rhos 0.5 0.1 --max-seeds 25 \
+    --out-name x10_tierb_test_charge__loveda_rural2urban__dinov2_vitb14
+python scripts/26_marida_confidence.py
+python scripts/26_marida_confidence.py \
+    --model marida_unet_official_holdout_ens5 \
+    --experiment h1_official__marida_unet_official_holdout_ens5 \
+    --out-stem x11_marida_confidence__ens5
+python scripts/27_triage_permutation_band.py
+python scripts/28_acdc_sequence_schemes.py
+for C in fog night rain snow; do
+  python scripts/05_run_experiments.py \
+      --name "x13_tierA25_seqdisjoint__${C}__segformer_b2_cityscapes" \
+      --model segformer_b2_cityscapes \
+      --scheme "acdc_${C}_targetcal25_seqdisjoint" \
+      --cal-datasets "acdc_${C}_train" "acdc_${C}_val" \
+      --test-datasets "acdc_${C}_train" "acdc_${C}_val" \
+      --methods region_crc heuristic argmax
+done
+
 echo "=== Phase 8: tables ==="
-python scripts/08_make_tables.py
+python scripts/08_make_tables.py --rho 0.5
+# The released rho=0.1 companion set is built by the same code from the same rows.
+python scripts/08_make_tables.py --rho 0.1 --suffix=-rho0
 python scripts/14_uncertainty_tables.py --rho 0.5
 python scripts/15_tierb_summary.py
 
