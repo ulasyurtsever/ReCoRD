@@ -66,6 +66,7 @@ import argparse
 import hashlib
 import json
 import subprocess
+from pathlib import Path
 from datetime import datetime, timezone
 
 import numpy as np
@@ -250,11 +251,30 @@ def defined_rows(matrix: np.ndarray, rows: np.ndarray) -> np.ndarray:
 
 
 def git_revision() -> str:
+    """Revision recorded in the .meta.json sidecar.
+
+    The working copy that runs the experiments is not always a git checkout
+    (the release lives in a separate git mirror, and the server copy is a
+    plain directory), so ``git rev-parse`` is tried first and a ``REVISION``
+    file at the repository root second. That file holds the short hash of the
+    mirror commit the copy was taken from and is written by
+    ``scripts/write_revision.sh`` after each commit; it is ignored by git so
+    it never goes stale inside the mirror itself. Its value is suffixed with
+    ``+file`` so a sidecar shows which route produced it.
+    """
+    root = Path(__file__).resolve().parents[1]
     try:
         return subprocess.check_output(
-            ["git", "rev-parse", "--short", "HEAD"], text=True).strip()
+            ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+            text=True, stderr=subprocess.DEVNULL).strip()
     except Exception:
-        return "unknown"
+        pass
+    rev = root / "REVISION"
+    if rev.exists():
+        token = rev.read_text().split()
+        if token:
+            return token[0] + "+file"
+    return "unknown"
 
 
 def load_cluster_map(path: str | None) -> dict[str, str]:
