@@ -17,6 +17,10 @@
   "methods": [
    "region_crc"
   ],
+  "lac_variants": [
+   "marginal"
+  ],
+  "measure_pixel_fnr": false,
   "loss": "region",
   "triage": true,
   "triage_rankings": [
@@ -48,5 +52,5 @@
  "scheme_file": "marida_official_holdout.json",
  "n_records": 6,
  "git_revision": "unknown",
- "completed_utc": "2026-08-16T20:26:32.180952+00:00"
+ "completed_utc": "2026-09-07T02:44:15.420359+00:00"
 }

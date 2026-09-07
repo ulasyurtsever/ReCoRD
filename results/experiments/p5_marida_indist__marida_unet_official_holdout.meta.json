@@ -20,6 +20,10 @@
    "heuristic",
    "argmax"
   ],
+  "lac_variants": [
+   "marginal"
+  ],
+  "measure_pixel_fnr": false,
   "loss": "region",
   "triage": false,
   "triage_rankings": [
@@ -49,5 +53,5 @@
  "scheme_file": "marida_random_half.json",
  "n_records": 2400,
  "git_revision": "unknown",
- "completed_utc": "2026-08-17T08:49:30.440776+00:00"
+ "completed_utc": "2026-09-07T06:31:41.486119+00:00"
 }
