@@ -51,6 +51,6 @@
  },
  "scheme_file": "marida_official_holdout.json",
  "n_records": 6,
- "git_revision": "unknown",
- "completed_utc": "2026-09-07T02:44:15.420359+00:00"
+ "git_revision": "010198e+file",
+ "completed_utc": "2026-09-07T21:14:43.540284+00:00"
 }

@@ -49,6 +49,6 @@
  },
  "scheme_file": "acdc_night_targetcal100.json",
  "n_records": 5400,
- "git_revision": "unknown",
- "completed_utc": "2026-09-06T23:39:13.833242+00:00"
+ "git_revision": "010198e+file",
+ "completed_utc": "2026-09-07T18:01:24.097473+00:00"
 }

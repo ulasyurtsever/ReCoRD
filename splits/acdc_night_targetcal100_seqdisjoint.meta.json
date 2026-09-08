@@ -6,6 +6,7 @@
  "n_seeds": 100,
  "base_seed": 20260806,
  "whole_sequences": false,
+ "rng_scheme_key": "acdc_night_targetcal100_seqdisjoint",
  "n_pool_frames": 506,
  "n_sequences": 6,
  "sequence_sizes": [
@@ -36,5 +37,5 @@
  "warnings": [
   "night: only 6 driving sequences. A sequence-disjoint calibration set rests on one or two of them, so the seed-to-seed spread, not the mean, is the reportable quantity here."
  ],
- "generated_utc": "2026-08-23T21:54:51.932318+00:00"
+ "generated_utc": "2026-09-08T01:33:24.719154+00:00"
 }

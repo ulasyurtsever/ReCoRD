@@ -1950,7 +1950,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,0.997,997,True,0.22613993857616305,0.22613993857616305,0.044251032173633575,,-1.0,196,655.0,141.0,0.2152671755725191,0.07576354679802955,False,0.29398663697104677,0.05027932960893855,0.0,,,36,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
 ,,,,-1,True,,0.5330336896663427,0.00519450381398201,,,406,,,0.49923664122137407,,False,,,,,,36,person,0.1,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
 ,,,0.973,973,True,0.35964485486169157,0.35964485486169157,0.015145210549235344,,-1.0,196,655.0,212.0,0.3236641221374046,0.13009852216748763,False,0.44097995545657015,0.0782122905027933,0.0,,,36,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
-,,,0.968,968,True,0.36829706574604537,0.36829706574604537,0.014299864880740643,,-1.0,196,655.0,221.0,0.3374045801526718,0.13024630541871918,False,0.45879732739420936,0.0782122905027933,0.0,,,36,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
+,,,0.968,968,True,0.36829706574604537,0.36829706574604537,0.014299864880740643,,-1.0,196,655.0,220.0,0.33587786259541985,0.13024630541871918,False,0.45879732739420936,0.0782122905027933,0.0,,,36,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
 ,,,,-1,True,,0.5330336896663427,0.00519450381398201,,,406,,,0.49923664122137407,,False,,,,,,36,person,0.2,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,196,655.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,36,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,196,655.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,36,person,0.05,0.5,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,51
@@ -3570,7 +3570,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,195,678.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
 ,,,,-1,True,,0.5085205535205535,0.0052741700783371925,,,406,,,0.4911504424778761,,False,,,,,,66,person,0.1,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
 ,,,0.993,993,True,0.242246094361479,0.242246094361479,0.032081905752420425,,-1.0,195,678.0,165.0,0.24336283185840707,0.07374384236453202,False,0.3347547974413646,0.043243243243243246,0.0,,,66,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
-,,,0.991,991,True,0.2699345170499016,0.2699345170499016,0.027677197009325027,,-1.0,195,678.0,179.0,0.2640117994100295,0.07965517241379316,False,0.3624733475479744,0.043243243243243246,0.0,,,66,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
+,,,0.991,991,True,0.2699345170499016,0.2699345170499016,0.027677197009325027,,-1.0,195,678.0,178.0,0.26253687315634217,0.07965517241379316,False,0.3624733475479744,0.043243243243243246,0.0,,,66,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
 ,,,,-1,True,,0.5085205535205535,0.0052741700783371925,,,406,,,0.4911504424778761,,False,,,,,,66,person,0.2,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,195,678.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,195,678.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.05,0.5,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,52
@@ -4163,7 +4163,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,199,636.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,199,636.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
 ,,,,-1,True,,0.5304074903321134,0.005033763591200113,,,406,,,0.5031446540880503,,False,,,,,,77,person,0.1,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
-,,,0.991,991,True,0.272152979627854,0.272152979627854,0.0273444727063179,,-1.0,199,636.0,160.0,0.25157232704402516,0.10320197044334978,False,0.3440366972477064,0.05056179775280899,0.0,,,77,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
+,,,0.991,991,True,0.272152979627854,0.272152979627854,0.0273444727063179,,-1.0,199,636.0,159.0,0.25,0.10320197044334978,False,0.3440366972477064,0.05056179775280899,0.0,,,77,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
 ,,,0.987,987,True,0.28376660330177916,0.28376660330177916,0.022185200825333595,,-1.0,199,636.0,165.0,0.25943396226415094,0.12655172413793103,False,0.3532110091743119,0.06179775280898876,0.0,,,77,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
 ,,,,-1,True,,0.5304074903321134,0.005033763591200113,,,406,,,0.5031446540880503,,False,,,,,,77,person,0.2,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,199,636.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,48
@@ -5190,7 +5190,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,191,662.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
 ,,,,-1,True,,0.5109457006053864,0.005065855570137501,,,406,,,0.486404833836858,,False,,,,,,96,person,0.1,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
 ,,,0.996,996,True,0.2230156332905024,0.2230156332905024,0.041382886469364166,,-1.0,191,662.0,143.0,0.21601208459214502,0.07344827586206892,False,0.2916666666666667,0.054945054945054944,0.0,,,96,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
-,,,0.991,991,True,0.2715819448149291,0.2715819448149291,0.02683776617050171,,-1.0,191,662.0,167.0,0.25226586102719034,0.06960591133004926,False,0.3399122807017544,0.06043956043956044,0.0,,,96,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
+,,,0.991,991,True,0.2715819448149291,0.2715819448149291,0.02683776617050171,,-1.0,191,662.0,166.0,0.25075528700906347,0.06960591133004926,False,0.3399122807017544,0.06043956043956044,0.0,,,96,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
 ,,,,-1,True,,0.5109457006053864,0.005065855570137501,,,406,,,0.486404833836858,,False,,,,,,96,person,0.2,0.1,argmax,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,191,662.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,acdc_night_targetcal100,56
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,191,662.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.05,0.5,heuristic,mask2former_swinb_cityscapes,acdc_night_targetcal100,56

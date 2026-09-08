@@ -49,6 +49,6 @@
  },
  "scheme_file": "acdc_fog_targetcal100.json",
  "n_records": 5400,
- "git_revision": "unknown",
- "completed_utc": "2026-09-06T22:54:48.256602+00:00"
+ "git_revision": "010198e+file",
+ "completed_utc": "2026-09-07T17:21:23.332434+00:00"
 }

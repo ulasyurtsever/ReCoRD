@@ -67,7 +67,10 @@ def table_baselines(df: pd.DataFrame) -> str:
     """T2: method comparison at alpha=0.2 (region FNR / area), Cityscapes."""
     sub = df[(df.block == "e1") & (df.alpha == 0.20)]
     cells = cell_means(sub, ["model", "method", "rho"])
-    extra = df[df.block.isin(["x4", "x5"]) & (df.alpha == 0.20)]
+    # x16 is dilation CRC: the argmax mask dilated by a calibrated radius
+    # (stage 30 tables, run on "<model>__dilation"). It is the fourth panel's
+    # requested geometric baseline and sits under each model's block.
+    extra = df[df.block.isin(["x4", "x5", "x16"]) & (df.alpha == 0.20)]
     extra_cells = cell_means(extra, ["model", "method", "rho"]) if len(extra) else None
     methods = ["argmax", "heuristic", "pixel_crc", "region_crc"]
     labels = {"argmax": "Argmax", "heuristic": "Uncorrected",
@@ -79,6 +82,7 @@ def table_baselines(df: pd.DataFrame) -> str:
         ("lac_classcond", "", "LAC (class-cond.)"),
         ("heuristic", "_tempscaled", "Uncorrected (temp.)"),
         ("region_crc", "_tempscaled", "Region CRC (temp.)"),
+        ("region_crc", "__dilation", "Dilation CRC"),
     ]
 
     def fetch(frame, model, method, rho):
