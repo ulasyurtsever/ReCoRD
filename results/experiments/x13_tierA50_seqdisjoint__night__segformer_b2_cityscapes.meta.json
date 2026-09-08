@@ -1,0 +1,54 @@
+{
+ "name": "x13_tierA50_seqdisjoint__night__segformer_b2_cityscapes",
+ "argv": {
+  "name": "x13_tierA50_seqdisjoint__night__segformer_b2_cityscapes",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "acdc_night_targetcal50_seqdisjoint",
+  "cal_datasets": [
+   "acdc_night_train",
+   "acdc_night_val"
+  ],
+  "test_datasets": [
+   "acdc_night_train",
+   "acdc_night_val"
+  ],
+  "methods": [
+   "region_crc",
+   "heuristic",
+   "argmax"
+  ],
+  "lac_variants": [
+   "marginal"
+  ],
+  "measure_pixel_fnr": false,
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": null,
+  "weight_source_holdout": 0.0,
+  "weight_holdout": 0.0,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "bootstrap_clusters": null,
+  "bootstrap_ci": 0,
+  "max_seeds": null
+ },
+ "scheme_file": "acdc_night_targetcal50_seqdisjoint.json",
+ "n_records": 5400,
+ "git_revision": "010198e+file",
+ "completed_utc": "2026-09-08T01:33:50.339297+00:00"
+}

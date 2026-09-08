@@ -3567,10 +3567,10 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,109,240.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.05,0.1,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,,-1,True,,0.5652795980777633,0.0010298113338649273,,,475,,,0.5291666666666667,,False,,,,,,66,person,0.05,0.1,argmax,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,1.0,1000,False,0.0,0.0,1.0,,-1.0,109,240.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
-,,,0.6940000000000001,694,True,0.5126365224989079,0.5126365224989079,0.0012613992439582944,,-1.0,109,240.0,119.0,0.49583333333333335,0.10947368421052628,False,0.660377358490566,0.17567567567567569,0.0,,,66,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
+,,,0.6940000000000001,694,True,0.5126365224989079,0.5126365224989079,0.0012613992439582944,,-1.0,109,240.0,118.0,0.49166666666666664,0.10947368421052628,False,0.660377358490566,0.17567567567567569,0.0,,,66,person,0.1,0.1,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,,-1,True,,0.5652795980777633,0.0010298113338649273,,,475,,,0.5291666666666667,,False,,,,,,66,person,0.1,0.1,argmax,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,109,240.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
-,,,0.6940000000000001,694,True,0.5126365224989079,0.5126365224989079,0.0012613992439582944,,-1.0,109,240.0,119.0,0.49583333333333335,0.10947368421052628,False,0.660377358490566,0.17567567567567569,0.0,,,66,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
+,,,0.6940000000000001,694,True,0.5126365224989079,0.5126365224989079,0.0012613992439582944,,-1.0,109,240.0,118.0,0.49166666666666664,0.10947368421052628,False,0.660377358490566,0.17567567567567569,0.0,,,66,person,0.2,0.1,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,,-1,True,,0.5652795980777633,0.0010298113338649273,,,475,,,0.5291666666666667,,False,,,,,,66,person,0.2,0.1,argmax,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,1.0,1000,False,0.0,0.0,1.0,,-1.0,109,240.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1.0,109,240.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,66,person,0.05,0.5,heuristic,mask2former_swinb_cityscapes,acdc_fog_targetcal25,6

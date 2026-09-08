@@ -127,7 +127,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,173,,,,,False,,,,,,2,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,3,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,3,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.1595137424343054,0.1595137424343054,0.04270803555846214,17.02,999,196,1317.0,194.0,0.14730447987851178,0.07999999999999996,False,0.23651452282157676,0.047516198704103674,0.0,,,3,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.1595137424343054,0.1595137424343054,0.04270803555846214,17.02,999,196,1317.0,193.0,0.14654517843583903,0.07999999999999996,False,0.23651452282157676,0.047516198704103674,0.0,,,3,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,3,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,3,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,3,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -211,7 +211,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,175,,,,,False,,,,,,4,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,224
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1373.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,5,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1373.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,5,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
-,,,0.999,999,True,0.1830875449479026,0.1830875449479026,0.048242636024951935,17.152,999,201,1373.0,227.0,0.16533139111434814,0.07599999999999996,False,0.2796143250688705,0.046370967741935484,0.0,,,5,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
+,,,0.999,999,True,0.1830875449479026,0.1830875449479026,0.048242636024951935,17.152,999,201,1373.0,226.0,0.16460305899490169,0.07599999999999996,False,0.2796143250688705,0.046370967741935484,0.0,,,5,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1373.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,5,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1373.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,5,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1373.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,5,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
@@ -253,7 +253,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,172,,,,,False,,,,,,5,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,220
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1383.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,6,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1383.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,6,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
-,,,0.999,999,True,0.17528046225675195,0.17528046225675203,0.045388877391815186,17.764,999,202,1383.0,233.0,0.16847433116413593,0.06399999999999995,False,0.2656449553001277,0.05194805194805195,0.0,,,6,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
+,,,0.999,999,True,0.17528046225675195,0.17528046225675203,0.045388877391815186,17.764,999,202,1383.0,232.0,0.16775126536514823,0.06399999999999995,False,0.2656449553001277,0.05194805194805195,0.0,,,6,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1383.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,6,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1383.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,6,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1383.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,6,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
@@ -379,7 +379,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,161,,,,,False,,,,,,8,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,231
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1212.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,9,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1212.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,9,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
-,,,0.999,999,True,0.18131220015652577,0.18131220015652572,0.04446534439921379,17.64,999,198,1212.0,208.0,0.1716171617161716,0.068,False,0.28417818740399386,0.05128205128205128,0.0,,,9,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
+,,,0.999,999,True,0.18131220015652577,0.18131220015652572,0.04446534439921379,17.64,999,198,1212.0,207.0,0.1707920792079208,0.068,False,0.28417818740399386,0.05128205128205128,0.0,,,9,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1212.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,9,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1212.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,9,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1212.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,9,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
@@ -547,7 +547,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,12,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,221
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1446.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,13,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1446.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,13,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.16758539821461646,0.16758539821461646,0.050873856991529465,18.22,999,200,1446.0,221.0,0.15283540802213003,0.10399999999999998,False,0.2632978723404255,0.04081632653061224,0.0,,,13,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.16758539821461646,0.16758539821461646,0.050873856991529465,18.22,999,200,1446.0,220.0,0.15214384508990317,0.10399999999999998,False,0.2632978723404255,0.04081632653061224,0.0,,,13,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1446.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,13,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1446.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,13,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1446.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,13,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
@@ -589,7 +589,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,169,,,,,False,,,,,,13,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1391.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,14,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1391.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,14,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.187832751162666,0.187832751162666,0.051052697002887726,18.644,999,200,1391.0,228.0,0.16391085549964055,0.136,False,0.27967257844474763,0.043052837573385516,0.0,,,14,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.187832751162666,0.187832751162666,0.051052697002887726,18.644,999,200,1391.0,227.0,0.16319194823867722,0.136,False,0.27967257844474763,0.043052837573385516,0.0,,,14,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1391.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,14,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1391.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,14,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1391.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,14,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
@@ -757,7 +757,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,153,,,,,False,,,,,,17,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,231
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1374.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,18,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1374.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,18,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
-,,,0.999,999,True,0.1755749966858694,0.1755749966858694,0.048030778765678406,18.408,999,202,1374.0,214.0,0.15574963609898107,0.04799999999999999,False,0.2557510148849797,0.05010438413361169,0.0,,,18,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
+,,,0.999,999,True,0.1755749966858694,0.1755749966858694,0.048030778765678406,18.408,999,202,1374.0,213.0,0.15502183406113537,0.04799999999999999,False,0.2557510148849797,0.05010438413361169,0.0,,,18,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1374.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,18,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1374.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,18,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1374.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,18,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
@@ -883,7 +883,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,20,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1396.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,21,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1396.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,21,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
-,,,0.999,999,True,0.18318765212179652,0.18318765212179652,0.04678509756922722,17.776,999,199,1396.0,237.0,0.16977077363896848,0.04799999999999999,False,0.27034120734908135,0.059880239520958084,0.0,,,21,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
+,,,0.999,999,True,0.18318765212179652,0.18318765212179652,0.04678509756922722,17.776,999,199,1396.0,236.0,0.16905444126074498,0.04799999999999999,False,0.27034120734908135,0.059880239520958084,0.0,,,21,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1396.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,21,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1396.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,21,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1396.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,21,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
@@ -967,7 +967,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,171,,,,,False,,,,,,22,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,23,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,23,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
-,,,0.999,999,True,0.17043394646026988,0.17043394646026988,0.04598290100693703,18.568,999,203,1439.0,238.0,0.16539263377345378,0.068,False,0.2742138364779874,0.039014373716632446,0.0,,,23,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
+,,,0.999,999,True,0.17043394646026988,0.17043394646026988,0.04598290100693703,18.568,999,203,1439.0,237.0,0.1646977067407922,0.068,False,0.2742138364779874,0.039014373716632446,0.0,,,23,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,23,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,23,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,23,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
@@ -1051,7 +1051,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,181,,,,,False,,,,,,24,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1412.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,25,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1412.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,25,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
-,,,0.999,999,True,0.18417963568304277,0.18417963568304277,0.0504918172955513,18.092,999,204,1412.0,234.0,0.16572237960339944,0.064,False,0.2774108322324967,0.04563492063492063,0.0,,,25,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
+,,,0.999,999,True,0.18417963568304277,0.18417963568304277,0.0504918172955513,18.092,999,204,1412.0,233.0,0.165014164305949,0.064,False,0.2774108322324967,0.04563492063492063,0.0,,,25,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1412.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,25,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1412.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,25,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1412.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,25,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
@@ -1135,7 +1135,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,173,,,,,False,,,,,,26,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1354.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,27,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1354.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,27,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
-,,,0.999,999,True,0.1611300214547968,0.1611300214547968,0.04604364186525345,17.388,999,205,1354.0,213.0,0.15731166912850814,0.05600000000000005,False,0.25,0.05353319057815846,0.0,,,27,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
+,,,0.999,999,True,0.1611300214547968,0.1611300214547968,0.04604364186525345,17.388,999,205,1354.0,212.0,0.15657311669128507,0.05600000000000005,False,0.25,0.05353319057815846,0.0,,,27,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1354.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,27,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1354.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,27,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1354.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,27,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
@@ -1177,7 +1177,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,173,,,,,False,,,,,,27,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1363.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,28,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1363.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,28,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
-,,,0.999,999,True,0.16618481504604293,0.16618481504604293,0.04624180868268013,18.168,999,201,1363.0,213.0,0.15627292736610418,0.07199999999999998,False,0.27019498607242337,0.036290322580645164,0.0,,,28,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
+,,,0.999,999,True,0.16618481504604293,0.16618481504604293,0.04624180868268013,18.168,999,201,1363.0,212.0,0.15553925165077037,0.07199999999999998,False,0.27019498607242337,0.036290322580645164,0.0,,,28,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1363.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,28,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1363.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,28,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1363.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,28,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
@@ -1303,7 +1303,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,30,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1276.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,31,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1276.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,31,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
-,,,0.999,999,True,0.17697480873637028,0.17697480873637028,0.04636025056242943,17.956,999,192,1276.0,184.0,0.14420062695924765,0.04800000000000004,False,0.24397590361445784,0.045454545454545456,0.0,,,31,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
+,,,0.999,999,True,0.17697480873637028,0.17697480873637028,0.04636025056242943,17.956,999,192,1276.0,183.0,0.14341692789968652,0.04800000000000004,False,0.24397590361445784,0.045454545454545456,0.0,,,31,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1276.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,31,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1276.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,31,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1276.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,31,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
@@ -1345,7 +1345,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,173,,,,,False,,,,,,31,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,227
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1207.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,32,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1207.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,32,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.17060762595402765,0.1706076259540277,0.04868348687887192,18.412,999,196,1207.0,187.0,0.15492957746478872,0.07200000000000006,False,0.25391849529780564,0.05517241379310345,0.0,,,32,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.17060762595402765,0.1706076259540277,0.04868348687887192,18.412,999,196,1207.0,186.0,0.15410107705053852,0.07200000000000006,False,0.25391849529780564,0.05517241379310345,0.0,,,32,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1207.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,32,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1207.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,32,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1207.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,32,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -1387,7 +1387,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,167,,,,,False,,,,,,32,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,231
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1472.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,33,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1472.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,33,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
-,,,0.998,998,True,0.22936156195541357,0.22936156195541357,0.04343697801232338,13.984,998,199,1472.0,296.0,0.20108695652173914,0.07200000000000006,False,0.3223844282238443,0.06060606060606061,0.0,,,33,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
+,,,0.998,998,True,0.22936156195541357,0.22936156195541357,0.04343697801232338,13.984,998,199,1472.0,295.0,0.20040760869565216,0.07200000000000006,False,0.3223844282238443,0.06060606060606061,0.0,,,33,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1472.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,33,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1472.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,33,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1472.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,33,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
@@ -1471,7 +1471,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,170,,,,,False,,,,,,34,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1300.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,35,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1300.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,35,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
-,,,0.999,999,True,0.17731952575552182,0.17731952575552185,0.04633726552128792,16.74,999,202,1300.0,222.0,0.17076923076923076,0.08000000000000007,False,0.2867231638418079,0.03938730853391685,0.0,,,35,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
+,,,0.999,999,True,0.17731952575552182,0.17731952575552185,0.04633726552128792,16.74,999,202,1300.0,221.0,0.17,0.08000000000000007,False,0.2867231638418079,0.03938730853391685,0.0,,,35,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1300.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,35,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1300.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,35,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1300.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,35,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
@@ -1555,7 +1555,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,168,,,,,False,,,,,,36,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1418.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,37,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1418.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,37,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
-,,,0.998,998,True,0.22427768351518465,0.22427768351518468,0.04412559047341347,14.672,998,202,1418.0,289.0,0.20380818053596614,0.11199999999999999,False,0.332892998678996,0.06990291262135923,0.0,,,37,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
+,,,0.998,998,True,0.22427768351518465,0.22427768351518468,0.04412559047341347,14.672,998,202,1418.0,288.0,0.20310296191819463,0.11199999999999999,False,0.332892998678996,0.06990291262135923,0.0,,,37,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1418.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,37,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1418.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,37,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
 ,,,1.0,1000,True,0.0,0.0,1.0,0.192,1000,202,1418.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,37,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,200
@@ -1681,7 +1681,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,172,,,,,False,,,,,,39,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,224
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1393.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,40,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1393.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,40,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
-,,,0.999,999,True,0.166205776477714,0.166205776477714,0.049260396510362625,17.992,999,201,1393.0,221.0,0.15865039483129936,0.06800000000000006,False,0.2620967741935484,0.0513347022587269,0.0,,,40,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
+,,,0.999,999,True,0.166205776477714,0.166205776477714,0.049260396510362625,17.992,999,201,1393.0,220.0,0.15793251974156497,0.06800000000000006,False,0.2620967741935484,0.0513347022587269,0.0,,,40,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1393.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,40,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1393.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,40,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1393.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,40,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
@@ -1765,7 +1765,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,169,,,,,False,,,,,,41,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,227
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,42,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,42,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
-,,,0.998,998,True,0.22434095424056957,0.22434095424056957,0.04073288291692734,14.008,998,198,1348.0,247.0,0.18323442136498516,0.08000000000000002,False,0.3012379642365887,0.05476673427991886,0.0,,,42,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
+,,,0.998,998,True,0.22434095424056957,0.22434095424056957,0.04073288291692734,14.008,998,198,1348.0,246.0,0.1824925816023739,0.08000000000000002,False,0.3012379642365887,0.05476673427991886,0.0,,,42,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,42,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,42,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
 ,,,1.0,1000,True,0.0,0.0,1.0,0.208,1000,198,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,42,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,204
@@ -1807,7 +1807,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,173,,,,,False,,,,,,42,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,227
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1361.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,43,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1361.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,43,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
-,,,0.999,999,True,0.1793967524678906,0.1793967524678906,0.046371880918741226,17.312,999,201,1361.0,202.0,0.14842027920646583,0.04399999999999993,False,0.24202127659574468,0.041304347826086954,0.0,,,43,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
+,,,0.999,999,True,0.1793967524678906,0.1793967524678906,0.046371880918741226,17.312,999,201,1361.0,201.0,0.14768552534900808,0.04399999999999993,False,0.24202127659574468,0.041304347826086954,0.0,,,43,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1361.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,43,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1361.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,43,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1361.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,43,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
@@ -1891,7 +1891,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,176,,,,,False,,,,,,44,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,224
 ,,,1.0,1000,True,0.0,0.0,1.0,0.212,1000,197,1216.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,45,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
 ,,,1.0,1000,True,0.0,0.0,1.0,0.212,1000,197,1216.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,45,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
-,,,0.998,998,True,0.2367002372675708,0.23670023726757078,0.03967273607850075,13.408,998,197,1216.0,248.0,0.20394736842105263,0.136,False,0.34276729559748426,0.06621004566210045,0.0,,,45,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
+,,,0.998,998,True,0.2367002372675708,0.23670023726757078,0.03967273607850075,13.408,998,197,1216.0,247.0,0.203125,0.136,False,0.34276729559748426,0.06621004566210045,0.0,,,45,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
 ,,,1.0,1000,True,0.0,0.0,1.0,0.212,1000,197,1216.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,45,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
 ,,,1.0,1000,True,0.0,0.0,1.0,0.212,1000,197,1216.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,45,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
 ,,,1.0,1000,True,0.0,0.0,1.0,0.212,1000,197,1216.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,45,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,205
@@ -1933,7 +1933,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,177,,,,,False,,,,,,45,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.228,1000,193,1336.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,46,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
 ,,,1.0,1000,True,0.0,0.0,1.0,0.228,1000,193,1336.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,46,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
-,,,0.999,999,True,0.16084238447606486,0.16084238447606483,0.05138062313199043,18.072,999,193,1336.0,192.0,0.1437125748502994,0.07200000000000006,False,0.23943661971830985,0.04375,0.0,,,46,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
+,,,0.999,999,True,0.16084238447606486,0.16084238447606483,0.05138062313199043,18.072,999,193,1336.0,191.0,0.14296407185628743,0.07200000000000006,False,0.23943661971830985,0.04375,0.0,,,46,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
 ,,,1.0,1000,True,0.0,0.0,1.0,0.228,1000,193,1336.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,46,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
 ,,,1.0,1000,True,0.0,0.0,1.0,0.228,1000,193,1336.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,46,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
 ,,,1.0,1000,True,0.0,0.0,1.0,0.228,1000,193,1336.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,46,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,209
@@ -2101,7 +2101,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,171,,,,,False,,,,,,49,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1360.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,50,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1360.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,50,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
-,,,0.999,999,True,0.1771808975422205,0.1771808975422205,0.04429992660880089,17.46,999,205,1360.0,221.0,0.1625,0.04799999999999999,False,0.26944444444444443,0.05241935483870968,0.0,,,50,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
+,,,0.999,999,True,0.1771808975422205,0.1771808975422205,0.04429992660880089,17.46,999,205,1360.0,220.0,0.16176470588235295,0.04799999999999999,False,0.26944444444444443,0.05241935483870968,0.0,,,50,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1360.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,50,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1360.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,50,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
 ,,,1.0,1000,True,0.0,0.0,1.0,0.18,1000,205,1360.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,50,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,197
@@ -2185,7 +2185,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,176,,,,,False,,,,,,51,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,220
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1339.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,52,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1339.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,52,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.18910026485107828,0.18910026485107834,0.049500059336423874,18.448,999,196,1339.0,202.0,0.1508588498879761,0.07600000000000001,False,0.2594202898550725,0.04417670682730924,0.0,,,52,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.18910026485107828,0.18910026485107834,0.049500059336423874,18.448,999,196,1339.0,201.0,0.15011202389843167,0.07600000000000001,False,0.2594202898550725,0.04417670682730924,0.0,,,52,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1339.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,52,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1339.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,52,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1339.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,52,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -2269,7 +2269,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,176,,,,,False,,,,,,53,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,222
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1218.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,54,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1218.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,54,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.17737777595220572,0.17737777595220572,0.0461728498339653,17.584,999,196,1218.0,193.0,0.15845648604269294,0.06000000000000005,False,0.2632398753894081,0.051111111111111114,0.0,,,54,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.17737777595220572,0.17737777595220572,0.0461728498339653,17.584,999,196,1218.0,192.0,0.15763546798029557,0.06000000000000005,False,0.2632398753894081,0.051111111111111114,0.0,,,54,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1218.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,54,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1218.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,54,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1218.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,54,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -2437,7 +2437,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,180,,,,,False,,,,,,57,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,221
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,58,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,58,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
-,,,0.998,998,True,0.2286710285106904,0.2286710285106904,0.03904606029391289,13.828,998,204,1349.0,285.0,0.2112676056338028,0.10000000000000003,False,0.3427800269905533,0.06550218340611354,0.0,,,58,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
+,,,0.998,998,True,0.2286710285106904,0.2286710285106904,0.03904606029391289,13.828,998,204,1349.0,284.0,0.21052631578947367,0.10000000000000003,False,0.3427800269905533,0.06550218340611354,0.0,,,58,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,58,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,58,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,58,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
@@ -2563,7 +2563,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,167,,,,,False,,,,,,60,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,224
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1350.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,61,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1350.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,61,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.16556817047410655,0.16556817047410655,0.050170641392469406,17.744,999,196,1350.0,207.0,0.15333333333333332,0.039999999999999925,False,0.2611111111111111,0.037422037422037424,0.0,,,61,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.16556817047410655,0.16556817047410655,0.050170641392469406,17.744,999,196,1350.0,206.0,0.15259259259259259,0.039999999999999925,False,0.2611111111111111,0.037422037422037424,0.0,,,61,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1350.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,61,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1350.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,61,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1350.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,61,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -2605,7 +2605,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,172,,,,,False,,,,,,61,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1309.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,62,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1309.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,62,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
-,,,0.999,999,True,0.17176615296205236,0.1717661529620524,0.04827114939689636,17.16,999,196,1309.0,205.0,0.15660809778456838,0.04400000000000004,False,0.2614942528735632,0.04680851063829787,0.0,,,62,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
+,,,0.999,999,True,0.17176615296205236,0.1717661529620524,0.04827114939689636,17.16,999,196,1309.0,204.0,0.15584415584415584,0.04400000000000004,False,0.2614942528735632,0.04680851063829787,0.0,,,62,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1309.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,62,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1309.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,62,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
 ,,,1.0,1000,True,0.0,0.0,1.0,0.216,1000,196,1309.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,62,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,206
@@ -2899,7 +2899,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,161,,,,,False,,,,,,68,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,227
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,69,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,69,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.18334996523084757,0.18334996523084757,0.04436280205845833,17.012,999,200,1392.0,227.0,0.16307471264367815,0.088,False,0.26588845654993515,0.04259634888438134,0.0,,,69,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.18334996523084757,0.18334996523084757,0.04436280205845833,17.012,999,200,1392.0,226.0,0.16235632183908047,0.088,False,0.26588845654993515,0.04259634888438134,0.0,,,69,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,69,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,69,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,69,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
@@ -2941,7 +2941,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,180,,,,,False,,,,,,69,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,223
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,70,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,70,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.17526926695309047,0.17526926695309047,0.044018276035785675,16.608,999,200,1397.0,233.0,0.16678596993557623,0.064,False,0.2683246073298429,0.0536779324055666,0.0,,,70,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.17526926695309047,0.17526926695309047,0.044018276035785675,16.608,999,200,1397.0,232.0,0.16607015032211883,0.064,False,0.2683246073298429,0.0536779324055666,0.0,,,70,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,70,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,70,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,70,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
@@ -3025,7 +3025,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,179,,,,,False,,,,,,71,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,226
 ,,,1.0,1000,True,0.0,0.0,1.0,0.168,1000,208,1304.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,72,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
 ,,,1.0,1000,True,0.0,0.0,1.0,0.168,1000,208,1304.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,72,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
-,,,0.999,999,True,0.17873781384941034,0.17873781384941034,0.041847050189971924,16.128,999,208,1304.0,211.0,0.16180981595092025,0.10400000000000009,False,0.2703862660944206,0.043933054393305436,0.0,,,72,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
+,,,0.999,999,True,0.17873781384941034,0.17873781384941034,0.041847050189971924,16.128,999,208,1304.0,210.0,0.16104294478527606,0.10400000000000009,False,0.2703862660944206,0.043933054393305436,0.0,,,72,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
 ,,,1.0,1000,True,0.0,0.0,1.0,0.168,1000,208,1304.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,72,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
 ,,,1.0,1000,True,0.0,0.0,1.0,0.168,1000,208,1304.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,72,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
 ,,,1.0,1000,True,0.0,0.0,1.0,0.168,1000,208,1304.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,72,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,194
@@ -3067,7 +3067,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,169,,,,,False,,,,,,72,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,222
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,73,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,73,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
-,,,0.998,998,True,0.22713937567241552,0.22713937567241552,0.036955222487449646,14.384,998,192,1317.0,274.0,0.20804859529233105,0.04800000000000004,False,0.3282967032967033,0.0757238307349666,0.0,,,73,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
+,,,0.998,998,True,0.22713937567241552,0.22713937567241552,0.036955222487449646,14.384,998,192,1317.0,273.0,0.2072892938496583,0.04800000000000004,False,0.3282967032967033,0.0757238307349666,0.0,,,73,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,73,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,73,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1317.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,73,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
@@ -3151,7 +3151,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,164,,,,,False,,,,,,74,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,230
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1405.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,75,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1405.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,75,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
-,,,0.999,999,True,0.1933670927855493,0.1933670927855493,0.04515078663825989,17.86,999,192,1405.0,229.0,0.16298932384341638,0.09600000000000003,False,0.2652005174644243,0.04801670146137787,0.0,,,75,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
+,,,0.999,999,True,0.1933670927855493,0.1933670927855493,0.04515078663825989,17.86,999,192,1405.0,228.0,0.16227758007117438,0.09600000000000003,False,0.2652005174644243,0.04801670146137787,0.0,,,75,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1405.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,75,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1405.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,75,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1405.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,75,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
@@ -3193,7 +3193,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,171,,,,,False,,,,,,75,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,232
 ,,,1.0,1000,True,0.0,0.0,1.0,0.176,1000,206,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,76,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
 ,,,1.0,1000,True,0.0,0.0,1.0,0.176,1000,206,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,76,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
-,,,0.999,999,True,0.18077955116628505,0.18077955116628505,0.046502456068992615,17.94,999,206,1397.0,229.0,0.1639226914817466,0.07200000000000006,False,0.2673656618610747,0.049484536082474224,0.0,,,76,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
+,,,0.999,999,True,0.18077955116628505,0.18077955116628505,0.046502456068992615,17.94,999,206,1397.0,228.0,0.1632068718682892,0.07200000000000006,False,0.2673656618610747,0.049484536082474224,0.0,,,76,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
 ,,,1.0,1000,True,0.0,0.0,1.0,0.176,1000,206,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,76,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
 ,,,1.0,1000,True,0.0,0.0,1.0,0.176,1000,206,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,76,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
 ,,,1.0,1000,True,0.0,0.0,1.0,0.176,1000,206,1397.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,76,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,196
@@ -3235,7 +3235,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,76,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,220
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
-,,,0.998,998,True,0.22412426419732623,0.2241242641973262,0.03893045708537102,13.644,998,207,1392.0,268.0,0.1925287356321839,0.06000000000000005,False,0.31983805668016196,0.06060606060606061,0.0,,,77,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
+,,,0.998,998,True,0.22412426419732623,0.2241242641973262,0.03893045708537102,13.644,998,207,1392.0,267.0,0.19181034482758622,0.06000000000000005,False,0.31983805668016196,0.06060606060606061,0.0,,,77,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1392.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,77,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
@@ -3277,7 +3277,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,175,,,,,False,,,,,,77,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,221
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,78,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,78,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
-,,,0.999,999,True,0.18003862973415422,0.18003862973415422,0.04515250399708748,17.44,999,204,1348.0,227.0,0.16839762611275966,0.055999999999999994,False,0.27297297297297296,0.049079754601226995,0.0,,,78,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
+,,,0.999,999,True,0.18003862973415422,0.18003862973415422,0.04515250399708748,17.44,999,204,1348.0,226.0,0.16765578635014836,0.055999999999999994,False,0.27297297297297296,0.049079754601226995,0.0,,,78,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,78,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,78,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
 ,,,1.0,1000,True,0.0,0.0,1.0,0.184,1000,204,1348.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,78,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,198
@@ -3319,7 +3319,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,78,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.22,1000,195,1267.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,79,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
 ,,,1.0,1000,True,0.0,0.0,1.0,0.22,1000,195,1267.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,79,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
-,,,0.999,999,True,0.1816197379324711,0.1816197379324711,0.04753178730607033,18.036,999,195,1267.0,216.0,0.17048145224940806,0.064,False,0.2823179791976226,0.05411255411255411,0.0,,,79,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
+,,,0.999,999,True,0.1816197379324711,0.1816197379324711,0.04753178730607033,18.036,999,195,1267.0,215.0,0.1696921862667719,0.064,False,0.2823179791976226,0.05411255411255411,0.0,,,79,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
 ,,,1.0,1000,True,0.0,0.0,1.0,0.22,1000,195,1267.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,79,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
 ,,,1.0,1000,True,0.0,0.0,1.0,0.22,1000,195,1267.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,79,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
 ,,,1.0,1000,True,0.0,0.0,1.0,0.22,1000,195,1267.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,79,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,207
@@ -3361,7 +3361,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,180,,,,,False,,,,,,79,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,80,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,80,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
-,,,0.999,999,True,0.17431250133571352,0.17431250133571355,0.03860417753458023,17.324,999,203,1349.0,240.0,0.17790956263899185,0.136,False,0.2886178861788618,0.053388090349075976,0.0,,,80,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
+,,,0.999,999,True,0.17431250133571352,0.17431250133571355,0.03860417753458023,17.324,999,203,1349.0,239.0,0.1771682727946627,0.136,False,0.2886178861788618,0.053388090349075976,0.0,,,80,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,80,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,80,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
 ,,,1.0,1000,True,0.0,0.0,1.0,0.188,1000,203,1349.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,80,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,199
@@ -3487,7 +3487,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,166,,,,,False,,,,,,82,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,233
 ,,,1.0,1000,True,0.0,0.0,1.0,0.248,1000,188,1319.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,83,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
 ,,,1.0,1000,True,0.0,0.0,1.0,0.248,1000,188,1319.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,83,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
-,,,0.999,999,True,0.17191105946807975,0.1719110594680798,0.044859230518341064,17.752,999,188,1319.0,219.0,0.16603487490523122,0.08399999999999996,False,0.2736248236953456,0.050955414012738856,0.0,,,83,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
+,,,0.999,999,True,0.17191105946807975,0.1719110594680798,0.044859230518341064,17.752,999,188,1319.0,218.0,0.1652767247915087,0.08399999999999996,False,0.2736248236953456,0.050955414012738856,0.0,,,83,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
 ,,,1.0,1000,True,0.0,0.0,1.0,0.248,1000,188,1319.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,83,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
 ,,,1.0,1000,True,0.0,0.0,1.0,0.248,1000,188,1319.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,83,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
 ,,,1.0,1000,True,0.0,0.0,1.0,0.248,1000,188,1319.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,83,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,214
@@ -3571,7 +3571,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,175,,,,,False,,,,,,84,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,229
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1414.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,85,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1414.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,85,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
-,,,0.999,999,True,0.18501928409609492,0.18501928409609492,0.04852684959769249,17.572,999,192,1414.0,242.0,0.17114568599717114,0.07600000000000001,False,0.2786885245901639,0.04149377593360996,0.0,,,85,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
+,,,0.999,999,True,0.18501928409609492,0.18501928409609492,0.04852684959769249,17.572,999,192,1414.0,241.0,0.17043847241867044,0.07600000000000001,False,0.2786885245901639,0.04149377593360996,0.0,,,85,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1414.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,85,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1414.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,85,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
 ,,,1.0,1000,True,0.0,0.0,1.0,0.232,1000,192,1414.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,85,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,210
@@ -3613,7 +3613,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,174,,,,,False,,,,,,85,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,232
 ,,,1.0,1000,True,0.0,0.0,1.0,0.144,1000,214,1616.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,86,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
 ,,,1.0,1000,True,0.0,0.0,1.0,0.144,1000,214,1616.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,86,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
-,,,0.999,999,True,0.18773622087805703,0.18773622087805705,0.04669449105858803,18.116,999,214,1616.0,257.0,0.15903465346534654,0.1080000000000001,False,0.25418060200668896,0.04929577464788732,0.0,,,86,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
+,,,0.999,999,True,0.18773622087805703,0.18773622087805705,0.04669449105858803,18.116,999,214,1616.0,256.0,0.15841584158415842,0.1080000000000001,False,0.25418060200668896,0.04929577464788732,0.0,,,86,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
 ,,,1.0,1000,True,0.0,0.0,1.0,0.144,1000,214,1616.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,86,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
 ,,,1.0,1000,True,0.0,0.0,1.0,0.144,1000,214,1616.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,86,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
 ,,,1.0,1000,True,0.0,0.0,1.0,0.144,1000,214,1616.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,86,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,188
@@ -3655,7 +3655,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,177,,,,,False,,,,,,86,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,216
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1450.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,87,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1450.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,87,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
-,,,0.999,999,True,0.16750941834109587,0.16750941834109584,0.04738468676805496,17.244,999,201,1450.0,216.0,0.1489655172413793,0.05600000000000005,False,0.24968152866242038,0.03667953667953668,0.0,,,87,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
+,,,0.999,999,True,0.16750941834109587,0.16750941834109584,0.04738468676805496,17.244,999,201,1450.0,215.0,0.1482758620689655,0.05600000000000005,False,0.24968152866242038,0.03667953667953668,0.0,,,87,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1450.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,87,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1450.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,87,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
 ,,,1.0,1000,True,0.0,0.0,1.0,0.196,1000,201,1450.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,87,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,201
@@ -3739,7 +3739,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,170,,,,,False,,,,,,88,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,230
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,89,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,89,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
-,,,0.999,999,True,0.16371902799913898,0.16371902799913898,0.04879768192768097,18.156,999,207,1439.0,207.0,0.1438498957609451,0.04799999999999999,False,0.24455825864276567,0.029296875,0.0,,,89,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
+,,,0.999,999,True,0.16371902799913898,0.16371902799913898,0.04879768192768097,18.156,999,207,1439.0,206.0,0.14315496872828354,0.04799999999999999,False,0.24455825864276567,0.029296875,0.0,,,89,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,89,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,89,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
 ,,,1.0,1000,True,0.0,0.0,1.0,0.172,1000,207,1439.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,89,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,195
@@ -3823,7 +3823,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,177,,,,,False,,,,,,90,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,222
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1337.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,91,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1337.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,91,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.1653267000457403,0.1653267000457403,0.04826473072171211,17.628,999,200,1337.0,233.0,0.17427075542258788,0.07200000000000006,False,0.28125,0.053418803418803416,0.0,,,91,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.1653267000457403,0.1653267000457403,0.04826473072171211,17.628,999,200,1337.0,232.0,0.17352281226626776,0.07200000000000006,False,0.28125,0.053418803418803416,0.0,,,91,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1337.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,91,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1337.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,91,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1337.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,91,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
@@ -3991,7 +3991,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,175,,,,,False,,,,,,94,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,229
 ,,,1.0,1000,True,0.0,0.0,1.0,0.224,1000,194,1213.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,95,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
 ,,,1.0,1000,True,0.0,0.0,1.0,0.224,1000,194,1213.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,95,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
-,,,0.999,999,True,0.18544341389462835,0.18544341389462835,0.04282175749540329,17.068,999,194,1213.0,208.0,0.17147568013190437,0.128,False,0.2824074074074074,0.055299539170506916,0.0,,,95,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
+,,,0.999,999,True,0.18544341389462835,0.18544341389462835,0.04282175749540329,17.068,999,194,1213.0,207.0,0.17065127782357792,0.128,False,0.2824074074074074,0.055299539170506916,0.0,,,95,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
 ,,,1.0,1000,True,0.0,0.0,1.0,0.224,1000,194,1213.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,95,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
 ,,,1.0,1000,True,0.0,0.0,1.0,0.224,1000,194,1213.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,95,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
 ,,,1.0,1000,True,0.0,0.0,1.0,0.224,1000,194,1213.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,95,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,208
@@ -4033,7 +4033,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,165,,,,,False,,,,,,95,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,232
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1364.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1364.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
-,,,0.999,999,True,0.1680596001856717,0.1680596001856717,0.047399792820215225,17.636,999,199,1364.0,221.0,0.16202346041055718,0.05199999999999999,False,0.26273458445040215,0.05,0.0,,,96,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
+,,,0.999,999,True,0.1680596001856717,0.1680596001856717,0.047399792820215225,17.636,999,199,1364.0,220.0,0.16129032258064516,0.05199999999999999,False,0.26273458445040215,0.05,0.0,,,96,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1364.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1364.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
 ,,,1.0,1000,True,0.0,0.0,1.0,0.204,1000,199,1364.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,96,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,203
@@ -4159,7 +4159,7 @@ fnr_boot_lo,fnr_boot_hi,n_test_clusters,lam,lam_index,feasible,controlled_risk,r
 ,,,1.0,1000,True,0.0,0.0,1.0,,-1,178,,,,,False,,,,,,98,bicycle,0.2,0.5,shared_crc,mask2former_swinb_cityscapes,cityscapes_val_half,225
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1286.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,99,person,0.05,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1286.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,99,person,0.1,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
-,,,0.999,999,True,0.17857048594680172,0.17857048594680172,0.045085225254297256,16.872,999,200,1286.0,201.0,0.15629860031104198,0.07200000000000001,False,0.24829467939972716,0.04157043879907621,0.0,,,99,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
+,,,0.999,999,True,0.17857048594680172,0.17857048594680172,0.045085225254297256,16.872,999,200,1286.0,200.0,0.15552099533437014,0.07200000000000001,False,0.24829467939972716,0.04157043879907621,0.0,,,99,person,0.2,0.1,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1286.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,99,person,0.05,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1286.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,99,person,0.1,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202
 ,,,1.0,1000,True,0.0,0.0,1.0,0.2,1000,200,1286.0,0.0,0.0,0.0,False,0.0,0.0,0.0,,,99,person,0.2,0.5,region_crc,mask2former_swinb_cityscapes,cityscapes_val_half,202

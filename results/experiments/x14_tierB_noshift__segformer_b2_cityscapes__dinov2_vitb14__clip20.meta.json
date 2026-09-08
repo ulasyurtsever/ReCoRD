@@ -1,0 +1,51 @@
+{
+ "name": "x14_tierB_noshift__segformer_b2_cityscapes__dinov2_vitb14__clip20",
+ "argv": {
+  "name": "x14_tierB_noshift__segformer_b2_cityscapes__dinov2_vitb14__clip20",
+  "model": "segformer_b2_cityscapes",
+  "scheme": "cityscapes_val_half",
+  "cal_datasets": [
+   "cityscapes_val"
+  ],
+  "test_datasets": [
+   "cityscapes_val"
+  ],
+  "methods": [
+   "weighted_crc",
+   "region_crc"
+  ],
+  "lac_variants": [
+   "marginal"
+  ],
+  "measure_pixel_fnr": false,
+  "loss": "region",
+  "triage": false,
+  "triage_rankings": [
+   "area"
+  ],
+  "alphas": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "rhos": [
+   0.1,
+   0.5
+  ],
+  "embedding": "dinov2_vitb14",
+  "weight_source_holdout": 0.0,
+  "weight_holdout": 0.0,
+  "weight_estimator": "logistic",
+  "weight_clip_min": 0.05,
+  "weight_clip_max": 20.0,
+  "cal_split": null,
+  "test_split": "test",
+  "bootstrap_clusters": null,
+  "bootstrap_ci": 0,
+  "max_seeds": null
+ },
+ "scheme_file": "cityscapes_val_half.json",
+ "n_records": 3600,
+ "git_revision": "010198e+file",
+ "completed_utc": "2026-09-08T01:35:32.953690+00:00"
+}

@@ -1211,6 +1211,7 @@ def _seqdisjoint_tier_a_claims():
 
     _seqdisjoint_frame_cost()
     _sequence_overlap_claims()
+    _panel4_arms()
 
 
 def _marida_confidence_size_strata():
@@ -1293,6 +1294,139 @@ def _sequence_overlap_claims():
     truth(956, "the retired 91-96% range was wrong at both ends",
           max(meds) > 0.96 and min(mins) < 0.91,
           f"max median {max(meds):.3f}, min draw {min(mins):.3f}")
+
+
+def _panel4_arms():
+    """Fourth panel (2026-09-07): the arms the article now quotes.
+
+    x13 at n_t = 50/100, tier B without shift (x14), source CRC at the
+    reduced level (x15) and dilation CRC (x16). Each check pins a sentence of
+    Section IV; x17 (Mask2Former on the log-tail grid) is reported separately
+    once its role in the tables is decided.
+    """
+    import glob as _glob
+    exp = results_dir("experiments")
+
+    def frame(pattern):
+        paths = sorted(_glob.glob(str(exp / pattern)))
+        if not paths:
+            return None
+        fs = []
+        for path in paths:
+            f = pd.read_csv(path)
+            f["experiment"] = os.path.basename(path)[:-4]
+            fs.append(f)
+        return pd.concat(fs, ignore_index=True)
+
+    # 961: sequence-disjoint tier A at the two larger budgets.
+    for n_t, want_sq, want_pub in ((50, 0.124, 0.134), (100, 0.120, 0.116)):
+        sq = frame(f"x13_tierA{n_t}_seqdisjoint__*.csv")
+        pub = frame(f"e3_tierA{n_t}__*segformer_b2_cityscapes.csv")
+        if sq is None or pub is None:
+            note(961, f"x13 at n_t={n_t} absent")
+            continue
+        def cells(d):
+            d = d[d["method"] == "region_crc"].copy()
+            d["cond"] = d["experiment"].str.extract(r"__(fog|night|rain|snow)__")[0]
+            f = feas(d)
+            return (f.groupby(["cond", "alpha", "rho", "class_name"])["region_fnr"].mean()
+                     .groupby(["cond", "alpha", "rho"]).mean())
+        j = pd.concat([cells(pub).rename("pub"), cells(sq).rename("sq")], axis=1, join="inner")
+        lev = j.index.get_level_values("alpha").values
+        truth(961, f"n_t={n_t}: no sequence-disjoint cell exceeds its level",
+              bool((j["sq"].values <= lev + 1e-12).all()), f"{len(j)} cells")
+        near(961, f"n_t={n_t}: largest sequence-disjoint cell", want_sq, float(j["sq"].max()), 5e-4)
+        near(961, f"n_t={n_t}: largest published cell", want_pub, float(j["pub"].max()), 5e-4)
+
+    # 962: tier B without shift.
+    x14 = frame("x14_tierB_noshift__*.csv")
+    if x14 is None:
+        note(962, "x14 absent")
+    else:
+        x14["arm"] = x14["experiment"].str.extract(r"__(dinov2_vitb14|clip_vitb16)__clip(\d+)").apply(
+            lambda r: f"{r[0]}:{r[1]}", axis=1)
+        w = x14[x14["method"] == "weighted_crc"]
+        for arm, want_p in (("dinov2_vitb14:20", 0.684), ("dinov2_vitb14:5", 0.356),
+                            ("dinov2_vitb14:2", 0.183), ("clip_vitb16:20", 0.574)):
+            d = w[w["arm"] == arm]
+            near(962, f"no-shift conservative test mass, {arm}", want_p,
+                 float(d["weight_p_test"].mean()), 0.005)
+        d20 = w[w["arm"] == "dinov2_vitb14:20"]
+        k = 20.0
+        near(962, "no-shift sum of source weights at kappa=20 is about 9", 9.2,
+             float((k / d20["weight_p_test"] - k).mean()), 0.5)
+        for arm in ("dinov2_vitb14:20", "dinov2_vitb14:5", "clip_vitb16:20"):
+            d = w[w["arm"] == arm]
+            truth(962, f"no informative draw at any level, {arm}",
+                  bool((d["lam"] >= 1.0 - 1e-12).all()),
+                  f"{int((d['lam'] < 1.0 - 1e-12).sum())} informative of {len(d)}")
+        d2 = w[(w["arm"] == "dinov2_vitb14:2") & np.isclose(w["alpha"], 0.2)]
+        inf2 = float((d2["lam"] < 1.0 - 1e-12).mean())
+        near(962, "kappa=2, alpha=0.2: about a third of the draws informative", 0.32, inf2, 0.02)
+        rng_claim(962, "kappa=2, alpha=0.2: marked area 68-72%", 0.68, 0.72,
+                  list(d2.groupby("rho")["marked_area_fraction"].mean().values), 0.01)
+        r = x14[(x14["method"] == "region_crc") & np.isclose(x14["alpha"], 0.2)]
+        rng_claim(962, "unweighted region CRC on the same splits marks 2-3%", 0.02, 0.034,
+                  list(r.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
+
+    # 963: source CRC at the reduced level reproduces tier B.
+    x15 = frame("x15_source_reduced__*.csv")
+    p3 = frame("p3_lo*.csv")
+    if x15 is None or p3 is None:
+        note(963, "x15 or p3 absent")
+    else:
+        p3 = p3[p3["method"] == "weighted_crc"].copy()
+        lo = p3["experiment"].str.extract(r"lo(\d{3})_")[0].astype(int) / 100
+        hi = p3["experiment"].str.extract(r"clip(\d+)__")[0].astype(int)
+        p3["ratio"] = (hi / lo).round(0)
+        p3["cond"] = p3["experiment"].str.extract(r"__(fog|night)__")[0]
+        x15 = x15[x15["method"] == "region_crc"].copy()
+        x15["cond"] = x15["experiment"].str.extract(r"__(fog|night)__")[0]
+        gaps = {}
+        for cond in ("fog", "night"):
+            for ratio, a_red in ((4, 0.1801), (8, 0.1602), (10, 0.1503), (20, 0.1009)):
+                s_ = x15[(x15["cond"] == cond) & np.isclose(x15["alpha"], a_red)
+                         & np.isclose(x15["rho"], 0.5)]["region_fnr"].mean()
+                t_ = p3[(p3["cond"] == cond) & np.isclose(p3["ratio"], ratio)
+                        & np.isclose(p3["alpha"], 0.2) & np.isclose(p3["rho"], 0.5)]["region_fnr"].mean()
+                gaps[(cond, ratio)] = float(s_ - t_)
+        close = [abs(v) for (c, r), v in gaps.items() if r in (4, 8, 10)]
+        truth(963, "source CRC at the reduced level is within 0.01 of tier B at ratios 4, 8, 10",
+              bool(close) and max(close) <= 0.01, str({k: round(v, 3) for k, v in gaps.items()}))
+        near(963, "and departs by about 0.03 at ratio 20", 0.03,
+             float(np.mean([abs(gaps[("fog", 20)]), abs(gaps[("night", 20)])])), 0.005)
+        near(963, "fog, ratio 8: 0.212 against 0.211", 0.212,
+             float(x15[(x15["cond"] == "fog") & np.isclose(x15["alpha"], 0.1602)
+                       & np.isclose(x15["rho"], 0.5)]["region_fnr"].mean()), 0.001)
+
+    # 964: dilation CRC.
+    x16 = frame("x16_dilation__*.csv")
+    e1 = frame("e1_indist__*.csv")
+    if x16 is None:
+        note(964, "x16 absent")
+    else:
+        d = x16[x16["method"] == "region_crc"]
+        tight = d[d["alpha"] < 0.15]
+        truth(964, "dilation CRC needs the whole image at alpha <= 0.1 for every model",
+              bool((tight["lam"] >= 1.0 - 1e-12).all()),
+              f"{int((tight['lam'] < 1.0 - 1e-12).sum())} interior radii of {len(tight)}")
+        b5 = d[(d["model"] == "segformer_b5_cityscapes__dilation") & np.isclose(d["alpha"], 0.2)]
+        rng_claim(964, "SegFormer-B5 at alpha=0.2: radius about 70-75 px", 70.0, 75.0,
+                  list((b5.groupby("rho")["lam"].mean() * 100.0).values), 1.0)
+        rng_claim(964, "and 43-46% marked area", 0.43, 0.46,
+                  list(b5.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
+        others = d[(d["model"] != "segformer_b5_cityscapes__dilation") & np.isclose(d["alpha"], 0.2)]
+        truth(964, "the other three models need the whole image at alpha=0.2 as well",
+              bool((others["lam"] >= 1.0 - 1e-12).all()),
+              f"{int((others['lam'] < 1.0 - 1e-12).sum())} interior radii of {len(others)}")
+        if e1 is not None:
+            key = ["class_name", "alpha", "rho", "seed"]
+            a_ = x16[x16["method"] == "argmax"].assign(model=lambda f: f["model"].str.replace("__dilation", "", regex=False))
+            b_ = e1[e1["method"] == "argmax"]
+            m = a_.merge(b_, on=["model"] + key, suffixes=("_dil", "_e1"))
+            truth(964, "the dilation family's argmax rows coincide with the published argmax rows",
+                  len(m) > 0 and float((m["region_fnr_dil"] - m["region_fnr_e1"]).abs().max()) < 1e-9,
+                  f"{len(m)} rows matched")
 
 
 def _seqdisjoint_frame_cost():

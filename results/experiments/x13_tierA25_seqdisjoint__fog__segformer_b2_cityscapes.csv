@@ -708,7 +708,7 @@ lam,lam_index,feasible,controlled_risk,region_fnr,marked_area_fraction,fp_compon
 1.0,1000,True,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,13,person,0.1,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
 ,-1,True,,0.6663852813852814,0.0007286886102519929,,,,False,,,,,,459,13,person,0.1,0.1,argmax,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.5983263598326359,,,,,
 1.0,1000,False,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,13,person,0.2,0.1,region_crc,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
-0.993,993,True,0.1981060606060606,0.1981060606060606,0.006801616866141558,9.041394335511983,993.0,0.09516339869281054,False,0.23225806451612904,0.05263157894736842,0.0,,,110,13,person,0.2,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.17154811715481172,,,,239.0,41.0
+0.993,993,True,0.1981060606060606,0.1981060606060606,0.006801616866141558,9.041394335511983,993.0,0.09516339869281054,False,0.23225806451612904,0.05263157894736842,0.0,,,110,13,person,0.2,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.16736401673640167,,,,239.0,40.0
 ,-1,True,,0.6663852813852814,0.0007286886102519929,,,,False,,,,,,459,13,person,0.2,0.1,argmax,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.5983263598326359,,,,,
 1.0,1000,False,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,13,person,0.05,0.5,region_crc,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
 1.0,1000,True,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,13,person,0.05,0.5,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
@@ -2220,7 +2220,7 @@ lam,lam_index,feasible,controlled_risk,region_fnr,marked_area_fraction,fp_compon
 1.0,1000,True,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,41,person,0.1,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
 ,-1,True,,0.6663852813852814,0.0007286886102519929,,,,False,,,,,,459,41,person,0.1,0.1,argmax,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.5983263598326359,,,,,
 1.0,1000,False,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,41,person,0.2,0.1,region_crc,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
-0.993,993,True,0.1981060606060606,0.1981060606060606,0.006801616866141558,9.041394335511983,993.0,0.12758169934640518,False,0.23225806451612904,0.05263157894736842,0.0,,,110,41,person,0.2,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.17154811715481172,,,,239.0,41.0
+0.993,993,True,0.1981060606060606,0.1981060606060606,0.006801616866141558,9.041394335511983,993.0,0.12758169934640518,False,0.23225806451612904,0.05263157894736842,0.0,,,110,41,person,0.2,0.1,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.16736401673640167,,,,239.0,40.0
 ,-1,True,,0.6663852813852814,0.0007286886102519929,,,,False,,,,,,459,41,person,0.2,0.1,argmax,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.5983263598326359,,,,,
 1.0,1000,False,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,41,person,0.05,0.5,region_crc,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0
 1.0,1000,True,0.0,0.0,1.0,0.7603485838779956,1000.0,0.0,False,0.0,0.0,0.0,,,110,41,person,0.05,0.5,heuristic,segformer_b2_cityscapes,acdc_fog_targetcal25_seqdisjoint,3,0.0,,,,239.0,0.0

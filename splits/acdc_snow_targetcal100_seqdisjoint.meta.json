@@ -6,6 +6,7 @@
  "n_seeds": 100,
  "base_seed": 20260806,
  "whole_sequences": false,
+ "rng_scheme_key": "acdc_snow_targetcal100_seqdisjoint",
  "n_pool_frames": 500,
  "n_sequences": 12,
  "sequence_sizes": [
@@ -40,5 +41,5 @@
  "test_frames_in_published_scheme": 400,
  "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
  "warnings": [],
- "generated_utc": "2026-08-23T21:54:53.148766+00:00"
+ "generated_utc": "2026-09-08T01:33:24.953500+00:00"
 }
