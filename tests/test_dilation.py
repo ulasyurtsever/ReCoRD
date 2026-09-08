@@ -24,24 +24,27 @@ def test_pseudo_prob_is_one_on_mask_and_decreases_with_distance():
     prob = dilation_pseudo_prob(argmax)
     assert prob.dtype == np.float32
     assert np.all(prob[argmax] == 1.0)
-    # One pixel to the right of the blob: distance 1.
-    assert prob[15, 15] == pytest.approx(1.0 - 1.0 / R_MAX_PX)
-    # Ten pixels to the right: distance 10.
-    assert prob[15, 24] == pytest.approx(1.0 - 10.0 / R_MAX_PX)
+    # One pixel to the right of the blob: distance 1 -> grid index 10 on a
+    # 1001-point grid with R_MAX_PX = 100, whatever the grid's spacing.
+    last = LAMBDA_GRID.size - 1
+    assert prob[15, 15] == pytest.approx(1.0 - LAMBDA_GRID[int(round(1.0 * last / R_MAX_PX))], abs=1e-6)
+    # Ten pixels to the right: distance 10 -> index 100.
+    assert prob[15, 24] == pytest.approx(1.0 - LAMBDA_GRID[int(round(10.0 * last / R_MAX_PX))], abs=1e-6)
     assert prob.min() >= 0.0 and prob.max() <= 1.0
 
 
 def test_empty_argmax_gives_zero_everywhere():
     prob = dilation_pseudo_prob(np.zeros((8, 8), dtype=bool))
-    assert prob.shape == (8, 8) and not prob.any()
+    assert prob.shape == (8, 8) and np.all(prob == np.float32(1.0 - LAMBDA_GRID[-1]))
 
 
 def test_grid_point_is_a_dilation_radius():
     assert radius_px(0.0) == 0.0
     assert radius_px(1.0) == R_MAX_PX
     assert radius_of_index(len(LAMBDA_GRID) - 1) == R_MAX_PX
-    # Uniform grid: 0.1 px per step.
+    # 0.1 px per grid index on a 1001-point grid, independent of the spacing.
     assert radius_of_index(1) == pytest.approx(0.1)
+    assert radius_px(LAMBDA_GRID[500]) == pytest.approx(50.0)
 
 
 def test_stage4_statistics_read_the_family_as_dilation():
