@@ -183,13 +183,19 @@ existing caches, with the comparison and the audit; the second redoes the
 union-area block alone),
 `run_panel4.sh` (the same re-derivation plus the fourth panel's arms: `x13`
 at $n_t = 50, 100$, `x14` tier B without shift, `x15` source CRC at the
-reduced level, `x16` dilation CRC, `x17` Mask2Former on the log-tail grid).
+reduced level, `x16` dilation CRC, `x17` Mask2Former on the log-tail grid),
+`run_loggrid_full.sh` (stage 4 rebuilt for every model on the log-tail grid,
+then everything above except `x17`, which that grid makes redundant).
 
-The threshold grid is selected at import time by `RECORD_GRID` (`uniform`,
-the published 1001-point grid, or `logtail`, which spaces the cutoff
-$1-\lambda$ over six decades). Tables and experiments built under one grid
-must never be read under another; `run_panel4.sh` therefore builds the
-`logtail` arm under a separate `RECORD_RESULTS_ROOT`.
+The threshold grid is selected at import time by `RECORD_GRID`. The default,
+`logtail`, has 1001 points with the cutoff $1-\lambda$ spaced over six
+decades, so thresholds within $10^{-3}$ of $\lambda = 1$, where confident
+models calibrate, are resolved; `uniform` is the earlier equally spaced grid,
+kept for reproducing the numbers released before 2026-09-08. Tables and
+experiments built under one grid must never be read under another;
+`run_loggrid_full.sh` rebuilds every stage-4 table and re-derives every
+result on the default grid, parking the uniform-grid tables under
+`results/raw_uniform`.
 
 ## Tests and audit
 

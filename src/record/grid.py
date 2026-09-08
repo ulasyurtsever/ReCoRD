@@ -17,17 +17,19 @@ N_POINTS = 1001
 def _build_grid(kind: str) -> np.ndarray:
     """Return the threshold grid named by ``kind``.
 
-    ``uniform`` (default) is the published grid: 1001 equally spaced points on
-    [0, 1]. ``logtail`` keeps the same count but spaces the cutoff 1 - lambda
-    logarithmically over six decades, so the top of the grid, where the
-    calibrated thresholds of Mask2Former sit, is resolved to 1e-6 instead of
-    1e-3: lambda_k = 1 - 10^(-6 k / (N-1)) for k < N-1, and lambda_{N-1} = 1
-    exactly so the last point still marks the whole image and the loss still
-    vanishes there (Lemma 1 needs that endpoint). The grid is selected with the
-    RECORD_GRID environment variable at import time; every cached statistic is
-    tabulated on it, so tables and experiments built under one grid must never
-    be read under another. The referee-response arm that uses ``logtail``
-    therefore also redirects RECORD_RESULTS_ROOT.
+    ``logtail`` (default since 2026-09-08) spaces the cutoff 1 - lambda
+    logarithmically over six decades: lambda_k = 1 - 10^(-6 k / (N-1)) for
+    k < N-1, and lambda_{N-1} = 1 exactly so the last point still marks the
+    whole image and the loss still vanishes there (Lemma 1 needs that
+    endpoint). Calibrated thresholds of confident models sit within 1e-3 of
+    lambda = 1, where the previous uniform grid had a single point; on that
+    grid Mask2Former could only be calibrated to "mark everything", which the
+    fourth referee panel showed to be a resolution artifact rather than a
+    property of the posterior. ``uniform`` is the earlier grid, 1001 equally
+    spaced points, kept selectable for reproducing the pre-2026-09-08 numbers.
+    The grid is selected with the RECORD_GRID environment variable at import
+    time; every cached statistic is tabulated on it, so tables and experiments
+    built under one grid must never be read under another.
     """
     if kind == "uniform":
         return np.linspace(0.0, 1.0, N_POINTS)
@@ -39,18 +41,18 @@ def _build_grid(kind: str) -> np.ndarray:
     raise ValueError(f"unknown RECORD_GRID={kind!r}; use 'uniform' or 'logtail'")
 
 
-GRID_KIND: str = os.environ.get("RECORD_GRID", "uniform")
+GRID_KIND: str = os.environ.get("RECORD_GRID", "logtail")
 LAMBDA_GRID: np.ndarray = _build_grid(GRID_KIND)
 
 # Coarser subgrid for statistics that require per-threshold connected-component
 # labeling (e.g. false-positive component counts), which is too expensive to
 # evaluate at every grid point. Indices into LAMBDA_GRID.
 #
-# The grid is deliberately non-uniform. Calibrated thresholds concentrate in the
-# top twenty grid points, so a uniform 25-step subgrid resolves the operating
-# region not at all and forces every selected threshold onto lambda_max, where
-# the mask covers the whole image and the component count degenerates. The tail
-# is therefore sampled at every point from index 960 upward.
+# The subgrid is index-based and deliberately non-uniform: every point from
+# index 960 upward plus every 25th index below. On the uniform grid that was
+# where calibrated thresholds concentrated; on the log-tail grid the same
+# indices cover 1 - lambda below 10^-5.76 densely and the rest at 0.15 decades
+# per step, which resolves the operating region of every model here.
 FP_SUBGRID_INDICES: np.ndarray = np.unique(np.concatenate([
     np.arange(0, 960, 25),      # coarse body
     np.arange(960, N_POINTS),   # dense tail, where lambda-hat lives

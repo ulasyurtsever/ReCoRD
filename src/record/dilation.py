@@ -8,20 +8,22 @@ same CRC rule selects a radius instead of a threshold.
 
 This module maps the dilation family onto the canonical lambda grid so that
 stage 4 and stage 5 run on it without modification. The trick is a
-pseudo-probability
+pseudo-probability ``prob = 1 - score`` whose score is the grid value at the
+index that the pixel's distance rounds up to:
 
-    prob[p] = 1 - min(d(p) / R_MAX_PX, 1),
+    score[p] = LAMBDA_GRID[ceil(d(p) * (N_POINTS - 1) / R_MAX_PX)],
 
 where ``d(p)`` is the Euclidean distance from pixel ``p`` to the nearest
-argmax pixel of the class. Stage 4 turns it into ``score = 1 - prob =
-min(d / R_MAX_PX, 1)``, and a pixel is inside the mask at grid point ``lam``
-iff ``score <= lam``, that is iff ``d <= lam * R_MAX_PX``. Grid point ``k``
-therefore *is* the dilation by radius ``k * R_MAX_PX / (N_POINTS - 1)``
-pixels, and the last grid point (``lam = 1``, ``score <= 1`` for every pixel)
-marks the whole image, which keeps the ``L(lambda_max) = 0`` endpoint that the
-CRC feasibility argument needs. Pixels farther than ``R_MAX_PX`` from any
-argmax pixel, and every pixel when the class is absent from the argmax, are
-reached only at that last point.
+argmax pixel of the class, and indices past the end saturate at the last
+grid point. A pixel is inside the mask at grid index ``k`` iff
+``score <= LAMBDA_GRID[k]``, that is iff ``d <= k * R_MAX_PX / (N_POINTS - 1)``.
+Grid index ``k`` therefore *is* the dilation by radius
+``k * R_MAX_PX / (N_POINTS - 1)`` pixels whatever the spacing of the grid
+values (the log-tail grid included), and the last grid point marks the whole
+image, which keeps the ``L(lambda_max) = 0`` endpoint that the CRC
+feasibility argument needs. Pixels farther than ``R_MAX_PX`` from any argmax
+pixel, and every pixel when the class is absent from the argmax, are reached
+only at that last point.
 
 Radius 0 is the argmax mask itself, so the ``argmax`` baseline row and the
 dilation row at ``lam = 0`` coincide by construction; that identity is a
@@ -64,21 +66,26 @@ def dilation_pseudo_prob(argmax_mask: np.ndarray, r_max_px: float = R_MAX_PX) ->
         raise ValueError(f"argmax_mask must be 2-D, got shape {mask.shape}")
     if r_max_px <= 0:
         raise ValueError("r_max_px must be positive")
+    last = LAMBDA_GRID.size - 1
     if not mask.any():
-        # No argmax pixel of the class: no finite dilation reaches anything.
-        return np.zeros(mask.shape, dtype=np.float32)
+        # No argmax pixel of the class: no finite dilation reaches anything;
+        # score 1 puts every pixel at the last grid point only.
+        return np.full(mask.shape, np.float32(1.0 - LAMBDA_GRID[last]), dtype=np.float32)
     # distance_transform_edt measures the distance of each *nonzero* pixel to
     # the nearest zero, so it is applied to the complement of the mask.
     dist = ndimage.distance_transform_edt(~mask)
-    score = np.minimum(dist / float(r_max_px), 1.0)
+    index = np.ceil(dist * (last / float(r_max_px)) - 1e-9).astype(np.int64)
+    index = np.clip(index, 0, last)
+    score = LAMBDA_GRID[index]
     return (1.0 - score).astype(np.float32)
-
-
-def radius_px(lam: float, r_max_px: float = R_MAX_PX) -> float:
-    """Dilation radius in pixels that grid value ``lam`` stands for."""
-    return float(lam) * float(r_max_px)
 
 
 def radius_of_index(lam_index: int, r_max_px: float = R_MAX_PX) -> float:
     """Dilation radius in pixels of grid index ``lam_index``."""
-    return radius_px(LAMBDA_GRID[int(lam_index)], r_max_px)
+    return float(lam_index) * float(r_max_px) / (LAMBDA_GRID.size - 1)
+
+
+def radius_px(lam: float, r_max_px: float = R_MAX_PX) -> float:
+    """Dilation radius in pixels of the grid value ``lam`` (looked up by index)."""
+    idx = int(np.searchsorted(LAMBDA_GRID, float(lam), side="left"))
+    return radius_of_index(min(idx, LAMBDA_GRID.size - 1), r_max_px)
