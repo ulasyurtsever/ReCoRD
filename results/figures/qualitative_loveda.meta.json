@@ -6,7 +6,7 @@
  "dataset_key": "loveda_Val_Urban",
  "class_name": "building",
  "patch_id": "Val/Urban/3595",
- "selection_rule": "most regions recovered by the calibrated threshold among test scenes with at least 2 regions and a region of at least 2000 px; ties by region count then patch id",
+ "selection_rule": "most regions recovered by the calibrated threshold among loveda_Val_Urban scenes with at least 2 regions and a region of at least 2000 px; ties by region count then patch id",
  "regions_recovered_vs_argmax": 19,
  "ranking_top": [
   {
@@ -92,13 +92,13 @@
  ],
  "alpha": 0.2,
  "rho": 0.5,
- "lambda": 0.786,
+ "lambda": 0.7871860954017288,
  "lambda_source": "median feasible region_crc lam in l1_indist__urban.csv",
  "n_regions": 30,
  "missed_argmax": 23,
  "missed_crc": 4,
  "marked_area_argmax": 0.049,
- "marked_area_crc": 0.1375,
+ "marked_area_crc": 0.1381,
  "region_sizes_px": [
   44344,
   7635,
@@ -131,6 +131,5 @@
   2416,
   2058
  ],
- "completed_utc": "2026-08-09T08:09:45.978038+00:00",
- "note": "regenerated path recorded after the figure was renamed to follow its benchmark; the render is unchanged"
+ "completed_utc": "2026-09-09T04:56:46.438946+00:00"
 }

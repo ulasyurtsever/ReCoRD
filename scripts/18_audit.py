@@ -218,8 +218,11 @@ def section_indist():
     areas = cellmean(r, ["model", "class_name", "alpha", "rho"],
                      col="marked_area_fraction")
     n_sat = int((areas.values > 0.99).sum())
-    truth(53, "26 of the 72 cells mark more than 99% of the image",
-          n_sat == 26, f"{n_sat} cells")
+    truth(53, "no in-distribution cell marks more than 99% of the image (log-tail grid)",
+          n_sat == 0, f"{n_sat} cells")
+    truth(53, "the largest per-class marked area is at most 29% (Mask2Former, person, a=0.05)",
+          0.28 <= float(areas.values.max()) <= 0.29,
+          f"max {float(areas.values.max()):.4f} at {areas.idxmax()}")
     lev = cells.index.get_level_values("alpha").values
     viol = cells[cells.values > lev + 1e-12]
     truth(1, "no in-distribution cell exceeds its level",
@@ -234,11 +237,11 @@ def section_indist():
     lev = hi.index.get_level_values("alpha").values
     over = hi[hi.values > lev + 1e-12]
     lo_ = m - 1.959963984540054 * s / np.sqrt(n.clip(lower=1))
-    truth(52, "nine cells, all at alpha=0.2, sit within 0.004 of the "
-              "level at the upper end of the 95% interval",
-          len(over) == 9 and all(np.isclose(k[2], 0.2) for k in over.index)
-          and float((over.values - 0.2).max()) <= 0.004,
-          f"{len(over)} cells, max excess {float((over.values - 0.2).max()):.4f}"
+    exc = over.values - over.index.get_level_values("alpha").values
+    truth(52, "41 of the 72 cells have the upper end of the 95% interval above "
+              "the level, by less than 0.004",
+          len(over) == 41 and float(exc.max()) < 0.004,
+          f"{len(over)} cells, max excess {float(exc.max()):.4f}"
           if len(over) else "none")
     lev2 = lo_.index.get_level_values("alpha").values
     truth("52b", "no cell has a 95% LOWER end above the level (violation test)",
@@ -248,35 +251,54 @@ def section_indist():
     # --- 54 / 2 / 231: marked area 2.5-9% at alpha=0.2 ---
     a = [mean(sel(r, model=mo, alpha=0.20, rho=0.5), "marked_area_fraction")
          for mo in SEGF]
-    rng_claim(54, "SegFormer marked area 2.5-9% at alpha=0.2", 0.025, 0.090, a)
+    rng_claim(54, "SegFormer marked area 1.4-2.4% at alpha=0.2", 0.0139, 0.0240, a)
 
     # --- 55: alpha=0.05 marks most of the image ---
     a05 = {mo: mean(sel(r, model=mo, alpha=0.05, rho=0.5), "marked_area_fraction")
            for mo in CS_MODELS}
-    truth(55, "alpha=0.05 requires marking most of the image (>0.8 everywhere)",
-          min(a05.values()) > 0.8, str({k: round(v, 3) for k, v in a05.items()}))
+    truth(55, "alpha=0.05 costs 3.9-4.9% of the image on the SegFormer variants",
+          0.039 - 5e-4 <= min(a05[m] for m in SEGF) and max(a05[m] for m in SEGF) <= 0.049 + 5e-4,
+          str({k: round(v, 3) for k, v in a05.items()}))
+    near(55, "alpha=0.05 costs 27% on Mask2Former", 0.272,
+         a05["mask2former_swinb_cityscapes"])
 
     # --- 57: MC-dropout 36% vs B2 63% at alpha=0.1 ---
-    near(57, "MC-dropout area at alpha=0.1 is 0.358",
-         0.358, mean(sel(r, model="segformer_b2_cityscapes_mcdrop8", alpha=0.10,
+    near(57, "MC-dropout area at alpha=0.1 is 0.035",
+         0.035, mean(sel(r, model="segformer_b2_cityscapes_mcdrop8", alpha=0.10,
                          rho=0.5), "marked_area_fraction"))
-    near(57, "B2 area at alpha=0.1 is 0.625",
-         0.625, mean(sel(r, model="segformer_b2_cityscapes", alpha=0.10,
+    near(57, "B2 area at alpha=0.1 is 0.035 (the same as MC-dropout)",
+         0.035, mean(sel(r, model="segformer_b2_cityscapes", alpha=0.10,
                          rho=0.5), "marked_area_fraction"))
 
     # --- 59: Mask2Former degenerate at rho=0.5 ---
     m2f = sel(r, model="mask2former_swinb_cityscapes", rho=0.5)
-    truth(59, "Mask2Former marks everything at rho=0.5, every level",
-          bool(np.allclose(m2f.marked_area_fraction, 1.0)) and
-          bool(np.allclose(m2f.lam, m2f.lam.max())),
-          f"area min={m2f.marked_area_fraction.min():.3f}, lam unique={sorted(m2f.lam.unique())[:3]}")
+    truth(59, "Mask2Former never returns lambda_max in distribution (log-tail grid)",
+          bool((m2f.lam_index < LAM_MAX).all()),
+          f"{int((m2f.lam_index >= LAM_MAX).sum())} of {len(m2f)} draws at lambda_max")
+    m2f_cut = {al: float(1.0 - sel(m2f, alpha=al).lam.mean()) for al in ALPHAS}
+    truth(59, "Mask2Former mean cutoff 1-lambda is 3e-6 / 1.4e-5 / 1.9e-4 at the three levels",
+          abs(m2f_cut[0.05] - 3.0e-6) < 0.5e-6 and abs(m2f_cut[0.10] - 1.4e-5) < 0.1e-5
+          and abs(m2f_cut[0.20] - 1.9e-4) < 0.1e-4,
+          str({k: f"{v:.2e}" for k, v in m2f_cut.items()}))
+    seg_cut = {al: [float(1.0 - sel(r, model=mo, alpha=al, rho=0.5).lam.mean()) for mo in SEGF]
+               for al in ALPHAS}
+    truth(59, "SegFormer mean cutoffs span 1.8-6e-4, 1-2e-3 and 6-13e-3",
+          1.7e-4 <= min(seg_cut[0.05]) and max(seg_cut[0.05]) <= 6e-4
+          and 1e-3 <= min(seg_cut[0.10]) and max(seg_cut[0.10]) <= 2.1e-3
+          and 6e-3 <= min(seg_cut[0.20]) and max(seg_cut[0.20]) <= 13.1e-3,
+          str({k: [f"{x:.2e}" for x in v] for k, v in seg_cut.items()}))
+    m2f_ratio = [mean(sel(m2f, alpha=al), "marked_area_fraction")
+                 / mean(sel(r, model=mo, alpha=al, rho=0.5), "marked_area_fraction")
+                 for al in ALPHAS for mo in SEGF]
+    rng_claim(59, "Mask2Former costs two to seven times the SegFormer area", 2.0, 7.0,
+              m2f_ratio, 0.3)
 
     # --- 61-64: in-distribution Cityscapes cells ---
     tab2 = {
-        "segformer_b2_cityscapes": [(0.003, 0.956), (0.036, 0.625), (0.182, 0.034)],
-        "segformer_b5_cityscapes": [(0.000, 1.000), (0.052, 0.459), (0.180, 0.090)],
-        "mask2former_swinb_cityscapes": [(0.000, 1.000), (0.000, 1.000), (0.000, 1.000)],
-        "segformer_b2_cityscapes_mcdrop8": [(0.011, 0.803), (0.058, 0.358), (0.183, 0.025)],
+        "segformer_b2_cityscapes": [(0.046, 0.049), (0.096, 0.035), (0.195, 0.023)],
+        "segformer_b5_cityscapes": [(0.045, 0.039), (0.095, 0.022), (0.194, 0.014)],
+        "mask2former_swinb_cityscapes": [(0.044, 0.272), (0.095, 0.134), (0.193, 0.053)],
+        "segformer_b2_cityscapes_mcdrop8": [(0.046, 0.049), (0.095, 0.035), (0.194, 0.024)],
     }
     for cid, (mo, rows) in zip([61, 62, 63, 64], tab2.items()):
         for al, (f_, a_) in zip(ALPHAS, rows):
@@ -313,18 +335,20 @@ def section_baselines():
     # 67 / 17 / 73: pixel CRC worst region FNR 0.257
     pix = {mo: mean(sel(e1, method="pixel_crc", model=mo, alpha=0.20, rho=0.5),
                     "region_fnr") for mo in CS_MODELS}
-    near(67, "pixel CRC worst region FNR at alpha=0.2, rho=0.5 is 0.257",
-         0.257, max(pix.values()))
-    truth(4, "pixel CRC violates the region target in distribution",
-          max(pix.values()) > 0.20, str({k: round(v, 3) for k, v in pix.items()}))
+    near(67, "pixel CRC worst region FNR at alpha=0.2, rho=0.5 is 0.260",
+         0.260, max(pix.values()))
+    truth(4, "pixel CRC violates the region target in distribution on all four models",
+          min(pix.values()) > 0.20, str({k: round(v, 3) for k, v in pix.items()}))
+    rng_claim(4, "pixel CRC region FNR at rho=0.5 spans 0.241-0.260", 0.2408, 0.2601,
+              list(pix.values()))
 
     # 68: paired (FNR, area) on B5
     b5 = sel(e1, model="segformer_b5_cityscapes", alpha=0.20, rho=0.5)
-    near(68, "B5 pixel CRC area 1.8%", 0.018,
+    near(68, "B5 pixel CRC area 1.1%", 0.011,
          mean(sel(b5, method="pixel_crc"), "marked_area_fraction"))
-    near(68, "B5 region CRC 0.180 at 9.0% area", 0.180,
+    near(68, "B5 region CRC 0.194 at 1.4% area", 0.194,
          mean(sel(b5, method="region_crc"), "region_fnr"))
-    near(68, "B5 region CRC area 9.0%", 0.090,
+    near(68, "B5 region CRC area 1.4%", 0.014,
          mean(sel(b5, method="region_crc"), "marked_area_fraction"))
 
     # 76: the false-positive component count is WITHDRAWN from the article.
@@ -347,8 +371,8 @@ def section_baselines():
                     alpha=0.20, rho=0.5), "marked_area_fraction")
     a_b5 = mean(sel(e1, method="region_crc", model="segformer_b5_cityscapes",
                     alpha=0.20, rho=0.5), "marked_area_fraction")
-    truth(77, "B5 marks a larger area than B2 (9.0% against 3.4%)",
-          a_b5 > a_b2 and abs(a_b5 - 0.090) < 5e-4 and abs(a_b2 - 0.034) < 5e-4,
+    truth(77, "B5 marks a smaller area than B2 (1.4% against 2.3%)",
+          a_b5 < a_b2 and abs(a_b5 - 0.014) < 5e-4 and abs(a_b2 - 0.023) < 5e-4,
           f"B5 area={a_b5:.3f} vs B2 area={a_b2:.3f} at alpha=0.2, rho=0.5")
 
     # 79: the new per-class LoveDA and breakdown conventions
@@ -359,15 +383,21 @@ def section_baselines():
     truth(79, "LoveDA per-class table covers 24 in-domain cells",
           len(lcells) == 24, f"{len(lcells)} cells")
     vac = lcells[lcells.area > 0.99]
-    truth(79, "exactly two LoveDA in-domain cells mark >99% of the image",
-          len(vac) == 2, str(sorted(vac.index.tolist())))
-    truth(79, "both vacuous cells are rural water at rho=0.5, a<=0.1",
-          all(m.endswith("rural") and c == "water" and np.isclose(rh, 0.5)
-              and al <= 0.1 for m, c, al, rh in vac.index),
-          str(sorted(vac.index.tolist())))
+    truth(79, "no LoveDA in-domain cell marks >99% of the image",
+          len(vac) == 0, str(sorted(vac.index.tolist())))
+    l05 = lcells[np.isclose(lcells.index.get_level_values("rho"), 0.5)]
+    a20 = l05[np.isclose(l05.index.get_level_values("alpha"), 0.2)].area
+    a05 = l05[np.isclose(l05.index.get_level_values("alpha"), 0.05)].area
+    truth(79, "LoveDA in-domain masks cover 13-23% at a=0.2 and 26-46% at a=0.05 (class-averaged, rho=0.5)",
+          0.125 <= float(a20.groupby(level=["model", "rho"]).mean().min()) and
+          float(a20.groupby(level=["model", "rho"]).mean().max()) <= 0.235 and
+          0.255 <= float(a05.groupby(level=["model", "rho"]).mean().min()) and
+          float(a05.groupby(level=["model", "rho"]).mean().max()) <= 0.465,
+          f"a=0.2 {a20.groupby(level=['model', 'rho']).mean().round(3).to_dict()}; "
+          f"a=0.05 {a05.groupby(level=['model', 'rho']).mean().round(3).to_dict()}")
     over = lcells[lcells.fnr > lcells.index.get_level_values("alpha")]
-    truth(79, "exactly three LoveDA in-domain cells exceed their level",
-          len(over) == 3, str(sorted(over.index.tolist())))
+    truth(79, "exactly seven LoveDA in-domain cells exceed their level",
+          len(over) == 7, str(sorted(over.index.tolist())))
 
     brk = sel(load("e2_break__*"), method="region_crc", rho=0.5)
     bcells = brk[brk.feasible.astype(bool)].groupby(
@@ -376,10 +406,9 @@ def section_baselines():
     star05 = bcells[(bcells.index.get_level_values("alpha") == 0.05)
                     & (bcells.area > 0.99)]
     models05 = sorted({m for m, _, _ in star05.index})
-    truth(79, "at alpha=0.05 the vacuous breakdown cells are B5 and Mask2Former",
-          models05 == ["mask2former_swinb_cityscapes",
-                       "segformer_b5_cityscapes"],
-          f"{len(star05)} starred cells over models {models05}")
+    truth(79, "no breakdown cell marks more than 99% of the image at any level",
+          len(star05) == 0 and int((bcells.area > 0.99).sum()) == 0,
+          f"{int((bcells.area > 0.99).sum())} starred cells over models {models05}")
 
     # 78: size strata
     for cid, mo in [(78, "segformer_b2_cityscapes"), (78, "segformer_b5_cityscapes")]:
@@ -395,7 +424,7 @@ def section_baselines():
                             ["model"]).values)
         v05 = list(cellmean(sel(lac, method=lacm[0], alpha=0.05, rho=0.5),
                             ["model"]).values)
-        rng_claim(80, "LAC misses 96% at alpha=0.2", 0.958, 0.960, v02, 0.002)
+        rng_claim(80, "LAC misses 88-95% at alpha=0.2", 0.8815, 0.9547, v02, 0.002)
         rng_claim(80, "LAC misses 51-61% at alpha=0.05", 0.510, 0.612, v05, 0.002)
 
     # 83: tempered uncorrected mean 0.197
@@ -414,29 +443,40 @@ def section_baselines():
           bool((c.values <= lev + 1e-12).all()),
           f"{int((c.values > lev).sum())} violations")
 
-    # 85: B5 area 9.0% -> 1.5%
+    # 85: tempering leaves the area where it was (B5 1.4% -> 1.5%, B2 2.3% -> 2.4%)
     b5t = [mo for mo in tr.model.unique() if "b5" in mo]
+    b2t = [mo for mo in tr.model.unique() if "b2" in mo]
     near(85, "tempered B5 area at alpha=0.2, rho=0.5 is 0.015", 0.015,
          mean(sel(tr, model=b5t, alpha=0.20, rho=0.5), "marked_area_fraction"))
+    near(85, "tempered B2 area at alpha=0.2, rho=0.5 is 0.024", 0.024,
+         mean(sel(tr, model=b2t, alpha=0.20, rho=0.5), "marked_area_fraction"))
+    truth(85, "tempering moves the region-CRC area by at most a tenth of a point",
+          abs(mean(sel(tr, model=b5t, alpha=0.20, rho=0.5), "marked_area_fraction")
+              - mean(sel(e1, method="region_crc", model="segformer_b5_cityscapes",
+                         alpha=0.20, rho=0.5), "marked_area_fraction")) <= 0.001
+          and abs(mean(sel(tr, model=b2t, alpha=0.20, rho=0.5), "marked_area_fraction")
+                  - mean(sel(e1, method="region_crc", model="segformer_b2_cityscapes",
+                             alpha=0.20, rho=0.5), "marked_area_fraction")) <= 0.001,
+          "")
 
     # 90-111: every cell of the method-baseline comparison
     table3 = {
         ("segformer_b2_cityscapes", "argmax"): [(0.586, 0.007), (0.676, 0.007)],
-        ("segformer_b2_cityscapes", "heuristic"): [(0.192, 0.020), (0.187, 0.030)],
-        ("segformer_b2_cityscapes", "pixel_crc"): [(0.166, 0.025), (0.230, 0.025)],
-        ("segformer_b2_cityscapes", "region_crc"): [(0.187, 0.020), (0.182, 0.034)],
+        ("segformer_b2_cityscapes", "heuristic"): [(0.199, 0.019), (0.199, 0.023)],
+        ("segformer_b2_cityscapes", "pixel_crc"): [(0.174, 0.021), (0.241, 0.021)],
+        ("segformer_b2_cityscapes", "region_crc"): [(0.194, 0.020), (0.195, 0.023)],
         ("segformer_b5_cityscapes", "argmax"): [(0.376, 0.007), (0.470, 0.007)],
-        ("segformer_b5_cityscapes", "heuristic"): [(0.197, 0.011), (0.189, 0.060)],
-        ("segformer_b5_cityscapes", "pixel_crc"): [(0.199, 0.018), (0.257, 0.018)],
-        ("segformer_b5_cityscapes", "region_crc"): [(0.192, 0.015), (0.180, 0.090)],
+        ("segformer_b5_cityscapes", "heuristic"): [(0.199, 0.011), (0.199, 0.014)],
+        ("segformer_b5_cityscapes", "pixel_crc"): [(0.202, 0.011), (0.260, 0.011)],
+        ("segformer_b5_cityscapes", "region_crc"): [(0.194, 0.012), (0.194, 0.014)],
         ("mask2former_swinb_cityscapes", "argmax"): [(0.548, 0.007), (0.633, 0.007)],
-        ("mask2former_swinb_cityscapes", "heuristic"): [(0.062, 0.691), (0.000, 1.000)],
-        ("mask2former_swinb_cityscapes", "pixel_crc"): [(0.080, 0.635), (0.105, 0.635)],
-        ("mask2former_swinb_cityscapes", "region_crc"): [(0.058, 0.707), (0.000, 1.000)],
+        ("mask2former_swinb_cityscapes", "heuristic"): [(0.197, 0.032), (0.198, 0.051)],
+        ("mask2former_swinb_cityscapes", "pixel_crc"): [(0.195, 0.033), (0.260, 0.033)],
+        ("mask2former_swinb_cityscapes", "region_crc"): [(0.193, 0.033), (0.193, 0.053)],
         ("segformer_b2_cityscapes_mcdrop8", "argmax"): [(0.592, 0.007), (0.684, 0.007)],
-        ("segformer_b2_cityscapes_mcdrop8", "heuristic"): [(0.195, 0.020), (0.188, 0.024)],
-        ("segformer_b2_cityscapes_mcdrop8", "pixel_crc"): [(0.166, 0.021), (0.236, 0.021)],
-        ("segformer_b2_cityscapes_mcdrop8", "region_crc"): [(0.190, 0.020), (0.183, 0.025)],
+        ("segformer_b2_cityscapes_mcdrop8", "heuristic"): [(0.199, 0.019), (0.199, 0.024)],
+        ("segformer_b2_cityscapes_mcdrop8", "pixel_crc"): [(0.172, 0.021), (0.244, 0.021)],
+        ("segformer_b2_cityscapes_mcdrop8", "region_crc"): [(0.194, 0.020), (0.194, 0.024)],
     }
     for (mo, me), rows in table3.items():
         for rh, (f_, a_) in zip((0.1, 0.5), rows):
@@ -449,19 +489,18 @@ def section_baselines():
     pix = {(mo, rh): mean(sel(e1, model=mo, method="pixel_crc", alpha=0.20, rho=rh))
            for mo in cs_models for rh in (0.1, 0.5)}
     segf = [m for m in cs_models if m.startswith("segformer")]
-    truth(957, "abstract: at rho=0.5 pixel CRC misses the region target on the "
-               "three SegFormer variants and not on Mask2Former",
-          all(pix[(m, 0.5)] > 0.20 for m in segf)
-          and pix[("mask2former_swinb_cityscapes", 0.5)] <= 0.20,
+    truth(957, "abstract: at rho=0.5 pixel CRC misses the region target on all "
+               "four Cityscapes models",
+          all(pix[(m, 0.5)] > 0.20 for m in cs_models),
           str({m.split("_")[1]: round(pix[(m, 0.5)], 3) for m in cs_models}))
-    truth(957, "abstract: at rho=0.1 no model's pixel CRC exceeds the level",
-          all(pix[(m, 0.1)] <= 0.20 for m in cs_models),
-          str({m.split("_")[1]: round(pix[(m, 0.1)], 3) for m in cs_models}))
+    note(957, "at rho=0.1 pixel CRC exceeds the level only on B5, by 0.002; the "
+              "abstract's sentence is scoped to rho=0.5",
+         str({m.split("_")[1]: round(pix[(m, 0.1)], 3) for m in cs_models}))
 
     # 94/101: LAC rows; 95/96/102/103: tempered-posterior rows
     lacm = [m for m in lac.method.unique() if "lac" in m]
-    lac_rows = {"segformer_b2": [(0.871, 0.003), (0.958, 0.003)],
-                "segformer_b5": [(0.807, 0.003), (0.960, 0.003)]}
+    lac_rows = {"segformer_b2": [(0.865, 0.003), (0.955, 0.003)],
+                "segformer_b5": [(0.694, 0.004), (0.882, 0.004)]}
     for key, rows in lac_rows.items():
         mos = [m for m in lac.model.unique() if m.startswith(key)]
         for rh, (f_, a_) in zip((0.1, 0.5), rows):
@@ -469,8 +508,8 @@ def section_baselines():
             near(94, f"baseline {key} LAC rho={rh} FNR", f_, mean(d))
             near(94, f"baseline {key} LAC rho={rh} area", a_,
                  mean(d, "marked_area_fraction"))
-    tmp_rows = {("segformer_b2", "heuristic"): [(0.198, 0.020), (0.196, 0.024)],
-                ("segformer_b2", "region_crc"): [(0.192, 0.020), (0.191, 0.025)],
+    tmp_rows = {("segformer_b2", "heuristic"): [(0.199, 0.020), (0.199, 0.024)],
+                ("segformer_b2", "region_crc"): [(0.193, 0.020), (0.193, 0.024)],
                 ("segformer_b5", "heuristic"): [(0.197, 0.012), (0.197, 0.014)],
                 ("segformer_b5", "region_crc"): [(0.192, 0.012), (0.192, 0.015)]}
     for (key, me), rows in tmp_rows.items():
@@ -487,8 +526,8 @@ def section_baselines():
     except FileNotFoundError:
         note(70, "pareto sweep CSVs missing")
         return
-    for mo, area_q, exp_r, exp_p in [("segformer_b2_cityscapes", 0.068, 0.171, 0.209),
-                                     ("segformer_b5_cityscapes", 0.138, 0.163, 0.206)]:
+    for mo, area_q, exp_r, exp_p in [("segformer_b2_cityscapes", 0.0188, 0.282, 0.287),
+                                     ("segformer_b5_cityscapes", 0.0685, 0.041, 0.047)]:
         d = sel(par, model=mo, rho=0.5)
         curves = {}
         for me in ("region_crc", "pixel_crc"):
@@ -504,8 +543,8 @@ def section_baselines():
             continue
         rr = float(np.interp(area_q, *curves["region_crc"]))
         pp = float(np.interp(area_q, *curves["pixel_crc"]))
-        near(71, f"{mo} region CRC at {area_q:.1%} area", exp_r, rr, 0.002)
-        near(71, f"{mo} pixel CRC at {area_q:.1%} area", exp_p, pp, 0.002)
+        near(71, f"{mo} region CRC at {area_q:.1%} area", exp_r, rr, 0.003)
+        near(71, f"{mo} pixel CRC at {area_q:.1%} area", exp_p, pp, 0.003)
         grid = np.linspace(lo, hi, 200)
         diff = np.interp(grid, *curves["pixel_crc"]) - np.interp(grid, *curves["region_crc"])
         note(70, f"{mo} area-matched advantage of region CRC over the band",
@@ -521,8 +560,8 @@ def section_lac_detail():
     per = lac.groupby(["model", "alpha", "rho"])[
         ["region_fnr", "marked_area_fraction"]].mean()
     for rho, (lo20, hi20), (lo05, hi05) in [
-            (0.5, (0.958, 0.960), (0.510, 0.612)),
-            (0.1, (0.807, 0.871), (0.4125, 0.5320))]:
+            (0.5, (0.8815, 0.9547), (0.5094, 0.6117)),
+            (0.1, (0.6937, 0.8646), (0.4118, 0.5314))]:
         v20 = [v for (m, a, rh), v in per["region_fnr"].items()
                if abs(a - 0.2) < 1e-9 and abs(rh - rho) < 1e-9]
         v05 = [v for (m, a, rh), v in per["region_fnr"].items()
@@ -533,8 +572,8 @@ def section_lac_detail():
            if abs(a - 0.2) < 1e-9 and abs(rh - 0.5) < 1e-9]
     a05 = [v for (m, a, rh), v in per["marked_area_fraction"].items()
            if abs(a - 0.05) < 1e-9 and abs(rh - 0.5) < 1e-9]
-    rng_claim(97, "LAC marked area at alpha=0.2 is 0.3% of the image",
-              0.0026, 0.0027, a20)
+    rng_claim(97, "LAC marked area at alpha=0.2 is 0.3-0.4% of the image",
+              0.0028, 0.0038, a20)
     rng_claim(97, "LAC marked area at alpha=0.05 is 0.7-0.9%", 0.0070, 0.0090, a05)
     _lac_classcond_and_pixel_fnr()
 
@@ -602,9 +641,9 @@ def _lac_classcond_and_pixel_fnr():
                   f"{LAC_PIXEL_GAP:g} margin")
             # The two gaps the section prints, to the precision it prints them.
             near(98, "largest class-conditional / pixel-CRC region-FNR gap",
-                 0.002, float(dreg.max()), tol=5e-4)
+                 0.001, float(dreg.max()), tol=5e-4)
             near(98, "largest class-conditional / pixel-CRC marked-area gap",
-                 0.029, float(darea.max()), tol=1e-3)
+                 0.0004, float(darea.max()), tol=5e-4)
 
     has_px = "realized_pixel_fnr" in raw.columns
     truth(99, "realized_pixel_fnr column present in x4_lac__*", has_px,
@@ -635,7 +674,7 @@ OWN_TARGET_METHODS = ("lac_classcond", "pixel_crc")
 # margin, or the article's whole reading of that row is wrong.
 MARGINAL_PIXEL_EXCESS = 0.20
 # ... and its region loss has to stand clear of the pixel-CRC row.
-MARGINAL_REGION_SEPARATION = 0.40
+MARGINAL_REGION_SEPARATION = 0.35
 
 
 def _pixel_target_checks(px):
@@ -680,13 +719,13 @@ def _pixel_target_checks(px):
     # The per-level values Section IV-B prints. The realized pixel FNR does
     # not depend on rho, so one number per (method, level) is the whole claim.
     by_level = cell.groupby(["method", "alpha"])["pix"].mean()
-    for alpha, want in ((0.05, 0.46), (0.10, 0.67), (0.20, 0.88)):
+    for alpha, want in ((0.05, 0.46), (0.10, 0.67), (0.20, 0.82)):
         near(100, f"marginal LAC pixel FNR on the critical class at alpha={alpha:g}",
              want, float(by_level[("lac_global", alpha)]), tol=5e-3)
     excess = [float(by_level[("lac_global", a)] - a) for a in (0.05, 0.10, 0.20)]
-    rng_claim(100, "the marginal excess over the level spans 0.41-0.68",
-              0.41, 0.68, excess, tol=5e-3)
-    for alpha, want in ((0.05, 0.005), (0.10, 0.060), (0.20, 0.188)):
+    rng_claim(100, "the marginal excess over the level spans 0.41-0.62",
+              0.41, 0.62, excess, tol=5e-3)
+    for alpha, want in ((0.05, 0.046), (0.10, 0.095), (0.20, 0.194)):
         near(100, f"class-conditional LAC pixel FNR at alpha={alpha:g}",
              want, float(by_level[("lac_classcond", alpha)]), tol=5e-4)
 
@@ -719,9 +758,15 @@ def section_ablations():
                 "marked_area_fraction") for mo in SEGF]
     shd = [mean(sel(cs, model=mo, alpha=0.10, rho=0.5), "marked_area_fraction")
            for mo in SEGF]
-    rng_claim(113, "per-class area 36-63% at alpha=0.1", 0.358, 0.625, per)
-    truth(113, "shared area is 100% at alpha=0.1",
-          bool(np.allclose(shd, 1.0, atol=5e-3)), str([round(x, 3) for x in shd]))
+    rng_claim(113, "per-class area 2.2-3.5% at alpha=0.1", 0.0221, 0.0352, per)
+    rng_claim(113, "shared area 3.4-4.8% at alpha=0.1", 0.0339, 0.0481, shd)
+    m2f_per = mean(sel(e1, method="region_crc", model="mask2former_swinb_cityscapes",
+                       alpha=0.10, rho=0.5), "marked_area_fraction")
+    m2f_shd = mean(sel(cs, model="mask2former_swinb_cityscapes", alpha=0.10, rho=0.5),
+                   "marked_area_fraction")
+    truth(113, "Mask2Former shared threshold at alpha=0.1: 13% -> 24%",
+          abs(m2f_per - 0.134) < 5e-4 and abs(m2f_shd - 0.237) < 5e-4,
+          f"{m2f_per:.4f} -> {m2f_shd:.4f}")
 
     # 116: ablation caption "up to an order of magnitude"
     ratios = {}
@@ -733,8 +778,9 @@ def section_ablations():
             if p > 0:
                 ratios[f"{mo}|a={al}"] = s / p
     worst = max(ratios.values())
-    truth(116, "caption: shared threshold inflates the marked area by up to 3.0x",
-          2.5 <= worst <= 3.0, f"largest measured ratio = {worst:.2f}x "
+    truth(116, "the shared threshold inflates the marked area by up to 2.2x (Mask2Former, a=0.2)",
+          2.15 <= worst <= 2.25 and max(ratios, key=ratios.get).startswith("mask2former"),
+          f"largest measured ratio = {worst:.2f}x "
                                f"({max(ratios, key=ratios.get)})")
 
     # 114: size-weighted loss
@@ -744,7 +790,7 @@ def section_ablations():
             ["segformer_b2_cityscapes", "segformer_b5_cityscapes"]]
     near(114, "size-weighted controlled risk at alpha=0.2", 0.19, cr, 0.006)
     rng_claim(114, "size-weighted unweighted region FNR 0.26-0.30",
-              0.255, 0.296, fnrs, 0.006)
+              0.264, 0.299, fnrs, 0.006)
 
 
 # --------------------------------------------------------------------------
@@ -761,32 +807,43 @@ def section_breakdown():
     truth(124, "SegFormer variants violate on all twelve model-condition cells",
           n_viol == len(c) == 12, f"{n_viol} of {len(c)} cells violate")
     worst = c.max() / 0.20
-    near(124, "worst violation ratio at alpha=0.2 is 2.03x", 2.03, float(worst), 0.01)
+    near(124, "worst violation ratio at alpha=0.2 is 2.23x", 2.23, float(worst), 0.01)
     note(124, "worst cell", f"{c.idxmax()} = {c.max():.4f}")
 
-    b5fog = mean(sel(r, model="segformer_b5_cityscapes", alpha=0.20, rho=0.5,
-                     experiment="e2_break__fog__segformer_b5_cityscapes"))
-    truth(125, "B5 under fog exceeds the level only in the fourth decimal",
-          0.20 < b5fog <= 0.2005, f"{b5fog:.4f}")
+    g125 = feas(sel(r, model=SEGF, alpha=0.20, rho=0.5)).groupby(["model", "experiment"])["region_fnr"]
+    lo125 = g125.mean() - 1.959963984540054 * g125.std(ddof=1) / np.sqrt(g125.size())
+    truth(125, "every one of the twelve SegFormer cells at alpha=0.2 exceeds the level "
+               "beyond the Monte Carlo error of the draws",
+          len(lo125) == 12 and bool((lo125.values > 0.20).all()),
+          f"{int((lo125.values > 0.20).sum())} of {len(lo125)} lower ends above 0.2")
 
     c1 = cellmean(sel(r, model=SEGF, alpha=0.10, rho=0.5), ["experiment"])
-    near(126, "worst violation ratio at alpha=0.1 is 1.5x", 1.48,
+    near(126, "worst violation ratio at alpha=0.1 is 2.74x (B5 at night)", 2.74,
          float(c1.max() / 0.10), 0.02)
+    c1m = cellmean(sel(r, model=SEGF, alpha=0.10, rho=0.5), ["model", "experiment"])
+    truth(126, "the SegFormer variants violate on all twelve cells at alpha=0.1 too",
+          int((c1m.values > 0.10).sum()) == 12, f"{int((c1m.values > 0.10).sum())} of {len(c1m)}")
 
     mc = cellmean(sel(r, model="segformer_b2_cityscapes_mcdrop8", alpha=0.10,
                       rho=0.5), ["experiment"])
     mc = {k.split("__")[1]: v for k, v in mc.items()}
-    truth(127, "MC-dropout breaks under fog/rain/snow but not at night at alpha=0.1",
-          all(mc[k] > 0.10 for k in ("fog", "rain", "snow")) and mc["night"] <= 0.10,
+    truth(127, "MC-dropout breaks under every condition at alpha=0.1",
+          all(mc[k] > 0.10 for k in CONDS),
           str({k: round(v, 3) for k, v in mc.items()}))
 
     c05 = cellmean(sel(r, alpha=0.05, rho=0.5), ["model", "experiment"])
-    truth(128, "no cell violates at alpha=0.05",
-          bool((c05.values <= 0.05 + 1e-12).all()),
-          f"max={c05.max():.4f}")
+    c05s = cellmean(sel(r, model=SEGF, alpha=0.05, rho=0.5), ["model", "experiment"])
+    truth(128, "at alpha=0.05 the SegFormer variants violate on all twelve cells, "
+               "by up to 2.71x (MC-dropout under fog)",
+          int((c05s.values > 0.05).sum()) == 12 and abs(float(c05s.max()) / 0.05 - 2.71) < 0.02
+          and c05s.idxmax() == ("segformer_b2_cityscapes_mcdrop8",
+                                "e2_break__fog__segformer_b2_cityscapes_mcdrop8"),
+          f"{int((c05s.values > 0.05).sum())} of 12; max={c05s.max():.4f} at {c05s.idxmax()}")
+    truth(128, "13 of the 16 model-condition cells violate at alpha=0.05",
+          int((c05.values > 0.05).sum()) == 13, f"{int((c05.values > 0.05).sum())} of {len(c05)}")
 
     cls = cellmean(sel(r, alpha=0.20, rho=0.5), ["model", "experiment", "class_name"])
-    near(129, "worst class-level cell is 0.487", 0.487, float(cls.max()))
+    near(129, "worst class-level cell is 0.522", 0.522, float(cls.max()))
     note(129, "worst class-level cell identity", str(cls.idxmax()))
 
     an = [mean(sel(e2, method="argmax", model=mo, alpha=0.20, rho=rh,
@@ -795,10 +852,15 @@ def section_breakdown():
     rng_claim(130, "argmax misses 68-83% of regions at night", 0.679, 0.835, an)
 
     m2f = sel(r, model="mask2former_swinb_cityscapes", rho=0.5)
-    truth(131, "Mask2Former under shift: FNR 0 and area 1 everywhere",
-          bool(np.allclose(m2f.region_fnr, 0.0)) and
-          bool(np.allclose(m2f.marked_area_fraction, 1.0)),
-          f"max FNR={m2f.region_fnr.max():.4f}, min area={m2f.marked_area_fraction.min():.4f}")
+    m2c = cellmean(m2f, ["experiment", "alpha"])
+    m2v = {(k[0].split("__")[1], k[1]): v > k[1] for k, v in m2c.items()}
+    truth(131, "Mask2Former under shift violates in fog at every level and in snow at "
+               "alpha>=0.1, and holds under night and rain",
+          all(m2v[("fog", a)] for a in ALPHAS) and m2v[("snow", 0.1)] and m2v[("snow", 0.2)]
+          and not m2v[("snow", 0.05)] and not any(m2v[(c_, a)] for c_ in ("night", "rain") for a in ALPHAS),
+          str({k: round(v, 3) for k, v in m2c.items()}))
+    near(131, "Mask2Former under fog at alpha=0.05 exceeds the level 2.05x", 2.05,
+         float(m2c[("e2_break__fog__mask2former_swinb_cityscapes", 0.05)]) / 0.05, 0.01)
 
     # The KS statistic is identically zero when lambda-hat = lambda_max, since
     # both sides then mark every pixel. Those draws cannot fire and are excluded
@@ -810,19 +872,20 @@ def section_breakdown():
           bool(np.allclose(degen.monitor_ks, 0.0))
           and bool((~degen.monitor_flag.astype(bool)).all()),
           f"{len(degen)} degenerate draws, max KS {float(degen.monitor_ks.max()):.2e}")
-    near(132, "46.8% of region-CRC draws at rho=0.5 are degenerate", 0.468,
-         float((mon.lam_index == LAM_MAX).mean()), 0.002)
+    truth(132, "four of the 10 800 SegFormer region-CRC draws at rho=0.5 are degenerate",
+          len(mon) == 10800 and int((mon.lam_index == LAM_MAX).sum()) == 4,
+          f"{int((mon.lam_index == LAM_MAX).sum())} of {len(mon)}")
     usable = mon[mon.lam_index < LAM_MAX]
     fl = usable.groupby("experiment")["monitor_flag"].mean()
-    rng_claim(132, "monitor fires in 64-100% of the non-degenerate region-CRC "
+    rng_claim(132, "monitor fires in 54-100% of the non-degenerate region-CRC "
                    "(draw, class, level) configurations at rho=0.5",
-              0.64, 1.00, fl.values, 0.006)
+              0.536, 1.00, fl.values, 0.006)
     ind = sel(e1, method="region_crc", rho=0.5)
     ind = ind[ind.model.isin(SEGF)]
     ind = ind[ind.lam_index < LAM_MAX]
     fa = ind.groupby("model")["monitor_flag"].mean()
-    rng_claim(132, "in-distribution false-alarm rate 0.5-1.9% on the same subset",
-              0.005, 0.019, fa.values, 0.0006)
+    rng_claim(132, "in-distribution false-alarm rate 0.6-1.2% on the same subset",
+              0.0056, 0.0122, fa.values, 0.0006)
     note(132, "nominal KS level is 1%; the realized in-distribution rate is",
          f"{float(ind.monitor_flag.mean()):.4f} pooled over the three variants")
 
@@ -833,8 +896,8 @@ def section_breakdown():
         cellsc = cellmean(sel(sub, alpha=0.20), ["model"])
         by_cond[c_] = (float(cellsc.mean()), float(cellsc.max()),
                        float(sub[sub.lam_index < LAM_MAX].monitor_flag.mean()))
-    for c_, want in (("night", 0.729), ("rain", 0.839),
-                     ("snow", 0.982), ("fog", 1.000)):
+    for c_, want in (("night", 0.637), ("rain", 0.798),
+                     ("snow", 0.948), ("fog", 1.000)):
         near(133, f"{c_} fires in {want:.0%} of non-degenerate draws",
              want, by_cond[c_][2], 0.002)
     worst_mean = max(by_cond, key=lambda k: by_cond[k][0])
@@ -850,14 +913,15 @@ def section_breakdown():
 
     # 135-138: every cell of the ACDC breakdown
     table5 = {
-        "segformer_b2_cityscapes": [0.007, 0.003, 0.003, 0.004, 0.066, 0.036,
-                                    0.051, 0.057, 0.325, 0.298, 0.387, 0.345],
-        "segformer_b5_cityscapes": [0.000, 0.000, 0.000, 0.000, 0.062, 0.148,
-                                    0.081, 0.087, 0.200, 0.406, 0.309, 0.225],
-        "mask2former_swinb_cityscapes": [0.0] * 12,
-        "segformer_b2_cityscapes_mcdrop8": [0.025, 0.008, 0.012, 0.011, 0.104,
-                                            0.065, 0.119, 0.134, 0.320, 0.291,
-                                            0.388, 0.333],
+        "segformer_b2_cityscapes": [0.122, 0.080, 0.125, 0.121, 0.195, 0.174,
+                                    0.213, 0.226, 0.348, 0.320, 0.405, 0.361],
+        "segformer_b5_cityscapes": [0.071, 0.120, 0.098, 0.097, 0.106, 0.274,
+                                    0.166, 0.157, 0.219, 0.445, 0.351, 0.239],
+        "mask2former_swinb_cityscapes": [0.102, 0.011, 0.019, 0.048, 0.176, 0.042,
+                                         0.069, 0.129, 0.272, 0.165, 0.181, 0.233],
+        "segformer_b2_cityscapes_mcdrop8": [0.135, 0.077, 0.126, 0.128, 0.212,
+                                            0.150, 0.215, 0.240, 0.328, 0.305,
+                                            0.404, 0.340],
     }
     for mo, vals in table5.items():
         k = 0
@@ -900,14 +964,40 @@ def section_tier_a():
     res = g140["region_fnr"].agg(["mean", "size"])
     lev = res.index.get_level_values("alpha").values
     bad = res[res["mean"].values > lev + 1e-12]
-    truth(140, "tier A restores the guarantee in 644 of the 648 feasible cells, "
-               "the four exceptions resting on ten or fewer feasible draws",
-          len(res) == 648 and len(bad) == 4 and int(bad["size"].max()) <= 10
-          and abs(float(bad["mean"].max()) - 0.265) < 5e-4,
-          f"{len(bad)} of {len(res)} cells above the level; feasible draws behind "
-          f"them: {bad['size'].tolist()}; worst "
-          f"{bad['mean'].max():.3f} at {bad['mean'].idxmax()}" if len(bad) else
-          f"{len(res)} cells all at or below the level")
+    sd140 = g140["region_fnr"].std(ddof=1)
+    lo140 = res["mean"] - 1.959963984540054 * sd140 / np.sqrt(res["size"])
+    # a single-draw cell has no interval; it cannot be separable
+    bad_lo = lo140.loc[bad.index].fillna(-np.inf)
+    n_sep = int((bad_lo.values > bad.index.get_level_values("alpha").values).sum())
+    truth(140, "tier A holds in 610 of the 648 feasible cells; none of the 38 "
+               "exceptions is separable from the Monte Carlo error of the draws",
+          len(res) == 648 and len(bad) == 38 and n_sep == 0,
+          f"{len(bad)} of {len(res)} cells above the level; {n_sep} separable")
+    small = bad[bad["size"] <= 10]
+    truth(140, "26 of the exceptions rest on ten or fewer feasible draws; the largest, "
+               "0.265 against alpha=0.1 (B5, bicycle, fog, n_t=50), is a single draw",
+          len(small) == 26 and abs(float(bad["mean"].max()) - 0.265) < 5e-4
+          and int(bad.loc[bad["mean"].idxmax(), "size"]) == 1
+          and bad["mean"].idxmax()[:5] == (50, "e3_tierA50__fog__segformer_b5_cityscapes",
+                                           "bicycle", 0.1, 0.5),
+          f"{len(small)} small cells; worst {bad['mean'].max():.3f} over "
+          f"{int(bad.loc[bad['mean'].idxmax(), 'size'])} draws at {bad['mean'].idxmax()}")
+    n_lmax = int((feas(r).lam_index >= LAM_MAX).sum())
+    note(140, "tier-A draws that return lambda_max (valid, uninformative), all models",
+         f"{n_lmax} of {len(feas(r))} feasible draws; by model "
+         + str(feas(r)[feas(r).lam_index >= LAM_MAX].groupby("model").size().to_dict()))
+    big = bad[bad["size"] > 10]
+    excess = big["mean"] - big.index.get_level_values("alpha")
+    truth(140, "the other twelve rest on 27-41 draws, are all rider cells, eleven at "
+               "alpha=0.2, and exceed by at most 0.06 (B5, rider, rain)",
+          len(big) == 12 and int(big["size"].min()) == 27 and int(big["size"].max()) == 41
+          and all(k[2] == "rider" for k in big.index)
+          and sum(np.isclose(k[3], 0.2) for k in big.index) == 11
+          and 0.055 <= float(excess.max()) <= 0.06
+          and excess.idxmax()[1] == "e3_tierA50__rain__segformer_b5_cityscapes",
+          f"{len(big)} cells, draws {sorted(big['size'].unique().tolist())}, "
+          f"classes {sorted(set(k[2] for k in big.index))}, max excess {float(excess.max()):.4f} "
+          f"at {excess.idxmax()}")
 
     sd5 = feas(sel(r, rho=0.5)).groupby(
         ["n_target", "experiment", "class_name", "alpha"])["lam"].std(ddof=1)
@@ -922,24 +1012,26 @@ def section_tier_a():
     # Table VI is class-balanced: each column is averaged per class and then
     # over classes, so no cell is dominated by whichever class still has
     # feasible draws at a tight level.
-    # Table VI is also SegFormer-only since the third panel (M4): Mask2Former
-    # marks 91-100% of the image in every tier-A cell, so pooling it lowered
-    # the printed FNR and raised the printed area with a degenerate solution.
+    # Table VI is over all four models again (2026-09-09): on the log-tail grid
+    # Mask2Former calibrates to interior thresholds in every tier-A cell, so
+    # the SegFormer-only restriction of the third panel (M4) has no basis.
     def _balanced(n, alpha, col="region_fnr", models=None):
         d = sel(r, n_target=n, alpha=alpha, rho=0.5)
         d = d[d.feasible.astype(bool)]
-        d = d[d.model.str.startswith("segformer")] if models is None else d[d.model.isin(models)]
+        d = d[d.model.isin(CS_MODELS if models is None else models)]
         return float(d.groupby("class_name")[col].mean().mean())
 
     ar = [_balanced(n, 0.20, "marked_area_fraction") for n in (25, 50, 100)]
-    rng_claim(142, "tier-A marked area 58-66% at alpha=0.2 (class-balanced, SegFormer)",
-              0.578, 0.664, ar, 0.006)
-    # With Mask2Former out of the average the area does fall with n_t, by
-    # about nine points of the image between n_t=25 and 100; the text now says
-    # so instead of "does not decrease", which was true of the pooled table.
-    truth(142, "area falls from 66% to 58% between n_t=25 and 100 (8-9 points)",
-          0.08 <= ar[0] - ar[2] <= 0.09 and ar[0] > ar[1] > ar[2],
+    rng_claim(142, "tier-A marked area 11-18% at alpha=0.2 (class-balanced, four models)",
+              0.1069, 0.1755, ar, 0.006)
+    truth(142, "area falls by seven points of the image between n_t=25 and 100",
+          0.065 <= ar[0] - ar[2] <= 0.075 and ar[0] > ar[1] > ar[2],
           str([round(x, 3) for x in ar]))
+    ars = [_balanced(n, 0.20, "marked_area_fraction", SEGF) for n in (25, 50, 100)]
+    rng_claim(142, "SegFormer-only tier-A area 8-14% at alpha=0.2", 0.0773, 0.1436, ars, 0.006)
+    arm = [_balanced(n, 0.20, "marked_area_fraction", ["mask2former_swinb_cityscapes"])
+           for n in (25, 50, 100)]
+    rng_claim(142, "Mask2Former tier-A area 20-27% at alpha=0.2", 0.1955, 0.2712, arm, 0.006)
 
     inf25 = 1 - sel(r, n_target=25, alpha=0.05).feasible.astype(bool).mean()
     inf100 = 1 - sel(r, n_target=100, alpha=0.05).feasible.astype(bool).mean()
@@ -947,9 +1039,9 @@ def section_tier_a():
           inf25 > 0.99, f"{inf25:.4f}")
     near(145, "infeasible fraction at n_t=100, alpha=0.05 is 0.47", 0.47, inf100, 0.006)
 
-    table6 = {25: [(0.007, 0.920, 0.99), (0.015, 0.883, 0.74), (0.076, 0.664, 0.38)],
-              50: [(0.002, 0.974, 0.80), (0.019, 0.851, 0.45), (0.093, 0.586, 0.19)],
-              100: [(0.003, 0.962, 0.47), (0.019, 0.834, 0.27), (0.088, 0.578, 0.03)]}
+    table6 = {25: [(0.025, 0.259, 0.99), (0.066, 0.226, 0.74), (0.140, 0.176, 0.38)],
+              50: [(0.026, 0.358, 0.80), (0.068, 0.272, 0.45), (0.169, 0.125, 0.19)],
+              100: [(0.030, 0.388, 0.47), (0.077, 0.241, 0.27), (0.167, 0.107, 0.03)]}
     for n, rows in table6.items():
         for al, (f_, ar_, inf_) in zip(ALPHAS, rows):
             d = sel(r, n_target=n, alpha=al, rho=0.5)
@@ -967,17 +1059,18 @@ def section_tier_a():
     m2f = m2f[m2f.feasible.astype(bool)]
     m2f_area = (m2f.groupby(["n_target", "alpha", "class_name"])["marked_area_fraction"]
                 .mean().groupby(level=[0, 1]).mean())
-    truth(958, "Mask2Former marks 91-100% of the image in every one of its nine "
-               "tier-A cells (class-balanced)",
-          len(m2f_area) == 9 and float(m2f_area.min()) >= 0.911 - 5e-4
-          and float(m2f_area.max()) <= 1.0 + 1e-9,
-          f"min {float(m2f_area.min()):.3f}, max {float(m2f_area.max()):.3f}, cells {len(m2f_area)}")
+    truth(958, "Mask2Former marks 20-77% of the image over its nine tier-A cells "
+               "(class-balanced), so it belongs in Table VI again",
+          len(m2f_area) == 9 and abs(float(m2f_area.min()) - 0.196) < 5e-4
+          and abs(float(m2f_area.max()) - 0.765) < 5e-4,
+          f"min {float(m2f_area.min()):.3f}, max {float(m2f_area.max()):.3f}, cells {len(m2f_area)}, "
+          f"{int((m2f.lam_index >= LAM_MAX).sum())} of {len(m2f)} draws at lambda_max")
     # 959: what the n_t=25, alpha=0.05 cell is made of (third panel, M5).
     cell = sel(r, n_target=25, alpha=0.05, rho=0.5)
-    cell = cell[cell.feasible.astype(bool) & cell.model.str.startswith("segformer")]
-    truth(959, "n_t=25, alpha=0.05: twelve feasible SegFormer draws, all person "
-               "under snow, four seeds per variant",
-          len(cell) == 12 and set(cell.class_name) == {"person"}
+    cell = cell[cell.feasible.astype(bool)]
+    truth(959, "n_t=25, alpha=0.05: sixteen feasible draws, all person "
+               "under snow, four seeds per model",
+          len(cell) == 16 and set(cell.class_name) == {"person"}
           and bool(cell.experiment.str.contains("snow").all())
           and bool(cell.groupby("model").size().eq(4).all()),
           f"{len(cell)} draws, classes {sorted(set(cell.class_name))}, "
@@ -1073,8 +1166,9 @@ def section_tier_b():
               f"{tuple(round(x,4) for x in a)} vs {tuple(round(x,4) for x in b)}")
         near(160, "both give p_test = 0.198", 0.198, a[0], 0.0006)
 
-    for al, targets in [(0.20, {20: (0.50, 0.093, 0.51), 10: (0.73, 0.174, 0.28),
-                                8: (0.80, 0.211, None), 4: (0.93, 0.282, None)})]:
+    for al, targets in [(0.20, {50: (0.187, 0.007, 0.829), 40: (0.667, 0.051, 0.352),
+                                20: (0.997, 0.207, 0.0085), 10: (0.987, 0.281, 0.0054),
+                                8: (0.997, 0.294, None), 4: (0.993, 0.325, None)})]:
         for ratio, (inf_frac, risk, area) in targets.items():
             d = p3f[np.isclose(p3f.ratio, ratio) & np.isclose(p3f.alpha, al)
                     & np.isclose(p3f.rho, 0.5)]
@@ -1089,48 +1183,59 @@ def section_tier_b():
             if area is not None:
                 near(163, f"ratio {ratio}: marked area", area, got_area, 0.006)
 
-    big = p3[(p3.ratio >= 50) & np.isclose(p3.alpha, 0.20)]
-    truth(162, "at alpha=0.2 ratios of 50 and above leave nothing informative",
-          bool((big.lam >= big.lam.max() - 1e-12).all()) if len(big) else False,
-          f"{int((big.lam < big.lam.max()).sum())} informative of {len(big)}")
+    big = p3[(p3.ratio >= 80) & np.isclose(p3.alpha, 0.20)]
+    truth(162, "at alpha=0.2 ratios of 80 and above leave nothing informative",
+          bool((big.lam_index >= LAM_MAX).all()) if len(big) else False,
+          f"{int((big.lam_index < LAM_MAX).sum())} informative of {len(big)}")
+    # the two valid cells, conditioned on the informative draws
+    for ratio, want in ((40, 0.076), (50, 0.037)):
+        d_ = p3f[np.isclose(p3f.ratio, ratio) & np.isclose(p3f.alpha, 0.20) & np.isclose(p3f.rho, 0.5)]
+        d_ = d_[d_.lam_index < LAM_MAX]
+        near(163, f"ratio {ratio}: risk conditioned on the informative draws", want,
+             float(d_.region_fnr.mean()), 0.002)
+    d20 = p3f[np.isclose(p3f.ratio, 20) & np.isclose(p3f.alpha, 0.20) & np.isclose(p3f.rho, 0.5)]
+    lo20 = float(d20.region_fnr.mean() - 1.959963984540054 * d20.region_fnr.std(ddof=1) / np.sqrt(len(d20)))
+    truth(163, "ratio 20 at alpha=0.2 violates with the level outside its interval",
+          lo20 > 0.20, f"lower end {lo20:.4f}")
 
-    a10 = p3[np.isclose(p3.alpha, 0.10)]
-    inf_by_ratio = a10.assign(inf=(a10.lam < a10.lam.max() - 1e-12)).groupby(
-        "ratio")["inf"].mean()
+    a10 = p3f[np.isclose(p3f.alpha, 0.10) & np.isclose(p3f.rho, 0.5)]
+    inf_by_ratio = a10.assign(inf=(a10.lam_index < LAM_MAX)).groupby("ratio")["inf"].mean()
     risk_by_ratio = a10.groupby("ratio")["region_fnr"].mean()
-    active = inf_by_ratio[inf_by_ratio > 0]
-    truth(167, "at alpha=0.1 only ratios <=10 return anything",
-          bool((active.index <= 10).all()) if len(active) else False,
-          str({round(k, 1): round(v, 3) for k, v in active.items()}))
-    truth(167, "and every such ratio is valid at alpha=0.1 when the risk is "
-               "averaged over ALL draws",
-          bool((risk_by_ratio[active.index] <= 0.10 + 1e-12).all()) if len(active) else False,
-          str({round(k, 1): round(risk_by_ratio[k], 4) for k in active.index}))
-    # Conditioned on the informative draws, as the released clip table is, the
-    # verdict splits by condition (third panel, M7): fog violates, night holds.
-    inf10 = a10[(a10.lam < a10.lam.max() - 1e-12) & np.isclose(a10.rho, 0.5)]
-    fog10 = inf10[inf10.cond == "fog"].groupby("ratio")["region_fnr"].mean()
-    night10 = inf10[inf10.cond == "night"].groupby("ratio")["region_fnr"].mean()
-    rng_claim(167, "conditioned on informative draws (rho=0.5) the fog cells at "
-                   "alpha=0.1 run 0.149-0.156", 0.149, 0.156, list(fog10.values), 0.001)
-    truth(167, "and every fog cell violates the level",
-          len(fog10) == 3 and bool((fog10 > 0.10).all()),
-          str({round(k, 1): round(v, 3) for k, v in fog10.items()}))
-    rng_claim(167, "the night cells run 0.060-0.070", 0.060, 0.070,
-              list(night10.values), 0.001)
-    truth(167, "and every night cell holds",
-          len(night10) == 3 and bool((night10 <= 0.10).all()),
-          str({round(k, 1): round(v, 3) for k, v in night10.items()}))
+    area_by_ratio = a10.groupby("ratio")["marked_area_fraction"].mean()
+    truth(167, "at alpha=0.1 (fog, rho=0.5) ratios 4-10 are informative in every draw, "
+               "ratio 20 in 37%, and nothing above",
+          bool((inf_by_ratio[[4.0, 8.0, 10.0]] >= 0.99).all()) and abs(inf_by_ratio[20.0] - 0.37) < 0.01
+          and bool((inf_by_ratio[inf_by_ratio.index > 20] == 0).all()),
+          str({round(k, 1): round(v, 3) for k, v in inf_by_ratio.items()}))
+    truth(167, "ratio 20 is the valid one at alpha=0.1: 0.017 at 65% area",
+          abs(risk_by_ratio[20.0] - 0.017) < 0.002 and abs(area_by_ratio[20.0] - 0.649) < 0.01,
+          f"risk {risk_by_ratio[20.0]:.4f} area {area_by_ratio[20.0]:.3f}")
+    rng_claim(167, "ratios 10 and below violate at alpha=0.1 on fog: 0.106-0.170",
+              0.106, 0.170, [risk_by_ratio[k] for k in (4.0, 8.0, 10.0)], 0.001)
+    n10 = p3[(p3.cond == "night") & np.isclose(p3.alpha, 0.10) & np.isclose(p3.rho, 0.5)]
+    nr = n10.groupby("ratio")["region_fnr"].mean()
+    truth(167, "on night at alpha=0.1 ratio 4 violates (0.146) and ratios 8 and 10 hold (0.092, 0.069)",
+          nr[4.0] > 0.10 and abs(nr[4.0] - 0.146) < 0.001 and abs(nr[8.0] - 0.092) < 0.001
+          and abs(nr[10.0] - 0.069) < 0.001,
+          str({round(k, 1): round(v, 3) for k, v in nr.items()}))
+    n20 = p3[(p3.cond == "night") & np.isclose(p3.alpha, 0.20) & np.isclose(p3.rho, 0.5)]
+    near(167, "night, ratio 20 at alpha=0.2: 0.178", 0.178,
+         float(n20[np.isclose(n20.ratio, 20)].region_fnr.mean()), 0.001)
 
-    a05 = p3[np.isclose(p3.alpha, 0.05) & np.isclose(p3.rho, 0.5)]
-    truth(168, "at alpha=0.05 nothing is informative at any ratio (rho=0.5)",
-          bool((a05.lam >= a05.lam.max() - 1e-12).all()),
-          f"{int((a05.lam < a05.lam.max()).sum())} informative of {len(a05)}")
-    a05b = p3[np.isclose(p3.alpha, 0.05) & np.isclose(p3.rho, 0.1)]
-    n_inf = int((a05b.lam < a05b.lam.max() - 1e-12).sum())
-    note(168, "same claim at rho=0.1",
-         f"{n_inf} informative draws of {len(a05b)}" +
-         ("" if not n_inf else " -- the claim is false at rho=0.1"))
+    a05 = p3f[np.isclose(p3f.alpha, 0.05) & np.isclose(p3f.rho, 0.5)]
+    inf05 = a05.assign(inf=(a05.lam_index < LAM_MAX)).groupby("ratio")["inf"].mean()
+    risk05 = a05.groupby("ratio")["region_fnr"].mean()
+    area05 = a05.groupby("ratio")["marked_area_fraction"].mean()
+    truth(168, "at alpha=0.05 (fog, rho=0.5) ratio 4 is informative in 99% of draws and "
+               "violates (0.070); ratios 8 and 10 are valid with 67% and 33% informative "
+               "at 36% and 70% area; nothing at 20 and above",
+          inf05[4.0] >= 0.99 and risk05[4.0] > 0.05 and abs(risk05[4.0] - 0.070) < 0.001
+          and abs(inf05[8.0] - 0.667) < 0.01 and abs(inf05[10.0] - 0.327) < 0.01
+          and risk05[8.0] <= 0.05 and risk05[10.0] <= 0.05
+          and abs(area05[8.0] - 0.364) < 0.01 and abs(area05[10.0] - 0.704) < 0.01
+          and bool((inf05[inf05.index >= 20] == 0).all()),
+          "inf " + str({round(k, 1): round(v, 3) for k, v in inf05.items()}) + " risk "
+          + str({round(k, 1): round(v, 3) for k, v in risk05.items()}))
 
     # 170: reduced level
     d20 = p3[np.isclose(p3.ratio, 20) & np.isclose(p3.alpha, 0.20)]
@@ -1182,31 +1287,51 @@ def _seqdisjoint_tier_a_claims():
           len(j) == 18, f"{len(j)} cells")
 
     lev = j.index.get_level_values("alpha").values
-    over = int((j["region_fnr_sq"].values > lev).sum())
-    truth(245, "no sequence-disjoint cell exceeds its level", over == 0,
-          f"{over} of {len(j)} cells above the level; worst "
+    over_idx = j.index[j["region_fnr_sq"].values > lev]
+    truth(245, "two sequence-disjoint cells exceed their level, the fog cells at "
+               "alpha=0.1 (0.102 and 0.104 against 0.070 and 0.076), and no published cell does",
+          len(over_idx) == 2 and all(k[0] == "fog" and np.isclose(k[1], 0.1) for k in over_idx)
+          and int((j["region_fnr_pub"].values > lev).sum()) == 0
+          and abs(float(j.loc[("fog", 0.1, 0.1), "region_fnr_sq"]) - 0.102) < 5e-4
+          and abs(float(j.loc[("fog", 0.1, 0.5), "region_fnr_sq"]) - 0.104) < 5e-4
+          and abs(float(j.loc[("fog", 0.1, 0.1), "region_fnr_pub"]) - 0.070) < 5e-4
+          and abs(float(j.loc[("fog", 0.1, 0.5), "region_fnr_pub"]) - 0.076) < 5e-4,
+          f"{len(over_idx)} of {len(j)} cells above the level: {list(over_idx)}; worst "
           f"{float(j['region_fnr_sq'].max()):.4f}")
-    near(246, "largest published tier-A cell at n_t=25", 0.113,
+    # the level lies inside the draw interval of both, and both rest on person alone
+    sq_paths = sorted(glob.glob(str(results_dir("experiments") / "x13_tierA25_seqdisjoint__fog__*.csv")))
+    sqf = pd.concat([pd.read_csv(p_) for p_ in sq_paths], ignore_index=True)
+    sqf = feas(sqf[(sqf["method"] == "region_crc") & np.isclose(sqf["alpha"], 0.1)])
+    dl = sqf.groupby(["rho", "seed"])["region_fnr"].mean().groupby("rho")
+    lo_fog = dl.mean() - 1.959963984540054 * dl.std(ddof=1) / np.sqrt(dl.size())
+    truth(245, "the level lies inside the draw interval of both fog cells, which rest on "
+               "23 person draws",
+          bool((lo_fog.values <= 0.1).all()) and set(sqf.class_name) == {"person"}
+          and bool((dl.size() == 23).all()),
+          f"lower ends {lo_fog.round(4).to_dict()}, classes {sorted(set(sqf.class_name))}, "
+          f"draws {dl.size().to_dict()}")
+    near(246, "largest published tier-A cell at n_t=25", 0.159,
          float(j["region_fnr_pub"].max()), tol=5e-4)
-    near(246, "largest sequence-disjoint cell at n_t=25", 0.127,
+    near(246, "largest sequence-disjoint cell at n_t=25", 0.181,
          float(j["region_fnr_sq"].max()), tol=5e-4)
-    # Two different cells (fourth panel, A4): the published maximum is night,
-    # the sequence-disjoint maximum is snow, both alpha=0.2, rho=0.1.
-    truth(246, "the published maximum is the night cell and the disjoint maximum the snow cell",
-          j["region_fnr_pub"].idxmax()[0] == "night" and j["region_fnr_sq"].idxmax()[0] == "snow",
+    truth(246, "the published maximum is night (a=0.2, rho=0.1) and the disjoint maximum night (a=0.2, rho=0.5), both below 0.2",
+          j["region_fnr_pub"].idxmax() == ("night", 0.2, 0.1) and j["region_fnr_sq"].idxmax() == ("night", 0.2, 0.5),
           f"{j['region_fnr_pub'].idxmax()} -> {j['region_fnr_sq'].idxmax()}")
-    near(246, "the night cell moves from 0.113 to 0.125 under the disjoint scheme", 0.125,
+    near(246, "the night cell moves from 0.159 to 0.178 under the disjoint scheme", 0.178,
          float(j.loc[j["region_fnr_pub"].idxmax(), "region_fnr_sq"]), tol=5e-4)
     move = j["region_fnr_sq"] - j["region_fnr_pub"]
-    near(246, "largest single movement in region FNR", 0.055,
+    near(246, "largest single movement in region FNR", 0.036,
          float(move.max()), tol=5e-4)
-    truth(246, "the largest movement is on snow at alpha=0.2, rho=0.5",
-          move.idxmax() == ("snow", 0.20, 0.5), str(move.idxmax()))
+    near(246, "largest negative movement in region FNR", -0.038,
+         float(move.min()), tol=5e-4)
+    truth(246, "the largest movements are both on snow (a=0.2 rho=0.5 up, a=0.1 rho=0.1 down)",
+          move.idxmax() == ("snow", 0.20, 0.5) and move.idxmin() == ("snow", 0.10, 0.1),
+          f"{move.idxmax()} / {move.idxmin()}")
     area = j["marked_area_fraction_sq"] - j["marked_area_fraction_pub"]
-    truth(247, "marked area is smaller in fourteen of the eighteen cells",
-          int((area < 0).sum()) == 14, f"{int((area < 0).sum())} of {len(area)}")
-    truth(247, "the largest area reduction is at most 0.17",
-          float(-area.min()) <= 0.175,
+    truth(247, "marked area is smaller in fifteen of the eighteen cells",
+          int((area < 0).sum()) == 15, f"{int((area < 0).sum())} of {len(area)}")
+    truth(247, "the largest area reduction is 19 points (fog, a=0.1, rho=0.1)",
+          0.185 <= float(-area.min()) <= 0.195 and area.idxmin() == ("fog", 0.10, 0.1),
           f"largest reduction {float(-area.min()):.4f} at {area.idxmin()}")
 
     _seqdisjoint_frame_cost()
@@ -1319,7 +1444,7 @@ def _panel4_arms():
         return pd.concat(fs, ignore_index=True)
 
     # 961: sequence-disjoint tier A at the two larger budgets.
-    for n_t, want_sq, want_pub in ((50, 0.124, 0.134), (100, 0.120, 0.116)):
+    for n_t, want_sq, want_pub, n_over_sq, n_over_pub in ((50, 0.184, 0.191, 2, 2), (100, 0.187, 0.183, 3, 0)):
         sq = frame(f"x13_tierA{n_t}_seqdisjoint__*.csv")
         pub = frame(f"e3_tierA{n_t}__*segformer_b2_cityscapes.csv")
         if sq is None or pub is None:
@@ -1333,8 +1458,17 @@ def _panel4_arms():
                      .groupby(["cond", "alpha", "rho"]).mean())
         j = pd.concat([cells(pub).rename("pub"), cells(sq).rename("sq")], axis=1, join="inner")
         lev = j.index.get_level_values("alpha").values
-        truth(961, f"n_t={n_t}: no sequence-disjoint cell exceeds its level",
-              bool((j["sq"].values <= lev + 1e-12).all()), f"{len(j)} cells")
+        o_sq = j.index[j["sq"].values > lev + 1e-12]
+        o_pub = j.index[j["pub"].values > lev + 1e-12]
+        truth(961, f"n_t={n_t}: {n_over_sq} disjoint and {n_over_pub} published cells exceed "
+                   "their level, all at alpha=0.05",
+              len(o_sq) == n_over_sq and len(o_pub) == n_over_pub
+              and all(np.isclose(k[1], 0.05) for k in list(o_sq) + list(o_pub)),
+              f"{len(j)} cells; disjoint over {list(o_sq)}; published over {list(o_pub)}")
+        truth(961, f"n_t={n_t}: the largest cells are the night cells at alpha=0.2, rho=0.5",
+              j["sq"].idxmax() == ("night", 0.2, 0.5) and j["pub"].idxmax() in
+              (("night", 0.2, 0.5), ("fog", 0.2, 0.5)),
+              f"{j['sq'].idxmax()} / {j['pub'].idxmax()}")
         near(961, f"n_t={n_t}: largest sequence-disjoint cell", want_sq, float(j["sq"].max()), 5e-4)
         near(961, f"n_t={n_t}: largest published cell", want_pub, float(j["pub"].max()), 5e-4)
 
@@ -1362,12 +1496,15 @@ def _panel4_arms():
                   f"{int((d['lam'] < 1.0 - 1e-12).sum())} informative of {len(d)}")
         d2 = w[(w["arm"] == "dinov2_vitb14:2") & np.isclose(w["alpha"], 0.2)]
         inf2 = float((d2["lam"] < 1.0 - 1e-12).mean())
-        near(962, "kappa=2, alpha=0.2: about a third of the draws informative", 0.32, inf2, 0.02)
-        rng_claim(962, "kappa=2, alpha=0.2: marked area 68-72%", 0.68, 0.72,
-                  list(d2.groupby("rho")["marked_area_fraction"].mean().values), 0.01)
+        near(962, "kappa=2, alpha=0.2: two thirds of the draws informative", 0.667, inf2, 0.01)
+        rng_claim(962, "kappa=2, alpha=0.2: marked area 36-37%", 0.363, 0.369,
+                  list(d2.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
         r = x14[(x14["method"] == "region_crc") & np.isclose(x14["alpha"], 0.2)]
-        rng_claim(962, "unweighted region CRC on the same splits marks 2-3%", 0.02, 0.034,
-                  list(r.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
+        rng_claim(962, "unweighted region CRC on the same splits marks 2.0-2.3%", 0.0196, 0.0234,
+                  list(r.groupby("rho")["marked_area_fraction"].mean().values), 0.0005)
+        dc = w[w["arm"] == "clip_vitb16:20"]
+        near(962, "no-shift sum of source weights at kappa=20 with CLIP is about 16", 15.9,
+             float((k / dc["weight_p_test"] - k).mean()), 0.5)
 
     # 963: source CRC at the reduced level reproduces tier B.
     x15 = frame("x15_source_reduced__*.csv")
@@ -1390,13 +1527,14 @@ def _panel4_arms():
                 t_ = p3[(p3["cond"] == cond) & np.isclose(p3["ratio"], ratio)
                         & np.isclose(p3["alpha"], 0.2) & np.isclose(p3["rho"], 0.5)]["region_fnr"].mean()
                 gaps[(cond, ratio)] = float(s_ - t_)
-        close = [abs(v) for (c, r), v in gaps.items() if r in (4, 8, 10)]
-        truth(963, "source CRC at the reduced level is within 0.01 of tier B at ratios 4, 8, 10",
-              bool(close) and max(close) <= 0.01, str({k: round(v, 3) for k, v in gaps.items()}))
-        near(963, "and departs by about 0.03 at ratio 20", 0.03,
-             float(np.mean([abs(gaps[("fog", 20)]), abs(gaps[("night", 20)])])), 0.005)
-        near(963, "fog, ratio 8: 0.212 against 0.211", 0.212,
+        close = [abs(v) for (c, r), v in gaps.items()]
+        truth(963, "source CRC at the reduced level is within 0.011 of tier B at ratios 4, 8, 10 and 20",
+              bool(close) and max(close) <= 0.011, str({k: round(v, 3) for k, v in gaps.items()}))
+        near(963, "fog, ratio 8: 0.287 against 0.294", 0.287,
              float(x15[(x15["cond"] == "fog") & np.isclose(x15["alpha"], 0.1602)
+                       & np.isclose(x15["rho"], 0.5)]["region_fnr"].mean()), 0.001)
+        near(963, "fog, ratio 10: 0.274 against 0.281", 0.274,
+             float(x15[(x15["cond"] == "fog") & np.isclose(x15["alpha"], 0.1503)
                        & np.isclose(x15["rho"], 0.5)]["region_fnr"].mean()), 0.001)
 
     # 964: dilation CRC.
@@ -1411,9 +1549,17 @@ def _panel4_arms():
               bool((tight["lam"] >= 1.0 - 1e-12).all()),
               f"{int((tight['lam'] < 1.0 - 1e-12).sum())} interior radii of {len(tight)}")
         b5 = d[(d["model"] == "segformer_b5_cityscapes__dilation") & np.isclose(d["alpha"], 0.2)]
-        rng_claim(964, "SegFormer-B5 at alpha=0.2: radius about 70-75 px", 70.0, 75.0,
-                  list((b5.groupby("rho")["lam"].mean() * 100.0).values), 1.0)
-        rng_claim(964, "and 43-46% marked area", 0.43, 0.46,
+        # The radius is an index quantity (0.1 px per grid step on every grid),
+        # never lambda itself: on the log-tail grid lambda*100 is meaningless.
+        rng_claim(964, "SegFormer-B5 at alpha=0.2: mean radius 71-75 px counting the "
+                       "saturated draws at 100 px", 70.8, 74.8,
+                  list((b5.groupby("rho")["lam_index"].mean() / 10.0).values), 0.5)
+        interior = b5[b5["lam_index"] < LAM_MAX]
+        rng_claim(964, "an interior radius in 56-58% of the draws", 0.563, 0.58,
+                  list(b5.groupby("rho")["lam_index"].apply(lambda s: float((s < LAM_MAX).mean())).values), 0.005)
+        rng_claim(964, "of about 50-55 px", 49.6, 55.3,
+                  list((interior.groupby("rho")["lam_index"].mean() / 10.0).values), 0.5)
+        rng_claim(964, "and 44-46% marked area", 0.4434, 0.4621,
                   list(b5.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
         others = d[(d["model"] != "segformer_b5_cityscapes__dilation") & np.isclose(d["alpha"], 0.2)]
         truth(964, "the other three models need the whole image at alpha=0.2 as well",
@@ -1509,7 +1655,7 @@ def _marida_confidence_claims():
               for r in e["official_split_operating_points"]}[(0.20, 0.5)]
         near(251, "ensemble at alpha=0.2: any-High", 0.169,
              float(er["miss_rate_component_avg_any_high"]), tol=5e-4)
-        near(251, "ensemble at alpha=0.2: no-High", 0.247,
+        near(251, "ensemble at alpha=0.2: no-High", 0.234,
              float(er["miss_rate_component_avg_no_high"]), tol=5e-4)
     else:
         note(251, "the ensemble confidence run is missing",
@@ -1613,23 +1759,28 @@ def section_loveda():
     truth(177, "LoveDA in-domain validity holds on both domains at every level "
                "when the two classes are averaged (per class: see check 920)",
           bool((c.values <= lev + 1e-12).all()), str({k: round(v, 3) for k, v in c.items()}))
-    near(177, "tightest urban cell 0.199", 0.199,
+    near(177, "tightest urban cell 0.200", 0.200,
          mean(sel(r, experiment="l1_indist__urban", alpha=0.20)))
-    near(177, "tightest rural cell 0.195", 0.195,
+    near(177, "tightest rural cell 0.196", 0.196,
          mean(sel(r, experiment="l1_indist__rural", alpha=0.20)))
-    near(178, "LoveDA urban pixel CRC region FNR 0.219", 0.219,
+    near(178, "LoveDA urban pixel CRC region FNR 0.220", 0.220,
          mean(sel(i, method="pixel_crc", experiment="l1_indist__urban",
                   alpha=0.20, rho=0.5)))
 
     u2r = cellmean(sel(b, method="region_crc", experiment="l2_break__urban2rural",
                        rho=0.5), ["alpha"])
     ratios = [u2r[a_] / a_ for a_ in ALPHAS if a_ in u2r.index]
-    rng_claim(180, "urban->rural violates by 2.5-3.0x", 2.46, 3.04, ratios, 0.01)
+    rng_claim(180, "urban->rural violates by 2.3-3.5x", 2.46, 3.47, ratios, 0.01)
+    u2r1 = cellmean(sel(b, method="region_crc", experiment="l2_break__urban2rural",
+                        rho=0.1), ["alpha"])
+    rng_claim(180, "urban->rural at rho=0.1 violates by 2.3-3.2x", 2.348, 3.183,
+              [u2r1[a_] / a_ for a_ in ALPHAS], 0.01)
     r2u = cellmean(sel(b, method="region_crc", experiment="l2_break__rural2urban",
                        rho=0.5), ["alpha"])
-    truth(181, "rural->urban stays within the level when the two classes are "
-               "averaged (rho=0.5)",
-          bool(all(r2u[a_] <= a_ + 1e-12 for a_ in ALPHAS if a_ in r2u.index)),
+    truth(181, "rural->urban stays within the level at alpha>=0.1 when the two classes "
+               "are averaged (rho=0.5) and exceeds it by 1.2x at alpha=0.05",
+          r2u[0.1] <= 0.1 + 1e-12 and r2u[0.2] <= 0.2 + 1e-12
+          and 1.2 <= r2u[0.05] / 0.05 <= 1.25,
           str({k: round(v, 3) for k, v in r2u.items()}))
     # Per class the same direction is not intact (third panel, M6): the text
     # now says four of twelve cells, all water, worst 1.27x at a=0.1, rho=0.1.
@@ -1639,14 +1790,19 @@ def section_loveda():
     pcells = pc.groupby(["class_name", "alpha", "rho"])["region_fnr"].mean()
     pratio = pcells / pcells.index.get_level_values("alpha")
     pover = pratio[pratio > 1 + 1e-9]
-    truth(181, "per class, rural->urban exceeds its level in four of the twelve "
+    truth(181, "per class, rural->urban exceeds its level in six of the twelve "
                "cells, all of them water",
-          len(pcells) == 12 and len(pover) == 4
+          len(pcells) == 12 and len(pover) == 6
           and all(k[0] == "water" for k in pover.index),
           f"{len(pover)} of {len(pcells)}: " + str([(k[0], k[1], k[2], round(v, 3)) for k, v in pover.items()]))
-    near(181, "the worst rural->urban class cell is 1.27x", 1.269, float(pratio.max()), 0.005)
-    truth(181, "and it sits at alpha=0.1, rho=0.1",
-          tuple(pratio.idxmax()[1:]) == (0.1, 0.1), str(pratio.idxmax()))
+    near(181, "the worst rural->urban class cell is 1.58x", 1.583, float(pratio.max()), 0.005)
+    truth(181, "and it sits at alpha=0.05, rho=0.1",
+          tuple(pratio.idxmax()[1:]) == (0.05, 0.1), str(pratio.idxmax()))
+    pu = sel(b, method="region_crc", experiment="l2_break__urban2rural")
+    pu = pu[pu.feasible.astype(bool)] if "feasible" in pu.columns else pu
+    pucells = pu.groupby(["class_name", "alpha", "rho"])["region_fnr"].mean()
+    near(181, "urban->rural water reaches 0.223 against 0.05 (rho=0.5)", 0.223,
+         float(pucells[("water", 0.05, 0.5)]), 0.001)
 
     try:
         t = load("l3_tierA*")
@@ -1654,7 +1810,7 @@ def section_loveda():
         tr = sel(t, method="region_crc", rho=0.5)
         ar = list(cellmean(sel(tr, alpha=0.20), ["n_target", "experiment"],
                            "marked_area_fraction").values)
-        rng_claim(183, "LoveDA tier-A area 21-39% at alpha=0.2", 0.211, 0.391, ar, 0.006)
+        rng_claim(183, "LoveDA tier-A area 20-24% at alpha=0.2", 0.1986, 0.2352, ar, 0.006)
         cc = cellmean(tr, ["n_target", "experiment", "class_name", "alpha"])
         lv = cc.index.get_level_values("alpha").values
         truth(183, "LoveDA tier A restores the guarantee in every feasible cell",
@@ -1769,16 +1925,16 @@ def section_marida():
     # carries both a single member and the ensemble.
     tab = {
         "h1_official__marida_unet_official_holdout": [0.066, 0.095, 0.200],
-        "h1_official__marida_unet_official_holdout_ens5": [0.069, 0.098, 0.265],
+        "h1_official__marida_unet_official_holdout_ens5": [0.069, 0.098, 0.250],
         "h2_region__16PCC__marida_unet_holdout_region_16PCC": [0.000, 0.027, 0.094],
         "h2_region__16PDC__marida_unet_holdout_region_16PDC": [0.009, 0.027, 0.142],
         "h2_region__16PEC__marida_unet_holdout_region_16PEC": [0.000, 0.159, 0.333],
-        "h2_region__18QYF__marida_unet_holdout_region_18QYF": [0.001, 0.096, 0.267],
+        "h2_region__18QYF__marida_unet_holdout_region_18QYF": [0.001, 0.096, 0.265],
         "h2_region__48PZC__marida_unet_holdout_region_48PZC": [0.000, 0.250, 0.375],
         "h3_season__winter__marida_unet_holdout_season_winter": [0.030, 0.041, 0.108],
-        "h3_season__spring__marida_unet_holdout_season_spring": [0.217, 0.357, 0.430],
+        "h3_season__spring__marida_unet_holdout_season_spring": [0.217, 0.346, 0.430],
         "h3_season__summer__marida_unet_holdout_season_summer": [0.000, 0.005, 0.044],
-        "h3_season__autumn__marida_unet_holdout_season_autumn": [0.000, 0.002, 0.054],
+        "h3_season__autumn__marida_unet_holdout_season_autumn": [0.001, 0.002, 0.052],
     }
     for exp, vals in tab.items():
         for al, v in zip(ALPHAS, vals):
@@ -1819,7 +1975,7 @@ def section_marida():
           "")
 
     spring = "h3_season__spring__marida_unet_holdout_season_spring"
-    for al, ratio, lo in zip(ALPHAS, [4.35, 3.57, 2.15], [0.063, 0.165, 0.231]):
+    for al, ratio, lo in zip(ALPHAS, [4.35, 3.46, 2.15], [0.063, 0.148, 0.231]):
         near(196, f"spring exceeds the level by {ratio}x at a={al}", ratio,
              mean(sel(rm, experiment=spring, alpha=al)) / al, 0.02)
         near(196, f"spring interval lower end at a={al}", lo,
@@ -1973,9 +2129,9 @@ def section_triage():
         beta = a.index.values
         curves[name] = (a, R0, (a.values - (1 - beta) * R0) / R0, beta)
 
-    quoted = {"official": (0.075, 0.036, 51.5), "region_16PCC": (0.025, 0.006, 77),
+    quoted = {"official": (0.070, 0.036, 48.6), "region_16PCC": (0.025, 0.006, 77),
               "region_16PDC": (0.029, 0.021, 29), "region_16PEC": (0.053, 0.021, 61),
-              "season_spring": (0.148, 0.060, 60), "night_tierA50": (0.036, 0.022, 38)}
+              "season_spring": (0.148, 0.060, 60), "night_tierA50": (0.059, 0.038, 34.5)}
     for name, (r0, r50, pct) in quoted.items():
         if name not in curves:
             note(220, f"{name}: triage curve missing"); continue
@@ -1986,7 +2142,7 @@ def section_triage():
              100 * (1 - float(a.loc[0.5]) / R0), 0.5)
 
     # the budget at which the score first drops below the exact random floor
-    first_below = {"official": 0.50, "region_16PCC": 0.10, "region_16PEC": 0.25,
+    first_below = {"official": 0.05, "region_16PCC": 0.10, "region_16PEC": 0.25,
                    "season_spring": 0.35}
     for name, want in first_below.items():
         if name not in curves:
@@ -2005,7 +2161,7 @@ def section_triage():
         truth(222, f"{name}: score stays above the floor at every budget",
               all(g > 1e-12 for g in pos), f"min gap {min(pos):+.3f}")
 
-    for name, want in (("region_16PDC", 0.21), ("official", -0.015)):
+    for name, want in (("region_16PDC", 0.21), ("official", 0.014)):
         if name not in curves:
             continue
         _, _, gap, _ = curves[name]
@@ -2049,8 +2205,8 @@ def _permutation_band_claims():
 
     n, below, above = len(w), int(w["below_band"].sum()), int(w["above"].sum())
     inside = n - below - above
-    truth(230, "80 comparisons: 9 below the band, 18 above, 53 inside",
-          (n, below, above, inside) == (80, 9, 18, 53),
+    truth(230, "80 comparisons: 12 below the band, 21 above, 47 inside",
+          (n, below, above, inside) == (80, 12, 21, 47),
           f"{n} comparisons, {below} below, {above} above, {inside} inside")
     truth(230, "1000 permutations per setting",
           set(band["n_permutations"].unique()) == {1000},
@@ -2060,28 +2216,38 @@ def _permutation_band_claims():
 
     # Every above-band outcome is in the one replicated setting.
     ab = sorted(w.loc[w["above"], "setting"].unique())
-    truth(231, "every above-band outcome arises in the replicated night setting",
-          ab == ["night_tierA50"], f"above-band settings: {ab}")
+    off_ab = w[(w["setting"] == "official") & w["above"]]
+    truth(231, "20 of the 21 above-band outcomes arise in the replicated night setting; "
+               "the other is the official split at beta=0.25",
+          ab == ["night_tierA50", "official"] and len(off_ab) == 1
+          and np.isclose(float(off_ab["budget"].iloc[0]), 0.25),
+          f"above-band settings: {ab}; official above at {off_ab['budget'].tolist()}")
     ni = w[w["setting"] == "night_tierA50"]
-    truth(231, "night, tier A: above the band in 18 of its 30 comparisons",
-          (int(ni["above"].sum()), len(ni)) == (18, 30),
+    truth(231, "night, tier A: above the band in 20 of its 30 comparisons",
+          (int(ni["above"].sum()), len(ni)) == (20, 30),
           f"{int(ni['above'].sum())} of {len(ni)}")
+    nic = ni.groupby("class_name").agg(above=("above", "sum"), below=("below_band", "sum"))
+    truth(231, "night: person and rider above the band at every budget, bicycle below at five",
+          int(nic.loc["person", "above"]) == 10 and int(nic.loc["rider", "above"]) == 10
+          and int(nic.loc["bicycle", "above"]) == 0 and int(nic.loc["bicycle", "below"]) == 5,
+          str(nic.to_dict()))
 
     # The five single-partition settings, and 16PCC as the single exception.
     per = w.groupby("setting")["below_band"].sum()
     never = sorted(per[per == 0].index)
-    truth(231, "the score never leaves the band in four of the five single "
-               "MARIDA partitions",
+    truth(231, "the score never falls below the band in four of the five single "
+               "MARIDA partitions and never leaves it in three",
           set(never) == {"official", "region_16PDC", "region_16PEC",
-                         "season_spring"},
+                         "season_spring"}
+          and set(w[w["setting"].isin(never) & w["above"]]["setting"]) == {"official"},
           f"never below: {never}")
     pcc_all = w[w["setting"] == "region_16PCC"]
     pcc = pcc_all[pcc_all["below_band"].astype(bool)]
     below_at = sorted(round(float(b), 2) for b in pcc["budget"])
     truth(231, "16PCC falls below the band at seven of its ten budgets, "
-               "0.1-0.2 and 0.35-0.5, with 0.25 and 0.3 back inside",
+               "0.1, 0.2 and 0.3-0.5, with 0.15 and 0.25 inside",
           len(pcc_all) == 10
-          and below_at == [0.1, 0.15, 0.2, 0.35, 0.4, 0.45, 0.5],
+          and below_at == [0.1, 0.2, 0.3, 0.35, 0.4, 0.45, 0.5],
           f"{len(pcc)} of {len(pcc_all)} budgets below, at {below_at}")
 
     # The two quoted bands at beta = 0.5.
@@ -2091,31 +2257,26 @@ def _permutation_band_claims():
                 float(g["q50_rel"].mean()), float(g["q95_rel"].mean()))
 
     a, lo, med, hi = cell("official")
-    near(232, "official at beta=0.5: score", 0.49, a, tol=5e-3)
-    near(232, "official at beta=0.5: band lower end", 0.37, lo, tol=5e-3)
-    near(232, "official at beta=0.5: band upper end", 0.64, hi, tol=5e-3)
+    near(232, "official at beta=0.5: score", 0.514, a, tol=5e-3)
+    near(232, "official at beta=0.5: band lower end", 0.36, lo, tol=5e-3)
+    near(232, "official at beta=0.5: band upper end", 0.65, hi, tol=5e-3)
     near(232, "official at beta=0.5: band median", 0.51, med, tol=5e-3)
-    # The width of the official band against the margin the score shows,
-    # which is what "cannot resolve an effect of the size at issue" means.
-    near(232, "the official band is 0.27 wide", 0.27, hi - lo, tol=5e-3)
+    # The width of the official band against the margin by which the score
+    # misses the closed-form line, which is what "cannot resolve an effect of
+    # the size at issue" means.
+    near(232, "the official band is 0.28 wide", 0.28, hi - lo, tol=5e-3)
     closed = 0.50
-    near(232, "the score improves on the closed-form line by 0.015",
-         0.015, closed - a, tol=5e-4)
-    # The margin has to be positive for the ratio to mean anything: if the
-    # score were worse than the closed-form line, closed - a would go negative
-    # and any positive width would clear the comparison for free.
-    margin = closed - a
+    near(232, "the score misses the closed-form line by 0.014 (worse than random)",
+         0.014, a - closed, tol=5e-4)
+    margin = abs(a - closed)
     truth(232, "the official band is more than ten times that margin",
           margin > 0 and (hi - lo) > 10 * margin,
-          f"width {hi - lo:.3f} against margin {margin:.4f}"
-          + (f", a factor of {(hi - lo) / margin:.1f}" if margin > 0
-             else " -- the score does not improve on the closed-form line, "
-                  "so the sentence this checks no longer applies"))
+          f"width {hi - lo:.3f} against margin {margin:.4f}, a factor of {(hi - lo) / margin:.1f}")
 
     a, lo, med, hi = cell("night_tierA50")
-    near(232, "night at beta=0.5: score", 0.63, a, tol=5e-3)
-    near(232, "night at beta=0.5: band lower end", 0.46, lo, tol=5e-3)
-    near(232, "night at beta=0.5: band upper end", 0.54, hi, tol=5e-3)
+    near(232, "night at beta=0.5: score", 0.65, a, tol=5e-3)
+    near(232, "night at beta=0.5: band lower end", 0.485, lo, tol=5e-3)
+    near(232, "night at beta=0.5: band upper end", 0.515, hi, tol=5e-3)
     truth(232, "the night band is narrower than the official one",
           (cell("night_tierA50")[3] - cell("night_tierA50")[1])
           < (cell("official")[3] - cell("official")[1]),
@@ -2144,10 +2305,10 @@ def section_cross():
     for k, c in parts.items():
         lev = c.index.get_level_values("alpha").values
         worst[k] = float((c.values / lev).max())
-    truth("X1", "worst violation ratio per axis: "
-                "2.0x weather, 3.0x geographic, 4.3x seasonal",
-          abs(worst.get("ACDC", 0) - 2.03) < 0.01
-          and abs(worst.get("LoveDA", 0) - 3.04) < 0.01
+    truth("X1", "worst violation ratio per axis (class-averaged): "
+                "2.7x weather, 3.5x geographic, 4.3x seasonal",
+          abs(worst.get("ACDC", 0) - 2.74) < 0.01
+          and abs(worst.get("LoveDA", 0) - 3.47) < 0.01
           and 4.3 <= worst.get("MARIDA", 0) <= 4.4,
           "worst ratio per axis: " + str({k: round(v, 2) for k, v in worst.items()}))
 
@@ -2301,10 +2462,14 @@ def section_revision():
             parts = [c.strip() for c in line.split("&")]
             if len(parts) == 6 and parts[0].startswith("SegFormer"):
                 deltas.append(float(parts[4]))
-        near(70, "region CRC leads by at most 0.043 on the released grid",
-             0.043, max(deltas), 0.0005)
-        near(70, "region CRC trails by at most 0.024 on the released grid",
-             -0.024, min(deltas), 0.0005)
+        near(70, "region CRC leads by at most 0.006 on the released grid",
+             0.006, max(deltas), 0.0005)
+        near(70, "region CRC trails by at most 0.011 on the released grid",
+             -0.011, min(deltas), 0.0005)
+        truth(70, "region CRC is the lower of the two at four of the six matched areas per model",
+              len(deltas) == 12 and sum(d_ > 0 for d_ in deltas[:6]) == 4
+              and sum(d_ > 0 for d_ in deltas[6:]) == 4,
+              f"positive deltas: B2 {sum(d_ > 0 for d_ in deltas[:6])}, B5 {sum(d_ > 0 for d_ in deltas[6:])}")
 
     # The prose compares the two frontiers at every matched area, not only at
     # the six tabulated points, so the dense interpolation is checked too.
@@ -2314,8 +2479,8 @@ def section_revision():
         note(70, "dense-alpha pareto runs missing", "skipped")
         dense = None
     if dense is not None:
-        want = {"segformer_b2_cityscapes": (0.044, -0.016),
-                "segformer_b5_cityscapes": (0.064, -0.025)}
+        want = {"segformer_b2_cityscapes": (0.0082, -0.0060),
+                "segformer_b5_cityscapes": (0.0077, -0.0106)}
         for model, (lead, trail) in want.items():
             sub = dense[(dense["model"] == model) & np.isclose(dense["rho"], 0.5)]
             cur = {}
@@ -2354,7 +2519,7 @@ def section_revision():
     truth(178, "the only class-AVERAGED LoveDA in-domain cell above its level "
                "is urban at "
                "rho=0.1, alpha=0.2",
-          len(over) == 1 and abs(over[0][1] - 0.2006) < 5e-4, str(over))
+          len(over) == 1 and abs(over[0][1] - 0.2003) < 5e-4, str(over))
 
     # LoveDA tier A: infeasibility is not negligible at the tight level.
     lv = sel(load("l3_tierA*"), method="region_crc", rho=0.5)
@@ -2379,7 +2544,7 @@ def section_revision():
     # image-averaged one; the two aggregations must both reproduce.
     mar_all = sel(load("h[123]_*"), method="region_crc", rho=0.5)
     spring = mar_all[mar_all["experiment"].str.contains("spring")]
-    for alpha, want in [(0.05, 0.155), (0.10, 0.250), (0.20, 0.300)]:
+    for alpha, want in [(0.05, 0.155), (0.10, 0.245), (0.20, 0.300)]:
         cell = spring[np.isclose(spring["alpha"], alpha)]
         pooled = (float(cell["n_missed_components"].iloc[0])
                   / float(cell["n_test_components"].iloc[0]))
@@ -2448,17 +2613,16 @@ def section_revision():
               bad == 0, f"{bad} violations in {len(uni)} draws")
         good = uni[uni["union_area"] <= 0.99]
         per = good.groupby("model")[["class_mean_area", "union_area"]].mean()
-        rng_claim(98, "measured union covers 3.4-5.0% of the image",
-                  0.0341, 0.0495, list(per["union_area"]), tol=0.0005)
-        rng_claim(98, "class mean on the same draws is 1.4-2.5%",
-                  0.0140, 0.0246, list(per["class_mean_area"]), tol=0.0005)
+        rng_claim(98, "measured union covers 3.4-4.9% of the image",
+                  0.0339, 0.0488, list(per["union_area"]), tol=0.0005)
+        rng_claim(98, "class mean on the same draws is 1.4-2.4%",
+                  0.0138, 0.0239, list(per["class_mean_area"]), tol=0.0005)
         ratios = list(per["union_area"] / per["class_mean_area"])
         rng_claim(98, "the union is 2.0-2.5 times the class mean",
-                  2.01, 2.45, ratios, tol=0.01)
+                  2.04, 2.46, ratios, tol=0.01)
         n_degen = int((uni["union_area"] > 0.99).sum())
-        truth(98, "none to three degenerate draws per model",
-              0 <= n_degen <= 3 * uni["model"].nunique(),
-              f"{n_degen} across {uni['model'].nunique()} models")
+        truth(98, "no degenerate draw on the log-tail grid",
+              n_degen == 0, f"{n_degen} across {uni['model'].nunique()} models")
 
     # Section IV-A: a tile becomes a hold-out scheme only at >= 50 patches.
     meta_path = paths_root() / "splits" / "marida_meta.csv"
@@ -2477,12 +2641,12 @@ def section_revision():
     except FileNotFoundError:
         note(199, "MARIDA in-distribution control missing", "run p5")
         return
-    quoted = {("marida_unet_official_holdout", 0.05): 0.047,
+    quoted = {("marida_unet_official_holdout", 0.05): 0.048,
               ("marida_unet_official_holdout", 0.10): 0.097,
-              ("marida_unet_official_holdout", 0.20): 0.202,
-              ("marida_unet_official_holdout_ens5", 0.05): 0.049,
-              ("marida_unet_official_holdout_ens5", 0.10): 0.098,
-              ("marida_unet_official_holdout_ens5", 0.20): 0.199}
+              ("marida_unet_official_holdout", 0.20): 0.201,
+              ("marida_unet_official_holdout_ens5", 0.05): 0.048,
+              ("marida_unet_official_holdout_ens5", 0.10): 0.097,
+              ("marida_unet_official_holdout_ens5", 0.20): 0.198}
     for (model, alpha), want in quoted.items():
         cell = ctrl[(ctrl.model == model) & np.isclose(ctrl.alpha, alpha)]
         near(199, f"positive control {model} at alpha={alpha}", want,
@@ -2510,18 +2674,20 @@ def section_review():
     spread = g.agg(["std", "size"]).reset_index()
     cells = cells.merge(spread, on=["model", "class_name", "alpha", "rho"])
     over = cells[cells.region_fnr > cells.alpha]
-    truth(920, "three of the 24 LoveDA in-domain per-class cells exceed the "
-               "level", len(cells) == 24 and len(over) == 3,
+    truth(920, "seven of the 24 LoveDA in-domain per-class cells exceed the "
+               "level", len(cells) == 24 and len(over) == 7,
           f"{len(over)} of {len(cells)}")
-    truth(921, "every LoveDA exceedance is water at alpha=0.2",
-          bool((over.class_name == "water").all()
-               and np.allclose(over.alpha, 0.2)),
-          str(sorted(zip(over.class_name, over.alpha))))
+    truth(921, "every LoveDA exceedance is water: four urban (a=0.1 and 0.2 at both rho) "
+               "and three rural",
+          bool((over.class_name == "water").all())
+          and int(over.model.str.endswith("urban").sum()) == 4
+          and int(over.model.str.endswith("rural").sum()) == 3,
+          str(sorted(zip(over.model.str[-5:], over.alpha, over.rho))))
     near(922, "the largest LoveDA in-domain exceedance is 0.003",
          0.003, float((over.region_fnr - over.alpha).max()), 0.0005)
     hi = over.region_fnr + 1.96 * over["std"] / np.sqrt(over["size"])
     lo = over.region_fnr - 1.96 * over["std"] / np.sqrt(over["size"])
-    truth(923, "the level is inside the draw interval for all three",
+    truth(923, "the level is inside the draw interval for all seven",
           bool(((lo <= over.alpha) & (over.alpha <= hi)).all()),
           f"lower ends {sorted(lo.round(4))}")
     truth(924, "one of the three sits at rho=0.5, so the in-domain claim is "
@@ -2581,9 +2747,9 @@ def section_review():
         ratios_sum.append(float(keep.union_area.mean()
                                 / per.sum(axis=1).mean()))
     rng_claim(933, "the union is 2.0-2.5x the class mean",
-              2.01, 2.45, ratios_mean, 0.01)
-    rng_claim(934, "the union is 67-82% of the sum of the three masks",
-              0.669, 0.816, ratios_sum, 0.005)
+              2.04, 2.46, ratios_mean, 0.01)
+    rng_claim(934, "the union is 68-82% of the sum of the three masks",
+              0.680, 0.820, ratios_sum, 0.005)
 
     # Section IV-B now prints the union with the degenerate draws kept as well
     # as removed: they are the most expensive operating points, not invalid
@@ -2602,19 +2768,21 @@ def section_review():
     # twenty points, which the matrix does not support.
     e1_ = sel(load("e1_indist__*"), method="region_crc")
     e1_ = e1_[e1_["feasible"].astype(bool)]
-    near(942, "the lowest selected grid index over all models is 881",
-         881, float(e1_["lam_index"].min()), 0.5)
+    near(942, "the lowest selected grid index over all models is 155 (B5)",
+         155, float(e1_["lam_index"].min()), 0.5)
     m2f_ = e1_[e1_["model"] == "mask2former_swinb_cityscapes"]
-    near(942, "Mask2Former selects within the top four grid points",
-         997, float(m2f_["lam_index"].min()), 0.5)
+    truth(942, "Mask2Former selects grid indices 410-981 (cutoffs 1.3e-6 to 3.5e-3)",
+          int(m2f_["lam_index"].min()) == 410 and int(m2f_["lam_index"].max()) == 981,
+          f"[{int(m2f_['lam_index'].min())}, {int(m2f_['lam_index'].max())}]")
 
     # Section V-C: the degenerate-draw fraction with and without Mask2Former,
     # and the argmax night range separated by capture level.
     e2_ = sel(load("e2_break__*"), method="region_crc", rho=0.5)
-    near(942, "46.8% of the SegFormer draws are degenerate", 0.468,
-         float((e2_[e2_["model"].isin(SEGF)]["lam_index"] == LAM_MAX).mean()), 0.002)
-    near(942, "60.1% once Mask2Former is included", 0.601,
-         float((e2_["lam_index"] == LAM_MAX).mean()), 0.002)
+    truth(942, "four SegFormer draws under shift are degenerate, and no Mask2Former draw",
+          int((e2_[e2_["model"].isin(SEGF)]["lam_index"] == LAM_MAX).sum()) == 4
+          and int((e2_["lam_index"] == LAM_MAX).sum()) == 4,
+          f"{int((e2_[e2_['model'].isin(SEGF)]['lam_index'] == LAM_MAX).sum())} SegFormer, "
+          f"{int((e2_['lam_index'] == LAM_MAX).sum())} in all of {len(e2_)}")
     an_ = sel(load("e2_break__*"), method="argmax", alpha=0.20)
     an_ = an_[an_["experiment"].str.contains("__night__")]
     for rho_, lo_, hi_ in ((0.5, 0.757, 0.835), (0.1, 0.679, 0.759)):
@@ -2627,13 +2795,13 @@ def section_review():
     st = sel(load("e1_indist__*"), method="region_crc", alpha=0.20, rho=0.5)
     st = st[st["feasible"].astype(bool)]
     b2 = st[st["model"] == "segformer_b2_cityscapes"]
-    near(943, "B2 smallest-stratum FNR is 0.24", 0.24,
+    near(943, "B2 smallest-stratum FNR is 0.26", 0.26,
          float(b2["fnr_stratum0"].mean()), 0.005)
     near(943, "B2 largest-stratum FNR is 0.02", 0.02,
          float(b2["fnr_stratum2"].mean()), 0.005)
     sg = st[st["model"].isin(SEGF)]
-    near(943, "the three SegFormer variants average 0.25 in the smallest stratum",
-         0.25, float(sg.groupby("model")["fnr_stratum0"].mean().mean()), 0.005)
+    near(943, "the three SegFormer variants average 0.27 in the smallest stratum",
+         0.27, float(sg.groupby("model")["fnr_stratum0"].mean().mean()), 0.005)
     near(943, "and 0.016 in the largest", 0.016,
          float(sg.groupby("model")["fnr_stratum2"].mean().mean()), 0.002)
 
@@ -2643,35 +2811,40 @@ def section_review():
     br = br[br["feasible"].astype(bool)]
     cc_ = br.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
     ratio_acdc = float((cc_ / cc_.index.get_level_values("alpha")).max())
-    near(944, "the worst ACDC per-class violation is 2.73x at rho=0.5", 2.73, ratio_acdc, 0.01)
+    near(944, "the worst ACDC per-class violation is 4.23x at rho=0.5 (the abstract's 4.2x)", 4.23, ratio_acdc, 0.01)
+    truth(944, "the rho=0.5 worst cell is MC-dropout, rider, fog, alpha=0.05",
+          (cc_ / cc_.index.get_level_values("alpha")).idxmax() ==
+          ("segformer_b2_cityscapes_mcdrop8", "e2_break__fog__segformer_b2_cityscapes_mcdrop8", "rider", 0.05),
+          str((cc_ / cc_.index.get_level_values("alpha")).idxmax()))
+    near(944, "its value is 0.211", 0.211, float(cc_[(cc_ / cc_.index.get_level_values("alpha")).idxmax()]), 0.001)
     # The abstract quotes the larger of the two capture levels (fourth panel,
     # A1): at rho=0.1 the worst class cell is B5, bicycle, night, alpha=0.1.
     br1 = sel(load("e2_break__*"), method="region_crc", rho=0.1)
     br1 = br1[br1["feasible"].astype(bool)]
     cc1 = br1.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
     ratio_acdc1 = float((cc1 / cc1.index.get_level_values("alpha")).max())
-    near(944, "the worst ACDC per-class violation is 2.90x at rho=0.1 (the abstract's 2.9x)",
-         2.90, ratio_acdc1, 0.01)
-    truth(944, "the rho=0.1 worst cell is B5, bicycle, night, alpha=0.1",
-          (cc1 / cc1.index.get_level_values("alpha")).idxmax()[1:] == ("e2_break__night__segformer_b5_cityscapes", "bicycle", 0.1)
-          or str((cc1 / cc1.index.get_level_values("alpha")).idxmax()).find("night") >= 0,
+    near(944, "the worst ACDC per-class violation is 3.88x at rho=0.1",
+         3.88, ratio_acdc1, 0.01)
+    truth(944, "the rho=0.1 worst cell is the same one: MC-dropout, rider, fog, alpha=0.05",
+          (cc1 / cc1.index.get_level_values("alpha")).idxmax() ==
+          ("segformer_b2_cityscapes_mcdrop8", "e2_break__fog__segformer_b2_cityscapes_mcdrop8", "rider", 0.05),
           str((cc1 / cc1.index.get_level_values("alpha")).idxmax()))
     lo_ = sel(load("l2_break__*"), method="region_crc", rho=0.5)
     lo_ = lo_[lo_["feasible"].astype(bool)]
     cl_ = lo_.groupby(["experiment", "class_name", "alpha"])["region_fnr"].mean()
     ratio_love = float((cl_ / cl_.index.get_level_values("alpha")).max())
-    near(944, "the worst LoveDA per-class violation is 3.66x", 3.66, ratio_love, 0.01)
-    truth(944, "both exceed the class-averaged figures the earlier text quoted",
-          ratio_acdc > 2.03 and ratio_love > 3.04,
+    near(944, "the worst LoveDA per-class violation is 4.46x (the conclusion's 4.5x)", 4.46, ratio_love, 0.01)
+    truth(944, "both exceed the class-averaged figures the conclusion quotes (2.7x / 3.5x)",
+          ratio_acdc > 2.74 and ratio_love > 3.47,
           f"per-class {ratio_acdc:.2f}/{ratio_love:.2f} against "
-          "class-averaged 2.03/3.04")
+          "class-averaged 2.74/3.47")
 
-    rng_claim(941, "the union over non-degenerate draws is 3.4-5.0% at a=0.2",
-              0.034, 0.050, cond, 0.0006)
-    rng_claim(941, "the union over all draws is 5.0-15.0% at a=0.2",
-              0.0495, 0.150, allw, 0.0006)
-    truth(941, "none to three draws per model are degenerate",
-          min(degen) == 0 and max(degen) == 3, f"degenerate counts {sorted(degen)}")
+    rng_claim(941, "the union over non-degenerate draws is 3.4-4.9% at a=0.2",
+              0.0339, 0.0488, cond, 0.0006)
+    rng_claim(941, "the union over all draws is the same (no degenerate draw)",
+              0.0339, 0.0488, allw, 0.0006)
+    truth(941, "no draw is degenerate on the log-tail grid",
+          max(degen) == 0, f"degenerate counts {sorted(degen)}")
 
     # Section V-E: the class-conditional target pool does not lift the collapse.
     pool_paths = sorted(glob.glob(str(exp_dir / "x8_tierb_pool__*.csv")))
@@ -2806,12 +2979,76 @@ def section_capture_rule():
           not bare, ", ".join(bare) if bare else "all comparisons go through capture_threshold")
 
 
+
+
+def section_loggrid():
+    """The 2026-09-08 grid change: every quantity the text derives from the
+    threshold grid itself, plus the abstract's headline numbers."""
+    head("Z  Threshold grid and headline numbers (log-tail grid, 2026-09-09)")
+    from record.grid import GRID_KIND, N_POINTS
+    k = np.arange(N_POINTS)
+    want = 1.0 - 10.0 ** (-6.0 * k / (N_POINTS - 1)); want[-1] = 1.0
+    truth(970, "the default grid is the log-tail grid of Section IV-A",
+          GRID_KIND == "logtail", f"GRID_KIND={GRID_KIND}")
+    truth(970, "lambda_k = 1 - 10^(-6k/1000) for k < 1000 and lambda_1000 = 1",
+          N_POINTS == 1001 and bool(np.allclose(LAMBDA_GRID, want, atol=0, rtol=1e-12))
+          and LAMBDA_GRID[-1] == 1.0,
+          f"{N_POINTS} points, max abs deviation {float(np.abs(LAMBDA_GRID - want).max()):.2e}")
+    truth(970, "the smallest nonzero cutoff is 1e-6 and the coarsest step is below 0.014",
+          abs((1 - LAMBDA_GRID[-2]) - 1e-6 * 10 ** (6 / 1000)) < 1e-9
+          and float(np.diff(LAMBDA_GRID).max()) < 0.014,
+          f"1-lambda_999 = {1 - LAMBDA_GRID[-2]:.3e}, max step {float(np.diff(LAMBDA_GRID).max()):.4f}")
+    tex = results_dir("tables") / "tier_a.tex"
+    if tex.exists():
+        t = tex.read_text()
+        truth(971, "Table VI is over all four models again (no 'SegFormer variants' in its caption) "
+                   "and its n_t=25, alpha=0.05 cell rests on 16 draws",
+              "SegFormer variants" not in t and "(16)" in t, "")
+    e1 = sel(load("e1_indist__*"), method="region_crc")
+    near(972, "abstract: Mask2Former marks 5.3% at alpha=0.2", 0.0535,
+         mean(sel(e1, model="mask2former_swinb_cityscapes", alpha=0.20, rho=0.5),
+              "marked_area_fraction"), 5e-4)
+    mc_b2 = [abs(mean(sel(e1, model="segformer_b2_cityscapes_mcdrop8", alpha=a, rho=0.5), "marked_area_fraction")
+                 - mean(sel(e1, model="segformer_b2_cityscapes", alpha=a, rho=0.5), "marked_area_fraction"))
+             for a in ALPHAS]
+    truth(972, "MC-dropout and B2 cost the same area to within a tenth of a point at every level",
+          max(mc_b2) <= 0.001, str([round(x, 4) for x in mc_b2]))
+    e2 = sel(load("e2_break__*"), method="region_crc", rho=0.5)
+    cells = cellmean(e2, ["model", "experiment", "alpha"])
+    n_viol = {a: int((cells.xs(a, level="alpha").values > a).sum()) for a in ALPHAS}
+    truth(973, "14 of the 16 model-condition cells violate at alpha=0.2 and 0.1, 13 at 0.05",
+          n_viol == {0.05: 13, 0.10: 14, 0.20: 14}, str(n_viol))
+    # The uniform-grid figures the text quotes for comparison come from the last
+    # uniform-grid table in the git history (commit 8e43d21).
+    import subprocess
+    try:
+        old = subprocess.run(["git", "-C", str(paths_root()), "show",
+                              "8e43d21:results/tables/validity_cityscapes.tex"],
+                             capture_output=True, text=True, check=True).stdout
+        vals = {}
+        for line in old.splitlines():
+            parts = [c.strip() for c in line.split("&")]
+            if len(parts) == 7 and parts[0] in ("SegFormer-B2", "SegFormer-B5", "Mask2Former",
+                                                "SegFormer-B2 (MC-dropout)"):
+                vals[parts[0]] = [float(parts[2]), float(parts[4]), float(parts[6].rstrip("\\ "))]
+        seg = [v[i] for m, v in vals.items() if m != "Mask2Former" for i in (0, 1)]
+        truth(975, "on the uniform grid the SegFormer variants marked 36-100% at alpha<=0.1 "
+                   "and Mask2Former 100% everywhere (git 8e43d21)",
+              abs(min(seg) - 0.358) < 5e-4 and max(seg) == 1.0
+              and all(x == 1.0 for x in vals["Mask2Former"]),
+              f"SegFormer alpha<=0.1 areas {sorted(seg)}; Mask2Former {vals['Mask2Former']}")
+    except Exception as exc:  # no git history here (e.g. the server tree)
+        note(975, "uniform-grid comparison table not reachable through git",
+             f"{type(exc).__name__}; the text's 36-100% figure rests on commit 8e43d21")
+
+
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,
     "F2": section_lac_detail,
     "H": section_breakdown, "I": section_tier_a, "J": section_tier_b,
     "K": section_loveda, "L": section_marida, "M": section_triage,
     "N": section_holdout, "R": section_revision, "S": section_review, "P": section_capture_rule, "X": section_cross,
+    "Z": section_loggrid,
 }
 
 
