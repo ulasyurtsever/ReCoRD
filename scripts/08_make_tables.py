@@ -170,15 +170,13 @@ def table_breakdown(df: pd.DataFrame) -> str:
 def table_tier_a(df: pd.DataFrame) -> str:
     """T4: tier-A recovery and applicability vs n_t (Cityscapes->ACDC)."""
     sub = df[(df.block == "e3") & (df.method == "region_crc")]
-    # SegFormer variants only. Mask2Former marks 91-100% of the image in every
-    # one of its nine tier-A cells, so its zero FNR is the degenerate
-    # lambda_max solution, not a recovery; pooling it raised the reported
-    # marked area at alpha=0.2 from 58-66% to 67-73% and hid that a quarter of
-    # the average was a tautology (third referee panel, 2026-09-02, M4). It
-    # stays in the validity count of the text, which is over all four models.
-    # Infeasibility does not depend on the model (it is fixed by the class
-    # counts of the draw), so the restriction leaves that column unchanged.
-    sub = sub[sub.model.str.startswith("segformer")]
+    # All four Cityscapes models. The third panel (2026-09-02, M4) had
+    # restricted the table to the SegFormer variants because Mask2Former's
+    # nine cells were the degenerate lambda_max solution on the uniform
+    # threshold grid; on the log-tail grid (2026-09-08) the same checkpoint
+    # calibrates to interior thresholds in every cell, so the restriction has
+    # no basis and the table matches the validity count of the text, which was
+    # always over all four models.
     feas = sub[sub.feasible.astype(bool)]
     # The infeasibility column is class-balanced. Averaging FNR and area over
     # raw feasible rows instead would weight whichever class still has feasible
@@ -212,7 +210,7 @@ def table_tier_a(df: pd.DataFrame) -> str:
     return latex_table(
         body,
         "Tier A on ACDC: exact recalibration from $n_t$ labeled target "
-        "images (SegFormer variants).",
+        "images.",
         # The feasible-draw counts widen the table past one IEEE column.
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
