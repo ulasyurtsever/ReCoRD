@@ -1497,8 +1497,11 @@ def _panel4_arms():
         d2 = w[(w["arm"] == "dinov2_vitb14:2") & np.isclose(w["alpha"], 0.2)]
         inf2 = float((d2["lam"] < 1.0 - 1e-12).mean())
         near(962, "kappa=2, alpha=0.2: two thirds of the draws informative", 0.667, inf2, 0.01)
-        rng_claim(962, "kappa=2, alpha=0.2: marked area 36-37%", 0.363, 0.369,
+        rng_claim(962, "kappa=2, alpha=0.2: marked area 36-37% over all draws", 0.363, 0.369,
                   list(d2.groupby("rho")["marked_area_fraction"].mean().values), 0.005)
+        d2i = d2[d2["lam_index"] < LAM_MAX]
+        rng_claim(962, "kappa=2, alpha=0.2: the informative draws mark 4.4-5.3%", 0.044, 0.053,
+                  list(d2i.groupby("rho")["marked_area_fraction"].mean().values), 0.001)
         r = x14[(x14["method"] == "region_crc") & np.isclose(x14["alpha"], 0.2)]
         rng_claim(962, "unweighted region CRC on the same splits marks 2.0-2.3%", 0.0196, 0.0234,
                   list(r.groupby("rho")["marked_area_fraction"].mean().values), 0.0005)
@@ -1770,7 +1773,7 @@ def section_loveda():
     u2r = cellmean(sel(b, method="region_crc", experiment="l2_break__urban2rural",
                        rho=0.5), ["alpha"])
     ratios = [u2r[a_] / a_ for a_ in ALPHAS if a_ in u2r.index]
-    rng_claim(180, "urban->rural violates by 2.3-3.5x", 2.46, 3.47, ratios, 0.01)
+    rng_claim(180, "urban->rural violates by 2.5-3.5x at rho=0.5", 2.46, 3.47, ratios, 0.01)
     u2r1 = cellmean(sel(b, method="region_crc", experiment="l2_break__urban2rural",
                         rho=0.1), ["alpha"])
     rng_claim(180, "urban->rural at rho=0.1 violates by 2.3-3.2x", 2.348, 3.183,
@@ -1782,6 +1785,19 @@ def section_loveda():
           r2u[0.1] <= 0.1 + 1e-12 and r2u[0.2] <= 0.2 + 1e-12
           and 1.2 <= r2u[0.05] / 0.05 <= 1.25,
           str({k: round(v, 3) for k, v in r2u.items()}))
+    r2u1 = cellmean(sel(b, method="region_crc", experiment="l2_break__rural2urban",
+                        rho=0.1), ["alpha"])
+    near(181, "at rho=0.1 the rural->urban alpha=0.1 cell sits at 0.101", 0.101, float(r2u1[0.1]), 5e-4)
+    px = sel(i, method="pixel_crc", alpha=0.20, rho=0.5)
+    pxc = px.groupby(["experiment", "class_name"])["region_fnr"].mean()
+    truth(178, "pixel CRC per class at rho=0.5: urban water 0.240, building 0.200; rural "
+               "0.186 on average (building 0.170, water 0.202)",
+          abs(pxc[("l1_indist__urban", "water")] - 0.240) < 5e-4
+          and abs(pxc[("l1_indist__urban", "building")] - 0.200) < 5e-4
+          and abs(pxc[("l1_indist__rural", "building")] - 0.170) < 5e-4
+          and abs(pxc[("l1_indist__rural", "water")] - 0.202) < 5e-4
+          and abs(float(pxc.xs("l1_indist__rural").mean()) - 0.186) < 5e-4,
+          str(pxc.round(4).to_dict()))
     # Per class the same direction is not intact (third panel, M6): the text
     # now says four of twelve cells, all water, worst 1.27x at a=0.1, rho=0.1.
     pc = sel(b, method="region_crc", experiment="l2_break__rural2urban")
@@ -2584,8 +2600,8 @@ def section_revision():
             worst_fnr = max(worst_fnr, abs(a[0] - b[0]))
             worst_area = max(worst_area, abs(a[1] - b[1]))
         truth(99, "refitting the temperature per draw moves the tempered cells "
-                  "by at most 0.0007 in FNR and 0.0002 in area",
-              worst_fnr <= 0.0007 + 1e-9 and worst_area <= 0.0002 + 1e-9,
+                  "by at most 0.0004 in FNR and 0.0001 in area",
+              worst_fnr <= 0.0004 + 1e-9 and worst_area <= 0.0001 + 1e-9,
               f"largest FNR move {worst_fnr:.5f}, area move {worst_area:.5f}")
         for model, lo, hi, k in (("segformer_b2_cityscapes", 1.45, 1.65, 5),
                                  ("segformer_b5_cityscapes", 1.90, 2.15, 6)):
@@ -3018,8 +3034,10 @@ def section_loggrid():
     n_viol = {a: int((cells.xs(a, level="alpha").values > a).sum()) for a in ALPHAS}
     truth(973, "14 of the 16 model-condition cells violate at alpha=0.2 and 0.1, 13 at 0.05",
           n_viol == {0.05: 13, 0.10: 14, 0.20: 14}, str(n_viol))
-    # The uniform-grid figures the text quotes for comparison come from the last
-    # uniform-grid table in the git history (commit 8e43d21).
+    # The uniform-grid figures the text quotes for comparison come from the
+    # results/tables of commit 8e43d21: the commit that made the log-tail grid
+    # the default (and therefore stamps the log-tail CSV sidecars), whose
+    # tables were still the last ones built on the uniform grid.
     import subprocess
     try:
         old = subprocess.run(["git", "-C", str(paths_root()), "show",
@@ -3042,13 +3060,116 @@ def section_loggrid():
              f"{type(exc).__name__}; the text's 36-100% figure rests on commit 8e43d21")
 
 
+
+
+def section_panel5():
+    """Fifth referee panel (2026-09-16): tier A on held-out MARIDA spring, the
+    drift monitor on the MARIDA partitions, the season definition, and the
+    ensemble's cost."""
+    head("Y  Fifth panel: MARIDA tier A, monitor, season, ensemble")
+    import glob as _glob
+    exp = results_dir("experiments")
+    h4 = sorted(_glob.glob(str(exp / "h4_tierA*__spring__*.csv")))
+    if not h4:
+        fail(980, "the MARIDA spring tier-A runs (h4_*) are absent",
+             "run scripts/31_marida_target_schemes.py and the four stage-5 commands in its docstring")
+    else:
+        fr = []
+        for path in h4:
+            f = pd.read_csv(path); f["experiment"] = os.path.basename(path)[:-4]; fr.append(f)
+        d = pd.concat(fr, ignore_index=True)
+        d = d[(d["method"] == "region_crc") & np.isclose(d["rho"], 0.5)].copy()
+        d["sd"] = d["experiment"].str.contains("scenedisjoint")
+        d["n_target"] = pd.to_numeric(d["experiment"].str.extract(r"tierA(\d+)")[0])
+        f = d[d["feasible"].astype(bool)]
+        g = f.groupby(["n_target", "sd", "alpha"])
+        m = g["region_fnr"].mean(); a = g["marked_area_fraction"].mean(); n = g.size()
+        lo = m - 1.959963984540054 * g["region_fnr"].std(ddof=1) / np.sqrt(n)
+        want = {(25, False, 0.2): (0.138, 0.039, 100), (25, False, 0.1): (0.052, 0.128, 54),
+                (50, False, 0.05): (0.016, 0.169, 32), (50, False, 0.1): (0.071, 0.078, 100),
+                (50, False, 0.2): (0.160, 0.023, 100),
+                (25, True, 0.2): (0.216, 0.037, 90), (25, True, 0.1): (0.140, 0.082, 62),
+                (50, True, 0.05): (0.053, 0.146, 41), (50, True, 0.1): (0.101, 0.077, 97),
+                (50, True, 0.2): (0.203, 0.028, 100)}
+        for k, (wf, wa, wn) in want.items():
+            tag = f"n_t={k[0]} {'scene-disjoint' if k[1] else 'patches'} a={k[2]}"
+            near(980, f"MARIDA spring tier A {tag}: FNR", wf, float(m[k]), 5e-4)
+            near(980, f"MARIDA spring tier A {tag}: area", wa, float(a[k]), 5e-4)
+            truth(980, f"MARIDA spring tier A {tag}: {wn} feasible draws", int(n[k]) == wn, f"{int(n[k])}")
+        truth(980, "n_t=25, alpha=0.05 is infeasible in every draw under both schemes",
+              (25, False, 0.05) not in n.index and (25, True, 0.05) not in n.index, "")
+        pk = f[(~f["sd"])]
+        lev = pk.groupby(["n_target", "alpha"])["region_fnr"].mean()
+        truth(980, "every feasible patch-level cell sits below its level",
+              bool((lev.values <= lev.index.get_level_values("alpha").values).all()), str(lev.round(3).to_dict()))
+        truth(980, "scene-disjoint n_t=25: the alpha=0.1 cell is separable (lower end 0.106 > 0.1), "
+                   "the alpha=0.2 cell is not",
+              abs(float(lo[(25, True, 0.1)]) - 0.106) < 1e-3 and float(lo[(25, True, 0.2)]) <= 0.2,
+              f"lower ends {float(lo[(25, True, 0.1)]):.4f}, {float(lo[(25, True, 0.2)]):.4f}")
+        truth(980, "scene-disjoint n_t=50: the level lies inside the interval in every feasible cell",
+              all(float(lo[(50, True, al)]) <= al for al in ALPHAS), str({al: round(float(lo[(50, True, al)]), 4) for al in ALPHAS}))
+        near(980, "n_t=25 draws carry 8.6 debris patches on average", 8.6,
+             float(d[(d["n_target"] == 25) & (~d["sd"])]["n_cal_images"].mean()), 0.05)
+        truth(980, "no feasible spring tier-A draw returns lambda_max", int((f["lam_index"] >= LAM_MAX).sum()) == 0,
+              f"{int((f['lam_index'] >= LAM_MAX).sum())} draws")
+    # 981: the monitor on the MARIDA partitions
+    mar = sel(load("h[123]_*"), method="region_crc", rho=0.5)
+    mar["part"] = mar["experiment"].str.extract(r"^h\d_\w+?__(\w+?)__")[0].fillna("official")
+    fl = mar.groupby(["part", "alpha"])["monitor_flag"].mean().unstack("alpha")
+    fires = (fl > 0.5).sum(axis=1)
+    want = {"16PDC": 3, "48PZC": 3, "16PEC": 2, "18QYF": 2, "16PCC": 1, "summer": 1,
+            "official": 0, "winter": 0, "autumn": 0, "spring": 0}
+    truth(981, "monitor fires at every level on 16PDC and 48PZC, two levels on 16PEC and 18QYF, one on "
+               "16PCC and summer, never on the official split, winter, autumn or spring",
+          all(int(fires.get(k, -1)) == v for k, v in want.items()), str(fires.to_dict()))
+    sp = mar[mar["part"] == "spring"]
+    rng_claim(981, "the spring mask marks 0.04-0.2% of the pixels at the three levels", 0.0004, 0.0019,
+              list(sp.groupby("alpha")["marked_area_fraction"].mean().values), 0.0001)
+    # 982: the ensemble's cost on the official split
+    ens = sel(load("h1_official__marida_unet_official_holdout_ens5"), rho=0.5, alpha=0.20)
+    near(982, "ensemble region CRC at alpha=0.2 is 0.250", 0.250, mean(sel(ens, method="region_crc")), 1e-3)
+    near(982, "ensemble argmax at alpha=0.2 is 0.259", 0.259, mean(sel(ens, method="argmax")), 1e-3)
+    truth(982, "ensemble CRC and argmax mark the same area (0.03%)",
+          abs(mean(sel(ens, method="region_crc"), "marked_area_fraction") - mean(sel(ens, method="argmax"), "marked_area_fraction")) < 1e-4, "")
+    truth(982, "the level lies inside the ensemble's scene-level interval at alpha=0.2",
+          float(sel(ens, method="region_crc")["fnr_boot_lo"].mean()) <= 0.2 <= float(sel(ens, method="region_crc")["fnr_boot_hi"].mean()), "")
+    # 983: season definition and hemisphere
+    meta = pd.read_csv(splits_dir() / "marida_meta.csv")
+    import json as _json
+    sch = _json.load(open(splits_dir() / "marida_holdout_season_spring.json"))
+    spr = meta[meta["patch_id"].isin(set(sch["seeds"]["0"]["test"]))]
+    south = spr[spr["tile"].isin({"36JUN", "50LLR", "48MXU", "51PTS"})]
+    truth(983, "held-out spring = acquisition months 3-5; 56 of its 134 patches from four "
+               "southern-hemisphere scenes",
+          sorted(spr["month"].unique()) == [3, 4, 5] and len(spr) == 134 and len(south) == 56
+          and south["scene"].nunique() == 4, f"{len(spr)} patches, months {sorted(spr['month'].unique())}, "
+          f"south {len(south)} over {south['scene'].nunique()} scenes")
+    # 984: the sequence-disjoint calibration side rests on one to five drives at n_t=25
+    mx = {c: _json.load(open(splits_dir() / f"acdc_{c}_targetcal25_seqdisjoint.meta.json"))["calibration_sequences"]["max"]
+          for c in CONDS}
+    truth(984, "sequence-disjoint calibration at n_t=25 rests on one to five drives (rain 5)",
+          max(mx.values()) == 5 and mx["night"] == 1, str(mx))
+    # 985: tier-A lambda_max draws quoted in the text
+    a = sel(load("e3_tierA*"), method="region_crc"); fa = a[a["feasible"].astype(bool)]
+    truth(985, "6.5% of the feasible tier-A draws (2 923 of 44 736) return lambda_max",
+          len(fa) == 44736 and int((fa["lam_index"] >= LAM_MAX).sum()) == 2923,
+          f"{int((fa['lam_index'] >= LAM_MAX).sum())} of {len(fa)}")
+    # 986: per-class SegFormer tier-A areas quoted as 5-20% by variant and budget
+    fa = fa.copy(); fa["n_target"] = pd.to_numeric(fa["experiment"].str.extract(r"tierA(\d+)")[0])
+    pm = (fa[np.isclose(fa["alpha"], 0.2) & np.isclose(fa["rho"], 0.5) & fa["model"].isin(SEGF)]
+          .groupby(["model", "n_target", "class_name"])["marked_area_fraction"].mean()
+          .groupby(["model", "n_target"]).mean())
+    rng_claim(986, "SegFormer tier-A area by variant and budget spans 5-20% at alpha=0.2", 0.053, 0.203,
+              list(pm.values), 0.005)
+
+
 SECTIONS = {
     "D": section_indist, "F": section_baselines, "G": section_ablations,
     "F2": section_lac_detail,
     "H": section_breakdown, "I": section_tier_a, "J": section_tier_b,
     "K": section_loveda, "L": section_marida, "M": section_triage,
     "N": section_holdout, "R": section_revision, "S": section_review, "P": section_capture_rule, "X": section_cross,
-    "Z": section_loggrid,
+    "Z": section_loggrid, "Y": section_panel5,
 }
 
 

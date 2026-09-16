@@ -82,6 +82,7 @@ import pandas as pd
 from record.evaluation import index_rows, triage_curve
 from record.paths import results_dir, splits_dir
 from record.splits import load_scheme
+from record.provenance import git_revision
 
 SCRIPTS = Path(__file__).resolve().parent
 OUT_STEM = "x12_triage_permutation_band"
@@ -417,6 +418,7 @@ def main() -> int:
     out.to_csv(out_csv, index=False)
     print(f"\nwrote {out_csv} ({len(out)} rows)")
     (exp_dir / f"{args.out_stem}.meta.json").write_text(json.dumps({
+        "git_revision": git_revision(),
         "alpha": args.alpha, "rho": args.rho,
         "n_permutations": args.n_permutations,
         "settings": {s: found[s][0] for s in wanted},

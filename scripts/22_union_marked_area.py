@@ -43,6 +43,7 @@ from record.gt import parse_dataset_key
 from record.labelmaps import critical_classes_for
 from record.paths import results_dir, splits_dir
 from record.splits import load_scheme
+from record.provenance import git_revision
 
 
 def union_area_for_image(model_key, dataset_key, image_id, thresholds,
@@ -170,6 +171,7 @@ def main() -> int:
 
     meta = results_dir("experiments") / f"x7_union_area__{args.model}.meta.json"
     meta.write_text(json.dumps({
+        "git_revision": git_revision(),
         "model_key": args.model, "dataset_key": args.dataset,
         "scheme": args.scheme, "threshold_source": args.experiment,
         "method": args.method, "seeds": args.seeds, "rho": args.rho,

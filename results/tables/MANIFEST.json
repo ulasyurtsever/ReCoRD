@@ -9,10 +9,11 @@
   "loveda_perclass.tex",
   "perclass_area.tex",
   "marida.tex",
+  "marida_tier_a.tex",
   "ablations.tex"
  ],
  "rho": 0.5,
- "n_experiment_rows": 794094,
- "n_rows_at_rho": 397047,
- "completed_utc": "2026-09-09T20:22:25.886569+00:00"
+ "n_experiment_rows": 801294,
+ "n_rows_at_rho": 400647,
+ "completed_utc": "2026-09-16T17:37:14.444049+00:00"
 }

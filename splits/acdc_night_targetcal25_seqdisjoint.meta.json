@@ -37,5 +37,5 @@
  "warnings": [
   "night: only 6 driving sequences. A sequence-disjoint calibration set rests on one or two of them, so the seed-to-seed spread, not the mean, is the reportable quantity here."
  ],
- "generated_utc": "2026-09-08T00:47:19.646710+00:00"
+ "generated_utc": "2026-09-09T00:17:26.864125+00:00"
 }

@@ -52,6 +52,7 @@ from record.grid import LAMBDA_GRID
 from record.paths import results_dir, splits_dir
 from record.splits import load_scheme
 from record.weights import clip_weights
+from record.provenance import git_revision
 
 SCRIPTS = Path(__file__).resolve().parent
 ALPHAS = (0.05, 0.10, 0.20)
@@ -195,6 +196,7 @@ def main() -> int:
     frame.to_csv(path, index=False)
     (out_dir / f"{name}.meta.json").write_text(json.dumps({
         "name": name, "argv": vars(args), "n_records": len(frame),
+        "git_revision": git_revision(),
         "completed_utc": datetime.now(timezone.utc).isoformat(),
     }, indent=1))
     print(f"\nwrote {path}  ({len(frame)} rows)")

@@ -9,10 +9,11 @@
   "loveda_perclass-rho0.tex",
   "perclass_area-rho0.tex",
   "marida-rho0.tex",
+  "marida_tier_a-rho0.tex",
   "ablations-rho0.tex"
  ],
  "rho": 0.1,
- "n_experiment_rows": 794094,
- "n_rows_at_rho": 397047,
- "completed_utc": "2026-09-09T20:22:30.550866+00:00"
+ "n_experiment_rows": 801294,
+ "n_rows_at_rho": 400647,
+ "completed_utc": "2026-09-16T17:37:19.276384+00:00"
 }
