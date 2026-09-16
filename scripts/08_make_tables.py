@@ -215,6 +215,58 @@ def table_tier_a(df: pd.DataFrame) -> str:
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
 
+
+def table_marida_tier_a(df: pd.DataFrame) -> str:
+    """T12: tier A on the held-out MARIDA spring (fifth referee panel).
+
+    Rows are the labeled-target budget crossed with the draw scheme: patches
+    drawn uniformly from the spring test group, and whole acquisition scenes
+    assigned to the calibration side so that no test patch shares a scene
+    with a calibration patch. Columns as in Table VI; the single critical
+    class makes the class balancing a no-op. Marked area is also given in
+    hectares of a 6.55 km^2 patch, the unit a photointerpreter budgets in.
+    """
+    sub = df[(df.block == "h4") & (df.method == "region_crc")].copy()
+    if sub.empty:
+        return latex_table(r"\multicolumn{10}{c}{h4 runs absent} \\",
+                           "Tier A on held-out MARIDA spring.", "tab:marida_tier_a",
+                           "l" + "ccc" * len(ALPHAS), "", star=True)
+    sub["scene_disjoint"] = sub.experiment.str.contains("scenedisjoint")
+    feas = sub[sub.feasible.astype(bool)]
+    percls = cell_means(feas, ["n_target", "scene_disjoint", "class_name", "alpha"])
+    counts = feas.groupby(["n_target", "scene_disjoint", "alpha"]).size()
+    infeas = infeasibility(sub, ["n_target", "scene_disjoint", "class_name", "alpha"])
+    rows = []
+    for nt in (25, 50):
+        for sd, label in ((False, "patches"), (True, "scene-disjoint")):
+            parts = [f"{nt}, {label}"]
+            for alpha in ALPHAS:
+                row = percls[(percls.n_target == nt) & (percls.scene_disjoint == sd)
+                             & np.isclose(percls.alpha, alpha)]
+                n_draws = int(counts.get((nt, sd, alpha), 0))
+                if row.empty or n_draws == 0:
+                    parts += ["--", "--"]
+                else:
+                    area = float(row.marked_area.mean())
+                    parts += [fmt(float(row.region_fnr.mean())),
+                              f"{fmt(area)} ({655.36 * area:.0f}\,ha)"]
+                inf = infeas[(infeas.n_target == nt) & (infeas.scene_disjoint == sd)
+                             & (infeas.alpha == alpha)]
+                rate = float(inf.infeasible_rate.mean())
+                cell = r"$>$0.99" if 0.995 <= rate < 1.0 else ("1.00" if rate >= 1.0 else fmt(rate, 2))
+                parts.append(rf"{cell} ({n_draws})")
+            rows.append(" & ".join(parts) + r" \\")
+    header = "$n_t$, draw & " + " & ".join(
+        rf"\multicolumn{{3}}{{c}}{{$\alpha={a:g}$}}" for a in ALPHAS)
+    subheader = " & " + " & ".join(["FNR & Area & Infeas.\\ ($n$)"] * len(ALPHAS)) + r" \\"
+    body = subheader + "\n" + r"\midrule" + "\n" + "\n".join(rows)
+    return latex_table(
+        body,
+        "Tier A on held-out MARIDA spring: recalibration from $n_t$ labeled "
+        "spring patches.",
+        "tab:marida_tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
+
+
 def table_loveda(df: pd.DataFrame) -> str:
     """T6: LoveDA validity and directional breakdown."""
     l1 = cell_means(df[(df.block == "l1") & (df.method == "region_crc")],
@@ -511,6 +563,7 @@ TABLES = {
     "loveda_perclass": table_loveda_perclass,
     "perclass_area": table_perclass_area,
     "marida": table_marida,
+    "marida_tier_a": table_marida_tier_a,
     "ablations": table_ablations,
 }
 
@@ -531,7 +584,8 @@ def main() -> int:
     parser.add_argument("--suffix", default="",
                         help="appended to every output filename, so a second "
                              "capture level can be generated without "
-                             "overwriting the main tables")
+                             "overwriting the main tables; a value starting "
+                             "with a dash must be passed as --suffix=-rho0")
     args = parser.parse_args()
 
     df = parse_axis_fields(load_experiments())

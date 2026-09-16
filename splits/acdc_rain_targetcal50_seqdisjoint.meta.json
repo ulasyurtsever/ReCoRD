@@ -40,5 +40,5 @@
  "test_frames_in_published_scheme": 450,
  "definition": "calibration frames are drawn from whole driving sequences; every frame of a calibration sequence is excluded from the test side, so no test frame shares a sequence with any calibration frame",
  "warnings": [],
- "generated_utc": "2026-09-08T01:33:24.787975+00:00"
+ "generated_utc": "2026-09-09T00:17:27.725511+00:00"
 }

@@ -1,0 +1,18 @@
+{
+ "scheme": "marida_spring_targetcal25_scenedisjoint",
+ "n_seeds": 100,
+ "n_calibration": 25,
+ "calibration_scenes": {
+  "min": 1,
+  "median": 3.0,
+  "max": 5
+ },
+ "test_patches": {
+  "min": 84,
+  "median": 104.0,
+  "max": 109
+ },
+ "pool_patches": 134,
+ "pool_scenes": 12,
+ "generated_utc": "2026-09-16T17:34:37.196169+00:00"
+}

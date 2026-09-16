@@ -155,6 +155,7 @@ restarts from scratch and overwrites its checkpoints.
 | 27 | `27_triage_permutation_band.py` | CPU | Permutation band (1000 random orderings) for the budgeted-review comparison (`x12`) |
 | 28 | `28_acdc_sequence_schemes.py` | CPU | Sequence-disjoint tier-A schemes on ACDC: whole driving sequences held out of the target calibration draw (`x13`, run through stage 5; `--sizes 50 100` for the larger budgets) |
 | 30 | `30_build_dilation_tables.py` | CPU | Stage-4 tables for the dilation family: the argmax mask dilated by a radius, mapped onto the lambda grid through an EDT pseudo-probability (`record.dilation`); stage 5 on `<model>__dilation` is then dilation CRC (`x16`) |
+| 31 | `31_marida_target_schemes.py` | CPU | Tier-A target-calibration schemes on held-out MARIDA spring: `marida_spring_targetcal{25,50}` (patches drawn from the spring group) and `..._scenedisjoint` (whole scenes to the calibration side); stage 5 on the spring model with `--cal-split target_calibration` gives the `h4_*` runs and Table `marida_tier_a` |
 | -- | `compare_experiments.py` | CPU | Row-aligned comparison of two `results/experiments/` trees, per file and capture level; `--strict` fails on a moved quantity that cannot move, on a file that cannot be aligned, and on a sidecar whose recorded arguments differ from the reference run |
 | -- | `write_revision.sh` | -- | Writes `REVISION` (the mirror's short commit hash) for copies of the tree that are not git checkouts |
 
