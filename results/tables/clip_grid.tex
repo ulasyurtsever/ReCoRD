@@ -1,7 +1,5 @@
 \begin{table}[t]
 \centering
-\caption{Vacuity certificate over the joint clip grid (SegFormer-B2, DINOv2, $\rho=0.5$). The condition $\hat{p}_{n+1}B > \alpha$ depends on both clips through $\kappa/(\ell n+\kappa)$, so narrowing the interval from below silences the certificate as effectively as lowering $\kappa$. ``inform.'' is the fraction of draws returning $\hat{\lambda} < 1$; FNR and area are averaged over those draws. A cell counts as violating when the whole $95\%$ interval of the empirical FNR lies above the level. Where the certificate is silenced the procedure becomes informative and stops respecting the level.}
-\label{tab:clip_grid}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lccccccccc}
@@ -82,4 +80,6 @@ night & 0.50 & 20 & 0.10 & 0.198 & yes & 0.00 & -- & -- & -- \\
 night & 0.50 & 20 & 0.20 & 0.198 & no & 0.67 & 0.031 & 0.075 & valid \\
 \bottomrule
 \end{tabular}
+\caption{Vacuity certificate over the joint clip grid (SegFormer-B2, DINOv2, $\rho=0.5$). The condition $\hat{p}_{n+1}B > \alpha$ depends on both clips through $\kappa/(\ell n+\kappa)$, so narrowing the interval from below silences the certificate as effectively as lowering $\kappa$. ``inform.'' is the fraction of draws returning $\hat{\lambda} < 1$; FNR and area are averaged over those draws. A cell counts as violating when the whole $95\%$ interval of the empirical FNR lies above the level. Where the certificate is silenced the procedure becomes informative and stops respecting the level.}
+\label{tab:clip_grid}
 \end{table}
