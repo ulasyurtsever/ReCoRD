@@ -1,7 +1,5 @@
 \begin{table}[t]
 \centering
-\caption{Density-ratio estimator on Cityscapes$\to$ACDC (SegFormer-B2, DINOv2, $\alpha=0.2$, $\rho=0.5$). The in-sample logistic classifier is fitted on the source points it then scores; the cross-fitted variant scores each source point out of fold. ESS is the effective sample size of the weights, and ``informative'' is the fraction of draws returning $\hat{\lambda} < 1$. If the collapse is a property of the shift rather than of the estimator, the two columns agree.}
-\label{tab:tierb_estimator}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lcccccc}
@@ -15,4 +13,6 @@ rain & 0.708 & 0.707 & 167.0 & 166.4 & 0.00 & 0.00 \\
 snow & 0.708 & 0.708 & 167.0 & 166.9 & 0.00 & 0.00 \\
 \bottomrule
 \end{tabular}
+\caption{Density-ratio estimator on Cityscapes$\to$ACDC (SegFormer-B2, DINOv2, $\alpha=0.2$, $\rho=0.5$). The in-sample logistic classifier is fitted on the source points it then scores; the cross-fitted variant scores each source point out of fold. ESS is the effective sample size of the weights, and ``informative'' is the fraction of draws returning $\hat{\lambda} < 1$. If the collapse is a property of the shift rather than of the estimator, the two columns agree.}
+\label{tab:tierb_estimator}
 \end{table}
