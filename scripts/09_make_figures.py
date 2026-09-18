@@ -30,7 +30,7 @@ CITYSCAPES_MODELS = [
     "segformer_b2_cityscapes", "segformer_b5_cityscapes",
     "mask2former_swinb_cityscapes", "segformer_b2_cityscapes_mcdrop8",
 ]
-COLUMN_W = 3.5  # inches, IEEE single column
+COLUMN_W = 3.5  # inches, single-column figure width
 
 plt.rcParams.update({
     "font.size": 8, "axes.titlesize": 8, "axes.labelsize": 8,

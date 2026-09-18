@@ -81,7 +81,7 @@ BENCHMARKS = {
 }
 PALETTE = {"gt": "#000000", "missed": "#D55E00", "captured": "#009E73",
            "marked": "#0072B2"}
-PAGE_W = 7.16  # inches, IEEE double column
+PAGE_W = 7.16  # inches, full-width figure
 
 plt.rcParams.update({
     "font.size": 8, "axes.titlesize": 8, "figure.dpi": 150,

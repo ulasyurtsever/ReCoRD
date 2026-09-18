@@ -24,7 +24,7 @@ from record.losses import capture_threshold
 from record.paths import results_dir
 
 PALETTE = ["#0072B2", "#E69F00", "#009E73", "#D55E00", "#CC79A7"]
-PAGE_W = 7.16  # inches, IEEE double column
+PAGE_W = 7.16  # inches, full-width figure
 
 plt.rcParams.update({
     "font.size": 8, "axes.titlesize": 8, "axes.labelsize": 8,
