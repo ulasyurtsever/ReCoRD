@@ -13,8 +13,7 @@ importance-weighted calibration over foundation-model embeddings otherwise)
 together with a score-distribution drift monitor.
 
 > The accompanying article is under review. `CITATION.cff` carries the
-> citation for the software and the preferred citation for the paper; it will
-> be updated on publication.
+> software citation; the article reference will be added on publication.
 
 ## Repository layout
 
