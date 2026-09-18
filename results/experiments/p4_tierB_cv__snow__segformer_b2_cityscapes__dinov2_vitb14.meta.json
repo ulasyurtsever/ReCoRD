@@ -46,6 +46,6 @@
  },
  "scheme_file": "cityscapes_val_half.json",
  "n_records": 1800,
- "git_revision": "010198e+file",
- "completed_utc": "2026-09-08T00:22:30.527530+00:00"
+ "git_revision": "8e43d21+file",
+ "completed_utc": "2026-09-08T23:53:11.174139+00:00"
 }

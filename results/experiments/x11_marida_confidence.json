@@ -127,8 +127,8 @@
   {
    "alpha": 0.05,
    "rho": 0.1,
-   "lam": 0.9470000000000001,
-   "lam_index": 947,
+   "lam": 0.9472770138577178,
+   "lam_index": 213,
    "feasible": true,
    "calibration_risk": 0.047235829765950255,
    "n_cal_images": 82,
@@ -148,8 +148,8 @@
   {
    "alpha": 0.1,
    "rho": 0.1,
-   "lam": 0.915,
-   "lam_index": 915,
+   "lam": 0.9144933287115317,
+   "lam_index": 178,
    "feasible": true,
    "calibration_risk": 0.09683683117418057,
    "n_cal_images": 82,
@@ -169,10 +169,10 @@
   {
    "alpha": 0.2,
    "rho": 0.1,
-   "lam": 0.8260000000000001,
-   "lam_index": 826,
+   "lam": 0.8270183640784898,
+   "lam_index": 127,
    "feasible": true,
-   "calibration_risk": 0.19992456161839578,
+   "calibration_risk": 0.19813719236114702,
    "n_cal_images": 82,
    "n_test_components": 223,
    "n_missed": 43,
@@ -190,8 +190,8 @@
   {
    "alpha": 0.05,
    "rho": 0.5,
-   "lam": 0.964,
-   "lam_index": 964,
+   "lam": 0.9636921945229898,
+   "lam_index": 240,
    "feasible": true,
    "calibration_risk": 0.048440649043058684,
    "n_cal_images": 82,
@@ -211,10 +211,10 @@
   {
    "alpha": 0.1,
    "rho": 0.5,
-   "lam": 0.935,
-   "lam_index": 935,
+   "lam": 0.9351365566451761,
+   "lam_index": 198,
    "feasible": true,
-   "calibration_risk": 0.0929424658340321,
+   "calibration_risk": 0.08892640157700397,
    "n_cal_images": 82,
    "n_test_components": 223,
    "n_missed": 18,
@@ -232,8 +232,8 @@
   {
    "alpha": 0.2,
    "rho": 0.5,
-   "lam": 0.847,
-   "lam_index": 847,
+   "lam": 0.8472433941761928,
+   "lam_index": 136,
    "feasible": true,
    "calibration_risk": 0.19866892301335962,
    "n_cal_images": 82,
@@ -259,5 +259,5 @@
   "unmatched": [],
   "mismatches": []
  },
- "written_utc": "2026-09-08T00:46:40.398964+00:00"
+ "written_utc": "2026-09-09T00:16:48.309314+00:00"
 }

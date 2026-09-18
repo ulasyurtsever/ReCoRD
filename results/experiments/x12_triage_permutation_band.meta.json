@@ -19,5 +19,5 @@
  "denominator": "full test-set size (images without components contribute zero loss, as in triage_curve)",
  "aggregation": "mean over (seed, class) cells before dividing by the no-review rate, matching fig_triage_baselines",
  "max_drift": 1e-09,
- "completed_utc": "2026-09-08T00:47:18.854228+00:00"
+ "completed_utc": "2026-09-09T00:17:26.101899+00:00"
 }
