@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Follow-up to run_p1_rerun.sh (2026-09-07): redo the x7 union-area block with
+# Follow-up to run_stage5_rederive.sh: redo the x7 union-area block with
 # the published arguments, then rebuild the derived artifacts and re-audit.
 #
 # The first pass called 22_union_marked_area.py without --seeds/--alphas and
@@ -10,9 +10,9 @@
 # published arguments.
 #
 # Usage (repository root, conda env `record`):
-#   nohup bash scripts/run_p1_x7_fix.sh > p1_x7_fix.log 2>&1 &
+#   nohup bash scripts/run_union_area_redo.sh > union_area_redo.log 2>&1 &
 #   tail -f p1_x7_fix.log
-# Dry run: DRY_RUN=1 bash scripts/run_p1_x7_fix.sh
+# Dry run: DRY_RUN=1 bash scripts/run_union_area_redo.sh
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -58,5 +58,5 @@ else
 fi
 
 echo
-echo "RESULT: P1 X7 FIX DONE"
+echo "RESULT: UNION AREA REDO DONE"
 date

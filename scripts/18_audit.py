@@ -484,7 +484,7 @@ def section_baselines():
             near(90, f"baseline {mo}/{me} rho={rh} FNR", f_, mean(d, "region_fnr"))
             near(90, f"baseline {mo}/{me} rho={rh} area", a_,
                  mean(d, "marked_area_fraction"))
-    # 957: the abstract's scope for the pixel-CRC sentence (third panel, M3).
+    # 957: the abstract's scope for the pixel-CRC sentence.
     cs_models = sorted({mo for mo, _ in table3})
     pix = {(mo, rh): mean(sel(e1, model=mo, method="pixel_crc", alpha=0.20, rho=rh))
            for mo in cs_models for rh in (0.1, 0.5)}
@@ -616,9 +616,9 @@ def _lac_classcond_and_pixel_fnr():
           "class-conditional row and Section V its two gaps")
 
     if not cc.empty:
-        # What the arm actually shows, measured rather than hoped for: given
+        # What the arm actually shows, measured rather than assumed: given
         # its own class's pixel-coverage target, class-conditional LAC lands
-        # on the pixel-CRC row. That is the honest answer to the referee --
+        # on the pixel-CRC row. That is the relevant comparison --
         # the fair version of LAC is the pixel baseline the article already
         # reports -- and it is checked over every cell of the matrix, not one
         # convenient corner, because the coincidence is what is being claimed.
@@ -1014,7 +1014,7 @@ def section_tier_a():
     # feasible draws at a tight level.
     # Table VI is over all four models again (2026-09-09): on the log-tail grid
     # Mask2Former calibrates to interior thresholds in every tier-A cell, so
-    # the SegFormer-only restriction of the third panel (M4) has no basis.
+    # the earlier SegFormer-only restriction has no basis.
     def _balanced(n, alpha, col="region_fnr", models=None):
         d = sel(r, n_target=n, alpha=alpha, rho=0.5)
         d = d[d.feasible.astype(bool)]
@@ -1054,7 +1054,7 @@ def section_tier_a():
                 truth(149, f"tier A n_t=25 a=0.05 infeasible >0.99", got > 0.99, f"{got:.4f}")
             else:
                 near(149, f"tier A n_t={n} a={al} infeasible", inf_, got, 0.006)
-    # 958: the reason Mask2Former is kept out of Table VI (third panel, M4).
+    # 958: the reason Mask2Former belongs in Table VI.
     m2f = sel(r, model="mask2former_swinb_cityscapes", rho=0.5)
     m2f = m2f[m2f.feasible.astype(bool)]
     m2f_area = (m2f.groupby(["n_target", "alpha", "class_name"])["marked_area_fraction"]
@@ -1065,7 +1065,7 @@ def section_tier_a():
           and abs(float(m2f_area.max()) - 0.765) < 5e-4,
           f"min {float(m2f_area.min()):.3f}, max {float(m2f_area.max()):.3f}, cells {len(m2f_area)}, "
           f"{int((m2f.lam_index >= LAM_MAX).sum())} of {len(m2f)} draws at lambda_max")
-    # 959: what the n_t=25, alpha=0.05 cell is made of (third panel, M5).
+    # 959: what the n_t=25, alpha=0.05 cell is made of.
     cell = sel(r, n_target=25, alpha=0.05, rho=0.5)
     cell = cell[cell.feasible.astype(bool)]
     truth(959, "n_t=25, alpha=0.05: sixteen feasible draws, all person "
@@ -1336,7 +1336,7 @@ def _seqdisjoint_tier_a_claims():
 
     _seqdisjoint_frame_cost()
     _sequence_overlap_claims()
-    _panel4_arms()
+    _additional_arms()
 
 
 def _marida_confidence_size_strata():
@@ -1396,7 +1396,7 @@ def _sequence_overlap_claims():
     """Section IV-A: at n_t=25, the share of test frames whose driving sequence
     also supplied a calibration frame. The text once said 91-96%; measured from
     the committed schemes it is a median of 92-100% by condition over a per-draw
-    range that reaches down to 70% (third panel, M2)."""
+    range that reaches down to 70%."""
     stats = {}
     for cond in ("fog", "night", "rain", "snow"):
         path = splits_dir() / f"acdc_{cond}_targetcal25.json"
@@ -1421,8 +1421,8 @@ def _sequence_overlap_claims():
           f"max median {max(meds):.3f}, min draw {min(mins):.3f}")
 
 
-def _panel4_arms():
-    """Fourth panel (2026-09-07): the arms the article now quotes.
+def _additional_arms():
+    """Additional arms the article quotes (added 2026-09-07).
 
     x13 at n_t = 50/100, tier B without shift (x14), source CRC at the
     reduced level (x15) and dilation CRC (x16). Each check pins a sentence of
@@ -1798,7 +1798,7 @@ def section_loveda():
           and abs(pxc[("l1_indist__rural", "water")] - 0.202) < 5e-4
           and abs(float(pxc.xs("l1_indist__rural").mean()) - 0.186) < 5e-4,
           str(pxc.round(4).to_dict()))
-    # Per class the same direction is not intact (third panel, M6): the text
+    # Per class the same direction is not intact: the text
     # now says four of twelve cells, all water, worst 1.27x at a=0.1, rho=0.1.
     pc = sel(b, method="region_crc", experiment="l2_break__rural2urban")
     if "feasible" in pc.columns:
@@ -2833,8 +2833,7 @@ def section_review():
           ("segformer_b2_cityscapes_mcdrop8", "e2_break__fog__segformer_b2_cityscapes_mcdrop8", "rider", 0.05),
           str((cc_ / cc_.index.get_level_values("alpha")).idxmax()))
     near(944, "its value is 0.211", 0.211, float(cc_[(cc_ / cc_.index.get_level_values("alpha")).idxmax()]), 0.001)
-    # The abstract quotes the larger of the two capture levels (fourth panel,
-    # A1): at rho=0.1 the worst class cell is B5, bicycle, night, alpha=0.1.
+    # The abstract quotes the larger of the two capture levels: at rho=0.1 the worst class cell is B5, bicycle, night, alpha=0.1.
     br1 = sel(load("e2_break__*"), method="region_crc", rho=0.1)
     br1 = br1[br1["feasible"].astype(bool)]
     cc1 = br1.groupby(["model", "experiment", "class_name", "alpha"])["region_fnr"].mean()
@@ -2978,7 +2977,7 @@ def section_capture_rule():
           component_miss_matrix(stored.astype(np.float32), 0.1)[0, 0] == 0.0,
           "0.1 stored as float16 is 0.0999756")
 
-    # The drivers, not only the library. The fourth panel (H2 #1) found three
+    # The drivers, not only the library. A review of the drivers found three
     # bare comparisons in 05_run_experiments.py and one in
     # 26_marida_confidence.py that the two source checks above could not see,
     # because they only read src/record. Every "< rho" outside
@@ -3062,11 +3061,11 @@ def section_loggrid():
 
 
 
-def section_panel5():
-    """Fifth referee panel (2026-09-16): tier A on held-out MARIDA spring, the
+def section_marida_followup():
+    """MARIDA follow-up checks (2026-09-16): tier A on held-out MARIDA spring, the
     drift monitor on the MARIDA partitions, the season definition, and the
     ensemble's cost."""
-    head("Y  Fifth panel: MARIDA tier A, monitor, season, ensemble")
+    head("Y  MARIDA follow-up: tier A, monitor, season, ensemble")
     import glob as _glob
     exp = results_dir("experiments")
     h4 = sorted(_glob.glob(str(exp / "h4_tierA*__spring__*.csv")))
@@ -3169,7 +3168,7 @@ SECTIONS = {
     "H": section_breakdown, "I": section_tier_a, "J": section_tier_b,
     "K": section_loveda, "L": section_marida, "M": section_triage,
     "N": section_holdout, "R": section_revision, "S": section_review, "P": section_capture_rule, "X": section_cross,
-    "Z": section_loggrid, "Y": section_panel5,
+    "Z": section_loggrid, "Y": section_marida_followup,
 }
 
 

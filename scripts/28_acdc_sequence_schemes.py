@@ -35,7 +35,7 @@ them, sometimes many more. That cost is reported per condition and per seed
 rather than hidden, and a condition whose sequence count is too small for the
 requested n_t is flagged loudly: night has only 6 sequences, so a
 sequence-disjoint calibration set there rests on one or two of them and the
-draw-to-draw spread is the honest headline, not the mean.
+draw-to-draw spread is the appropriate headline, not the mean.
 
 Example
 -------
@@ -115,7 +115,7 @@ def sequence_disjoint_split(pool, n_cal, base_seed, scheme, seed_index,
     By default the calibration list is then truncated to exactly ``n_cal``
     frames (in shuffled order within the consumed sequences), so that its size
     matches the published tier-A scheme and the two rows differ only in where
-    the frames come from -- the comparison the referee is asking for. With
+    the frames come from, which is the comparison of interest. With
     ``whole_sequences`` the calibration side keeps every frame of the consumed
     sequences instead, which answers a different question (how well does tier A
     do with a sequence-sized labeling budget) and is reported separately.

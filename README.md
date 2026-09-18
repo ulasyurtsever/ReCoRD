@@ -103,14 +103,14 @@ split generation, inference caching and region tables, LoveDA and MARIDA
 training, the experiment matrix on all three benchmarks, the positive control
 on a random patch-level split, the detector-level and temperature measurements
 (phase 7), the supplementary measurements the text quotes (phase 7b, stages
-21--24), the referee-response arms (phase 7c, stages 25--28), the tables at
+21--24), the supplementary arms (phase 7c, stages 25--28), the tables at
 both capture levels, the figures, and finally `18_audit.py`, which recomputes
 every published quantity from the CSVs on a code path independent of the table
 and figure builders. A nonzero exit from that last phase means the pipeline
 has stopped reproducing a published value.
 
 Re-deriving stage 5 alone, without training or inference, is what
-`run_p1_rerun.sh` does: it backs up `results/experiments/`, rewrites every
+`run_stage5_rederive.sh` does: it backs up `results/experiments/`, rewrites every
 experiment CSV from the existing caches and region tables, compares the two
 trees with `compare_experiments.py` (which stops the run if a quantity that
 cannot move has moved), and rebuilds the tables, figures and audit.
@@ -176,13 +176,13 @@ per region and season, then caching, tables and experiments),
 the cross-fitted weights, the tier-B holdout controls and the MARIDA
 in-distribution control: the `p1`--`p7` blocks under
 `results/experiments/`),
-`run_referee_response.sh` (stages 25--28 preceded by a stage-4 rebuild on the
+`run_supplementary_arms.sh` (stages 25--28 preceded by a stage-4 rebuild on the
 densified false-positive subgrid; `run_all.sh` reaches the same stages as
 phase 7c without the rebuild),
-`run_p1_rerun.sh` and `run_p1_x7_fix.sh` (stage 5 re-derived in full from
+`run_stage5_rederive.sh` and `run_union_area_redo.sh` (stage 5 re-derived in full from
 existing caches, with the comparison and the audit; the second redoes the
 union-area block alone),
-`run_panel4.sh` (the same re-derivation plus the fourth panel's arms: `x13`
+`run_stage5_rederive_arms.sh` (the same re-derivation plus the additional arms: `x13`
 at $n_t = 50, 100$, `x14` tier B without shift, `x15` source CRC at the
 reduced level, `x16` dilation CRC, `x17` Mask2Former on the log-tail grid),
 `run_loggrid_full.sh` (stage 4 rebuilt for every model on the log-tail grid,
@@ -225,7 +225,7 @@ every result file had been produced by the same defective code. The
 stage-5 integration test and audit section P were added for that gap. When a
 finding touches a published number, the sequence is: fix the library, extend
 the tests so the defect fails, re-derive the affected result files
-(`run_p1_rerun.sh` or the relevant driver), update the audit constants to the
+(`run_stage5_rederive.sh` or the relevant driver), update the audit constants to the
 measured values, and inject the defect once more to confirm both layers catch
 it.
 

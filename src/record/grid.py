@@ -23,9 +23,9 @@ def _build_grid(kind: str) -> np.ndarray:
     whole image and the loss still vanishes there (Lemma 1 needs that
     endpoint). Calibrated thresholds of confident models sit within 1e-3 of
     lambda = 1, where the previous uniform grid had a single point; on that
-    grid Mask2Former could only be calibrated to "mark everything", which the
-    fourth referee panel showed to be a resolution artifact rather than a
-    property of the posterior. ``uniform`` is the earlier grid, 1001 equally
+    grid Mask2Former could only be calibrated to "mark everything", which
+    turned out to be a resolution artifact rather than a property of the
+    posterior. ``uniform`` is the earlier grid, 1001 equally
     spaced points, kept selectable for reproducing the pre-2026-09-08 numbers.
     The grid is selected with the RECORD_GRID environment variable at import
     time; every cached statistic is tabulated on it, so tables and experiments

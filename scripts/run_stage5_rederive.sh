@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# P1 re-run: regenerate every stage-5 output with the corrected capture rule.
+# Stage-5 re-derivation: regenerate every stage-5 output with the corrected
+# capture rule.
 #
 # WHY. src/record/losses.py now decides capture at the storage precision of the
 # coverage curves (float16). Before commit 448e186 two drivers widened the
@@ -11,10 +12,10 @@
 #
 # WHAT IT DOES NOT DO. No training, no inference, no cache or region-table
 # rebuild: results/raw and cache/ are inputs here, never outputs. The FP
-# subgrid rebuild (step 1 of run_referee_response.sh) is stage 4 and is
+# subgrid rebuild (step 1 of run_supplementary_arms.sh) is stage 4 and is
 # skipped for the same reason.
 #
-# ORDER. Stage-5 matrices first (e/l/h/c/x/p blocks), then the referee arms
+# ORDER. Stage-5 matrices first (e/l/h/c/x/p blocks), then the supplementary arms
 # that read them (x10 reproduces e4_tierB and aborts if it cannot), then the
 # supplementary measurements of phase 7b, then the comparison, then tables and
 # figures, then the audit. The comparison runs BEFORE the tables: if rho = 0.5
@@ -26,10 +27,10 @@
 # stage-5 drivers whose ">>> ... DONE" line already appears in the log.
 #
 # Usage (from the repository root, conda env `record`):
-#   nohup bash scripts/run_p1_rerun.sh > p1_rerun.log 2>&1 &
+#   nohup bash scripts/run_stage5_rederive.sh > stage5_rederive.log 2>&1 &
 #   tail -f p1_rerun.log
 # Dry run (prints every command, executes none):
-#   DRY_RUN=1 bash scripts/run_p1_rerun.sh
+#   DRY_RUN=1 bash scripts/run_stage5_rederive.sh
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -71,7 +72,7 @@ run bash scripts/run_stage5_extras.sh                 # x1 (6), x2 (2), x3 (6 ru
 run bash scripts/run_stage5_baselines.sh              # 04b tables, x4 (2), x5 (2)
 run bash scripts/run_stage5_supplementary.sh          # p1 (2), p3 (24), p4 (4), p5 (2), p6/p7 (8)
 
-step "2. referee-response arms (run_referee_response.sh steps 2, 3, 4, 6)"
+step "2. supplementary arms (run_supplementary_arms.sh steps 2, 3, 4, 6)"
 # step 1 of that driver is stage 4 (unchanged), step 5 duplicates baselines above.
 run python scripts/25_tierb_test_charge.py \
     --model segformer_b2_cityscapes --scheme cityscapes_val_half \
@@ -158,5 +159,5 @@ else
 fi
 
 echo
-echo "RESULT: P1 RERUN DONE"
+echo "RESULT: STAGE5 REDERIVE DONE"
 date

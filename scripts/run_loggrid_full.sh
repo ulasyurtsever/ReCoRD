@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Move every published number onto the log-tail threshold grid (2026-09-08).
 #
-# WHY. The fourth panel's x17 arm showed that Mask2Former's "mark everything"
+# WHY. The x17 arm showed that Mask2Former's "mark everything"
 # calibration was an artifact of the uniform 1001-point grid, whose single
 # point within 1e-3 of lambda = 1 could not resolve that model's thresholds;
 # on a grid that spaces 1 - lambda over six decades the same model calibrates
@@ -18,7 +18,7 @@
 #   results/tables, results/figures are versioned in the git mirror.
 #
 # ORDER. Stage 4 for all models (from raw_uniform's directory list), stage 30
-# (dilation tables), then stage 5 exactly as run_panel4.sh minus the x17 arm,
+# (dilation tables), then stage 5 exactly as run_stage5_rederive_arms.sh minus the x17 arm,
 # which is now the main matrix; x17 files and results_loggrid/ are parked.
 # The comparison against the backup runs WITHOUT --strict: every number is
 # expected to move, and lambda-hat indices are not comparable across grids.
@@ -95,7 +95,7 @@ run bash scripts/run_stage5_extras.sh
 run bash scripts/run_stage5_baselines.sh              # step 1 rebuilds the tempscaled and LAC tables
 run bash scripts/run_stage5_supplementary.sh
 
-step "3. referee-response arms x10-x13"
+step "3. supplementary arms x10-x13"
 run python scripts/25_tierb_test_charge.py \
     --model segformer_b2_cityscapes --scheme cityscapes_val_half \
     --cal-datasets cityscapes_val --embedding dinov2_vitb14 \

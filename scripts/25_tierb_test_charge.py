@@ -6,18 +6,18 @@ charge it the clipping ceiling (``test_weight=clip[1]`` in stage 5): the
 largest weight the estimator is allowed to return, hence an upper bound on
 whatever the true test point would have been given. That is safe, and the
 method section says in as many words that it is stricter than necessary. It is
-also what makes the tier-B rows vacuous, because the conservative mass it buys,
+also what makes the tier-B rows vacuous, because the conservative mass it introduces,
 
     p_test = kappa / (sum_i w_i + kappa),
 
 exceeds alpha on its own once the calibration weights have collapsed onto the
 floor: with w_i = ell for every i the sum is ell*n, and at
 (ell, kappa, n) = (0.05, 20, 200) the mass is 0.66 against an alpha of at most
-0.2. A referee is entitled to ask whether the reported vacuity is a property of
+0.2. A natural question is whether the reported vacuity is a property of
 importance-weighted CRC or an artifact of that ceiling. Nothing in the
 published files answers it, because the pipeline never scores the estimated
 ratio anywhere except on the source side. This stage answers it, with four arms
-written side by side into one CSV so that no one has to join files:
+written side by side into one CSV so that no join across files is needed:
 
     published/ceiling   the published fit, the published ceiling charge,
                         recomputed here from the same tables
@@ -47,8 +47,8 @@ transductive dependence ``--weight-holdout`` exists to remove in stage 5 -- and
 there is no single calibrated threshold at the end, only a family of them, one
 per target image, so the reported risk averages over thresholds rather than
 measuring one. The arm is therefore an optimistic bound on what charging the
-true weight could buy, not a procedure anyone can ship. That is the right
-instrument for the referee's question: if even this reading stays vacuous, the
+true weight could achieve, not a deployable procedure. That is the right
+instrument for that question: if even this reading stays vacuous, the
 ceiling was not the reason.
 
 The unfiltered refit

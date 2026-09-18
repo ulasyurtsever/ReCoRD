@@ -214,7 +214,7 @@ class TableStore:
 
         # Size-weighted region-miss curves: components weighted by pixel area.
         # Same capture rule as record.losses: decided at the storage precision
-        # of the curves, never on the widened float32 copy (third panel, P1).
+        # of the curves, never on the widened float32 copy.
         ind = (curves < capture_threshold(rho)).astype(np.float64)
         num_sw = np.zeros((n, LAMBDA_GRID.size))
         np.add.at(num_sw, img_idx, ind * sizes[:, None])
@@ -611,9 +611,9 @@ def run_shared(records, triage_records, cal_store, test_store, cal_rows,
 def _lac_pixel_fnr(args, tv, test_rows, col) -> dict:
     """The realized pixel FNR of a LAC threshold, when it was asked for.
 
-    The LAC rows are the ones the referee's objection is about -- a threshold
-    set by a pixel-coverage target, then charged with region loss -- so they
-    are the rows where the pixel quantity most needs to be on the record.
+    The LAC rows are the ones where a threshold set by a pixel-coverage
+    target is charged with region loss, so they are the rows where the pixel
+    quantity most needs to be on the record.
     They are built here rather than in the main record path, which is why the
     column was NaN on exactly these rows in the first run.
     """
@@ -652,7 +652,7 @@ def run_lac(records, cal_store, test_store, cal_rows, test_rows, seed_key,
     comparison is then the quantity in dispute -- controlling the pixel
     coverage of a class is not the same as capturing its regions -- rather
     than an artifact of which pixels set the threshold. Reporting only the
-    first invites the referee's objection; reporting only the second hides
+    first would be unfair to LAC; reporting only the second hides
     the out-of-the-box behaviour a practitioner would actually get.
     """
     if "marginal" in args.lac_variants:

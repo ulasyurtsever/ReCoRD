@@ -284,8 +284,8 @@ def test_stage5_measure_pixel_fnr_covers_the_lac_rows(synthetic_env):
     """--measure-pixel-fnr must fill the column on the LAC rows too.
 
     The first server run produced it on pixel_crc and region_crc and left it
-    NaN on lac_global and lac_classcond -- exactly the rows the referee's
-    question is about -- because run_lac builds its records separately from
+    NaN on lac_global and lac_classcond -- exactly the rows where the quantity
+    matters -- because run_lac builds its records separately from
     the main record path.
     """
     frame = _run_stage5(synthetic_env, "lac_pixfnr_run", [
@@ -360,7 +360,7 @@ def test_stage5_captures_components_sitting_exactly_on_rho(synthetic_env):
     assert (rows["lam"] < 1.0).all(), rows["lam"].tolist()
     # The driver's own component tally and its size-weighted curve must use
     # the same rounded rule as the controlled loss. Both compared the widened
-    # float32 copy against a bare rho until the fourth panel (H2 #1), so the
+    # float32 copy against a bare rho until that was corrected, so the
     # count said "every component missed" while the controlled risk said
     # "none": two answers to one question, in one CSV row.
     assert (rows["n_missed_components"] == 0).all(), rows["n_missed_components"].tolist()
