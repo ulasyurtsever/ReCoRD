@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 24: descriptive statistics of the MARIDA ground-truth components.
 
-Two numbers quoted in Section V-E are properties of the benchmark rather than
+Two numbers quoted in the MARIDA section are properties of the benchmark rather than
 of any calibration run: the size distribution of the debris components and the
 number of MARIDA patches that carry at least one of them. Both are read from
 the cached component tables that stage 4 writes under ``results/raw``. Those

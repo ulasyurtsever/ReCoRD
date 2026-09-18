@@ -3,7 +3,7 @@
 
 Pure arithmetic over ``results/experiments/``; writes one PDF per figure
 under ``results/figures/`` plus a manifest. Colors follow the Okabe--Ito
-colorblind-safe palette; sizes target a single IEEE column.
+colorblind-safe palette; sizes target a single text column.
 """
 
 from __future__ import annotations

@@ -211,7 +211,7 @@ def table_tier_a(df: pd.DataFrame) -> str:
         body,
         "Tier A on ACDC: exact recalibration from $n_t$ labeled target "
         "images.",
-        # The feasible-draw counts widen the table past one IEEE column.
+        # The feasible-draw counts widen the table past a single column.
         "tab:tier_a", "l" + "ccc" * len(ALPHAS), header, star=True)
 
 
@@ -222,7 +222,7 @@ def table_marida_tier_a(df: pd.DataFrame) -> str:
     Rows are the labeled-target budget crossed with the draw scheme: patches
     drawn uniformly from the spring test group, and whole acquisition scenes
     assigned to the calibration side so that no test patch shares a scene
-    with a calibration patch. Columns as in Table VI; the single critical
+    with a calibration patch. Columns as in the tier-A table; the single critical
     class makes the class balancing a no-op. Marked area is also given in
     hectares of a 6.55 km^2 patch, the unit a photointerpreter budgets in.
     """
@@ -403,7 +403,7 @@ def table_ablations(df: pd.DataFrame) -> str:
 
 
 CRITICAL_CLASSES = ["person", "rider", "bicycle"]
-# The full model labels overflow an IEEE column at twelve rows by eight
+# The full model labels overflow a single column at twelve rows by eight
 # columns; the caption names the table they abbreviate.
 SHORT_MODEL_LABELS = {
     "segformer_b2_cityscapes": "B2",

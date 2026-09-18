@@ -213,7 +213,7 @@ def section_indist():
     cells = cellmean(r, ["model", "class_name", "alpha", "rho"])
     truth(51, "in-distribution matrix has exactly 72 cells",
           len(cells) == 72, f"{len(cells)} cells")
-    # Abstract and Section IV-A: validity is met by marking almost everything
+    # Abstract and in-distribution section: validity is met by marking almost everything
     # in part of the matrix, so the count of near-saturated cells is reported.
     areas = cellmean(r, ["model", "class_name", "alpha", "rho"],
                      col="marked_area_fraction")
@@ -555,7 +555,7 @@ def section_baselines():
 # G. ablations
 # --------------------------------------------------------------------------
 def section_lac_detail():
-    """Section IV-B quotes LAC at both capture levels and its marked area."""
+    """The in-distribution section quotes LAC at both capture levels and its marked area."""
     lac = sel(load("x4_lac__*"), method="lac_global")
     per = lac.groupby(["model", "alpha", "rho"])[
         ["region_fnr", "marked_area_fraction"]].mean()
@@ -595,8 +595,8 @@ def _lac_classcond_and_pixel_fnr():
     made the guard depend on the artefact under test: rerunning the block with
     the narrower flag set overwrites the CSV *and* the sidecar, so the check
     stopped asking for exactly the rows the rerun had just dropped, and the
-    audit passed while Table II lost two rows. The demand is therefore
-    unconditional. Table II prints the class-conditional row and Section V
+    audit passed while the baselines table lost two rows. The demand is therefore
+    unconditional. The baselines table prints the class-conditional row and the text
     quotes both the region-FNR and the marked-area gap, so once the x4 block
     exists at all, these rows are published content and their absence is a
     failure, whatever the run asked for. The recorded argv is still read, but
@@ -612,8 +612,8 @@ def _lac_classcond_and_pixel_fnr():
           not cc.empty,
           f"{len(cc)} rows" if not cc.empty else
           "x4_lac ran without --lac-variants marginal class_conditional "
-          f"(sidecars recorded the request: {asked_cc}); Table II loses its "
-          "class-conditional row and Section V its two gaps")
+          f"(sidecars recorded the request: {asked_cc}); the baselines table loses its "
+          "class-conditional row and the text its two gaps")
 
     if not cc.empty:
         # What the arm actually shows, measured rather than assumed: given
@@ -648,7 +648,7 @@ def _lac_classcond_and_pixel_fnr():
     has_px = "realized_pixel_fnr" in raw.columns
     truth(99, "realized_pixel_fnr column present in x4_lac__*", has_px,
           "x4_lac ran without --measure-pixel-fnr (sidecars recorded the "
-          f"request: {asked_px}); the pixel-level target Section V reports "
+          f"request: {asked_px}); the pixel-level target the text reports "
           "is then asserted rather than measured" if not has_px else "")
     if has_px:
         px = raw.dropna(subset=["realized_pixel_fnr"])
@@ -716,7 +716,7 @@ def _pixel_target_checks(px):
           f"{len(gap)} cells, smallest separation {float(gap.min()):+.4f}"
           if len(gap) else "no comparable cell")
 
-    # The per-level values Section IV-B prints. The realized pixel FNR does
+    # The per-level values the in-distribution section prints. The realized pixel FNR does
     # not depend on rho, so one number per (method, level) is the whole claim.
     by_level = cell.groupby(["method", "alpha"])["pix"].mean()
     for alpha, want in ((0.05, 0.46), (0.10, 0.67), (0.20, 0.82)):
@@ -729,14 +729,14 @@ def _pixel_target_checks(px):
         near(100, f"class-conditional LAC pixel FNR at alpha={alpha:g}",
              want, float(by_level[("lac_classcond", alpha)]), tol=5e-4)
 
-    # What Table II prints: the alpha=0.2 rows, rounded as the table rounds.
+    # What the baselines table prints: the alpha=0.2 rows, rounded as the table rounds.
     tab = cell[np.isclose(cell["alpha"], 0.20)]
     key = ["model", "rho"]
     cc = tab[tab["method"] == "lac_classcond"].set_index(key)
     px = tab[tab["method"] == "pixel_crc"].set_index(key)
     shared = cc.index.intersection(px.index)
     dprint = (cc.loc[shared, "reg"].round(3) - px.loc[shared, "reg"].round(3)).abs()
-    truth(100, "as printed in Table II the two rows agree to 0.002 in FNR",
+    truth(100, "as printed in the baselines table the two rows agree to 0.002 in FNR",
           bool(len(shared)) and float(dprint.max()) <= 0.002 + 1e-12,
           f"{len(shared)} printed cells, largest printed gap {float(dprint.max()):.3f}")
 
@@ -1009,10 +1009,10 @@ def section_tier_a():
     note(141, "same over both capture levels",
          f"max sd = {np.nanmax(sdall.values):.4f} at {sdall.idxmax()}")
 
-    # Table VI is class-balanced: each column is averaged per class and then
+    # The tier-A table is class-balanced: each column is averaged per class and then
     # over classes, so no cell is dominated by whichever class still has
     # feasible draws at a tight level.
-    # Table VI is over all four models again (2026-09-09): on the log-tail grid
+    # The tier-A table is over all four models again (2026-09-09): on the log-tail grid
     # Mask2Former calibrates to interior thresholds in every tier-A cell, so
     # the earlier SegFormer-only restriction has no basis.
     def _balanced(n, alpha, col="region_fnr", models=None):
@@ -1054,13 +1054,13 @@ def section_tier_a():
                 truth(149, f"tier A n_t=25 a=0.05 infeasible >0.99", got > 0.99, f"{got:.4f}")
             else:
                 near(149, f"tier A n_t={n} a={al} infeasible", inf_, got, 0.006)
-    # 958: the reason Mask2Former belongs in Table VI.
+    # 958: the reason Mask2Former belongs in the tier-A table.
     m2f = sel(r, model="mask2former_swinb_cityscapes", rho=0.5)
     m2f = m2f[m2f.feasible.astype(bool)]
     m2f_area = (m2f.groupby(["n_target", "alpha", "class_name"])["marked_area_fraction"]
                 .mean().groupby(level=[0, 1]).mean())
     truth(958, "Mask2Former marks 20-77% of the image over its nine tier-A cells "
-               "(class-balanced), so it belongs in Table VI again",
+               "(class-balanced), so it belongs in the tier-A table again",
           len(m2f_area) == 9 and abs(float(m2f_area.min()) - 0.196) < 5e-4
           and abs(float(m2f_area.max()) - 0.765) < 5e-4,
           f"min {float(m2f_area.min()):.3f}, max {float(m2f_area.max()):.3f}, cells {len(m2f_area)}, "
@@ -1252,7 +1252,7 @@ def section_tier_b():
     _tierb_test_charge_claims()
 
 def _seqdisjoint_tier_a_claims():
-    """Section IV-E: tier A with whole driving sequences held out.
+    """Tier-A section: tier A with whole driving sequences held out.
 
     The paragraph claims the recovery is not proximity within a drive. The
     checks are the cells that carry a feasible draw under both schemes, and
@@ -1340,7 +1340,7 @@ def _seqdisjoint_tier_a_claims():
 
 
 def _marida_confidence_size_strata():
-    """Section IV-H: the confidence gap is confounded by component size.
+    """MARIDA section: the confidence gap is confounded by component size.
 
     The paragraph claims that stratifying by size removes most of the apparent
     confidence effect. That is a negative claim about the confidence layer, so
@@ -1393,7 +1393,7 @@ def _marida_confidence_size_strata():
 
 
 def _sequence_overlap_claims():
-    """Section IV-A: at n_t=25, the share of test frames whose driving sequence
+    """Setup section: at n_t=25, the share of test frames whose driving sequence
     also supplied a calibration frame. The text once said 91-96%; measured from
     the committed schemes it is a median of 92-100% by condition over a per-draw
     range that reaches down to 70%."""
@@ -1426,7 +1426,7 @@ def _additional_arms():
 
     x13 at n_t = 50/100, tier B without shift (x14), source CRC at the
     reduced level (x15) and dilation CRC (x16). Each check pins a sentence of
-    Section IV; x17 (Mask2Former on the log-tail grid) is reported separately
+    the experiments section; x17 (Mask2Former on the log-tail grid) is reported separately
     once its role in the tables is decided.
     """
     import glob as _glob
@@ -1579,7 +1579,7 @@ def _additional_arms():
 
 
 def _seqdisjoint_frame_cost():
-    """Section IV-E: what holding out whole drives costs in test frames."""
+    """Tier-A section: what holding out whole drives costs in test frames."""
     paths = sorted(glob.glob(str(splits_dir()
                                  / "acdc_*_targetcal25_seqdisjoint.meta.json")))
     if not paths:
@@ -1603,7 +1603,7 @@ def _seqdisjoint_frame_cost():
 
 
 def _marida_confidence_claims():
-    """Section IV-H: MARIDA annotation confidence.
+    """MARIDA section: annotation confidence.
 
     The pixel split is checked against MARIDA's own published total of 3399
     annotated debris pixels, so a change in how the rasters are read shows up
@@ -1683,7 +1683,7 @@ def _marida_confidence_claims():
 
 
 def _tierb_test_charge_claims():
-    """Section IV-F: charging the test point its own estimated weight.
+    """Tier-B section: charging the test point its own estimated weight.
 
     The paragraph rests on two measurements -- that the four arms agree
     exactly, and that they agree because every target weight is already at
@@ -2015,12 +2015,12 @@ def section_marida():
     single = "h1_official__marida_unet_official_holdout"
     ens = "h1_official__marida_unet_official_holdout_ens5"
 
-    # --- prose numbers of Section V-E that no table carries -------------
+    # --- prose numbers of the MARIDA section that no table carries ----------
     debris = _n_debris_patches()
     if debris is None:
         fail(190, "the debris-patch count cannot be read",
              "run scripts/24_marida_component_stats.py (run_all.sh phase 7b); "
-             "Section V-E quotes 373 of 1381 patches from it")
+             "the MARIDA section quotes 373 of 1381 patches from it")
     else:
         near(190, "373 of 1381 patches contain debris", 373, float(debris), 0.5)
     near(199, "official test group spans 14 debris-bearing scenes", 14,
@@ -2058,7 +2058,7 @@ def section_marida():
     else:
         fail(202, "the MARIDA component-size statistics cannot be read",
              "run scripts/24_marida_component_stats.py (run_all.sh phase 7b); "
-             "Section V-E and the appendix quote the median size and the "
+             "the MARIDA section quotes the median size and the "
              "3-px fraction from it")
 
     # pixel-level F1 of the reported detectors
@@ -2134,7 +2134,7 @@ def section_triage():
              f"area {100*(a.loc[0.5]/R0-1):+.0f}%  measured-random "
              f"{100*(rnd.loc[0.5]/R0-1):+.0f}%  exact floor -50%")
 
-    # --- the numbers Section V-F quotes, asserted rather than printed ----
+    # --- numbers the text quotes, asserted rather than printed ------------
     curves = {}
     for name in settings:
         sub = sel(tr, setting=name)
@@ -2198,7 +2198,7 @@ def section_triage():
 
 
 def _permutation_band_claims():
-    """Section IV-G: the marked-area ranking against the permutation band.
+    """Triage section: the marked-area ranking against the permutation band.
 
     Every number the subsection prints is checked here. The claim it supports
     is negative -- the ranking is not separable from a random order at these
@@ -2470,7 +2470,7 @@ def section_revision():
     near(203, "collapse prediction at ratio 40 leaves the certificate silent "
               "at alpha=0.2", 0.193, 40 / (n_cal + 40), 0.001)
 
-    # Section IV-B quotes the area-matched frontier from the released grid.
+    # The in-distribution section quotes the area-matched frontier from the released grid.
     pareto = (results_dir("tables") / "pareto_area_matched.tex")
     if pareto.exists():
         deltas = []
@@ -2517,7 +2517,7 @@ def section_revision():
             near(70, f"{model}: largest pixel-CRC lead over the whole band",
                  trail, float(d.min()), 0.0006)
 
-    # Section IV-F: the two Tier-B estimators fail for different reasons.
+    # Tier-B section: the two Tier-B estimators fail for different reasons.
     try:
         knn = sel(load("e4_tierB_knn__*"), method="weighted_crc")
         ratio = (knn["weight_ess"] / knn["n_cal_images"]).dropna()
@@ -2528,7 +2528,7 @@ def section_revision():
     except FileNotFoundError:
         note(157, "kNN tier-B runs missing", "skipped")
 
-    # Section IV-G: LoveDA in-domain validity is a rho=0.5 statement.
+    # LoveDA section: in-domain validity is a rho=0.5 statement.
     lv = sel(load("l1_indist__*"), method="region_crc")
     cells = cellmean(lv, ["scheme", "rho", "alpha"])
     over = [(k, v) for k, v in cells.items() if v > k[2] + 1e-12]
@@ -2556,7 +2556,7 @@ def section_revision():
     near(198, "smallest MARIDA calibration group puts the floor at 0.037",
          0.037, 1.0 / (float(min(sizes.values)) + 1), 0.001)
 
-    # Section IV-H quotes the pooled component rate on spring alongside the
+    # The MARIDA section quotes the pooled component rate on spring alongside the
     # image-averaged one; the two aggregations must both reproduce.
     mar_all = sel(load("h[123]_*"), method="region_crc", rho=0.5)
     spring = mar_all[mar_all["experiment"].str.contains("spring")]
@@ -2567,7 +2567,7 @@ def section_revision():
         near(200, f"spring pooled component rate at alpha={alpha}", want,
              pooled, 0.001)
 
-    # Section IV-B: the tempered rows of Table II use the seed-0 scalar. The
+    # In-distribution section: the tempered rows of the baselines table use the seed-0 scalar. The
     # prose bounds the dependence that reuse leaves behind by the move to the
     # per-draw refit, so the two runs are differenced cell by cell.
     cells = [(m, meth, rho)
@@ -2611,7 +2611,7 @@ def section_revision():
                   len(temps) == k and abs(min(temps) - lo) < 1e-9
                   and abs(max(temps) - hi) < 1e-9, str(temps))
 
-    # Section IV-B reports the measured union of the critical-class masks at
+    # The in-distribution section reports the measured union of the critical-class masks at
     # the selected thresholds, excluding draws where one class marks the whole
     # image. The per-draw bounds max_c <= union <= min(1, sum_c) must hold.
     try:
@@ -2619,7 +2619,7 @@ def section_revision():
     except FileNotFoundError:
         fail(98, "the union-area runs are absent",
              "run scripts/22_union_marked_area.py (run_all.sh phase 7b); "
-             "Section IV-B reports the measured union from them")
+             "the in-distribution section reports the measured union from them")
         uni = None
     if uni is not None:
         uni = uni[np.isclose(uni["alpha"], 0.2)]
@@ -2640,7 +2640,7 @@ def section_revision():
         truth(98, "no degenerate draw on the log-tail grid",
               n_degen == 0, f"{n_degen} across {uni['model'].nunique()} models")
 
-    # Section IV-A: a tile becomes a hold-out scheme only at >= 50 patches.
+    # Setup section: a tile becomes a hold-out scheme only at >= 50 patches.
     meta_path = paths_root() / "splits" / "marida_meta.csv"
     if meta_path.exists():
         counts = pd.read_csv(meta_path)["tile"].value_counts()
@@ -2681,7 +2681,7 @@ def section_review():
     and the measured mask union against the sum of the class masks."""
     head("S  Consistency-review quantities")
 
-    # Figure 4 and Section V-G report per-class cells, as Cityscapes does.
+    # The LoveDA figure and section report per-class cells, as Cityscapes does.
     lov = sel(load("l1_indist__*"), method="region_crc")
     if "feasible" in lov.columns:
         lov = lov[lov["feasible"].astype(bool)]
@@ -2718,7 +2718,7 @@ def section_review():
           len(ocells) == 12 and len(o_over) == 9,
           f"{len(o_over)} of {len(ocells)}")
 
-    # Section V-H: the spring numbers quoted per image and per component.
+    # MARIDA section: the spring numbers quoted per image and per component.
     spring = sel(load("h3_season__spring*"), rho=0.5, alpha=0.2)
     arg = spring[spring.method == "argmax"]
     crc = spring[spring.method == "region_crc"]
@@ -2744,13 +2744,13 @@ def section_review():
               at_floor == want_floor,
               f"ESS/n in [{ess.min():.4f}, {ess.max():.4f}]")
 
-    # Section V-A: the union of the three critical masks against their sum.
+    # In-distribution section: the union of the three critical masks against their sum.
     exp_dir = results_dir("experiments")
     paths = sorted(glob.glob(str(exp_dir / "x7_union_area__*.csv")))
     if not paths:
         fail(932, "the union-area runs are absent",
              "run scripts/22_union_marked_area.py (run_all.sh phase 7b); "
-             "Section V-A reports the union against the sum from them")
+             "the in-distribution section reports the union against the sum from them")
         return
     ratios_mean, ratios_sum = [], []
     for p in paths:
@@ -2767,7 +2767,7 @@ def section_review():
     rng_claim(934, "the union is 68-82% of the sum of the three masks",
               0.680, 0.820, ratios_sum, 0.005)
 
-    # Section IV-B now prints the union with the degenerate draws kept as well
+    # The in-distribution section prints the union with the degenerate draws kept as well
     # as removed: they are the most expensive operating points, not invalid
     # observations, and on B5 three draws in twenty-five carry the figure from
     # 3.4% to 15.0%.
@@ -2779,7 +2779,7 @@ def section_review():
         cond.append(float(keep["union_area"].mean()))
         allw.append(float(u["union_area"].mean()))
         degen.append(int(u["degenerate"].sum()) if "degenerate" in u else 0)
-    # Section V-B: the lowest grid index any model selects, and Mask2Former's
+    # In-distribution section: the lowest grid index any model selects, and Mask2Former's
     # own minimum. The earlier text claimed every threshold sat in the top
     # twenty points, which the matrix does not support.
     e1_ = sel(load("e1_indist__*"), method="region_crc")
@@ -2791,7 +2791,7 @@ def section_review():
           int(m2f_["lam_index"].min()) == 410 and int(m2f_["lam_index"].max()) == 981,
           f"[{int(m2f_['lam_index'].min())}, {int(m2f_['lam_index'].max())}]")
 
-    # Section V-C: the degenerate-draw fraction with and without Mask2Former,
+    # Degenerate-draw fraction with and without Mask2Former,
     # and the argmax night range separated by capture level.
     e2_ = sel(load("e2_break__*"), method="region_crc", rho=0.5)
     truth(942, "four SegFormer draws under shift are degenerate, and no Mask2Former draw",
@@ -2806,7 +2806,7 @@ def section_review():
         rng_claim(942, f"argmax misses {lo_:.0%}-{hi_:.0%} of night regions at "
                        f"rho={rho_}", lo_, hi_, v.values, 0.001)
 
-    # Section V-B: the size strata quoted in the text are B2's, and the
+    # In-distribution section: the size strata quoted in the text are B2's, and the
     # three-variant average is a different pair.
     st = sel(load("e1_indist__*"), method="region_crc", alpha=0.20, rho=0.5)
     st = st[st["feasible"].astype(bool)]
@@ -2861,12 +2861,12 @@ def section_review():
     truth(941, "no draw is degenerate on the log-tail grid",
           max(degen) == 0, f"degenerate counts {sorted(degen)}")
 
-    # Section V-E: the class-conditional target pool does not lift the collapse.
+    # Tier-B section: the class-conditional target pool does not lift the collapse.
     pool_paths = sorted(glob.glob(str(exp_dir / "x8_tierb_pool__*.csv")))
     if not pool_paths:
         fail(935, "the tier-B target-pool run is absent",
              "run scripts/23_tierb_target_pool.py (run_all.sh phase 7b); "
-             "Section V-E reports the pool diagnostics from it")
+             "the tier-B section reports the pool diagnostics from it")
         return
     x8 = pd.concat([pd.read_csv(p) for p in pool_paths], ignore_index=True)
     truth(935, "every weight clips to the floor under BOTH target pools",
@@ -2904,14 +2904,14 @@ def section_review():
                "the shared pool", len(j) > 0 and d == 0.0,
           f"{len(j)} matched records, max abs diff {d:.3e}")
 
-    # Section VI(a): the expected number of missed regions per scene is
+    # Limitation (a) in the Discussion: the expected number of missed regions per scene is
     # E[N L], not E[N] E[L]. The bound constrains L alone, so the product form
     # is exact only under independence, and the discussion quotes the gap
     # measured here rather than asserting the factorization.
     comp = results_dir("experiments") / "x11_marida_confidence__components.csv"
     if not comp.exists():
         fail(941, "the MARIDA component table is absent",
-             "run scripts/26_marida_confidence.py; Section VI(a) quotes the "
+             "run scripts/26_marida_confidence.py; limitation (a) quotes the "
              "product-form gap measured from it")
     else:
         cdf = pd.read_csv(comp)
@@ -3003,7 +3003,7 @@ def section_loggrid():
     from record.grid import GRID_KIND, N_POINTS
     k = np.arange(N_POINTS)
     want = 1.0 - 10.0 ** (-6.0 * k / (N_POINTS - 1)); want[-1] = 1.0
-    truth(970, "the default grid is the log-tail grid of Section IV-A",
+    truth(970, "the default grid is the log-tail grid of the Protocol",
           GRID_KIND == "logtail", f"GRID_KIND={GRID_KIND}")
     truth(970, "lambda_k = 1 - 10^(-6k/1000) for k < 1000 and lambda_1000 = 1",
           N_POINTS == 1001 and bool(np.allclose(LAMBDA_GRID, want, atol=0, rtol=1e-12))
@@ -3016,7 +3016,7 @@ def section_loggrid():
     tex = results_dir("tables") / "tier_a.tex"
     if tex.exists():
         t = tex.read_text()
-        truth(971, "Table VI is over all four models again (no 'SegFormer variants' in its caption) "
+        truth(971, "the tier-A table is over all four models again (no 'SegFormer variants' in its caption) "
                    "and its n_t=25, alpha=0.05 cell rests on 16 draws",
               "SegFormer variants" not in t and "(16)" in t, "")
     e1 = sel(load("e1_indist__*"), method="region_crc")

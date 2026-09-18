@@ -130,7 +130,7 @@ def emit(cells: pd.DataFrame, keycols: list[str], caption: str, label: str,
 
     colspec = "l" * len(keycols) + "c" * (len(cols) - len(keycols))
     # The MARIDA table carries three extra count columns beside long axis
-    # labels, so it needs tighter padding to stay inside the IEEE column.
+    # labels, so it needs tighter padding to stay inside a single column.
     colsep = "2pt" if show_components else "3pt"
     path.write_text(latex_table("\n".join(body_rows), caption, label,
                                 colspec, header, colsep=colsep))

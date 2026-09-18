@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """Stage 31: tier-A target-calibration schemes for the held-out MARIDA spring.
 
-WHY. Section IV reports tier A (recalibration on a few labeled target images)
+WHY. The experiments section reports tier A (recalibration on a few labeled target images)
 on the weather and urban--rural axes only, while the one MARIDA partition whose
 breakdown is separable from its own uncertainty, held-out spring, had no
 remedy measured on it. This stage draws the
