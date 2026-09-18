@@ -65,7 +65,7 @@ for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes; do
 done
 # --seeds and --alphas are spelled out because the stage's defaults (one seed,
 # three levels) are not the published run (25 seeds, alpha = 0.2 only). The
-# 2026-09-07 re-run called it with the defaults and the audit's union checks
+# earlier re-run called it with the defaults and the audit's union checks
 # (98, 933, 934, 941) failed on a three-row file; the sidecar's `seeds` field
 # is what identified the cause.
 for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes \
@@ -83,11 +83,11 @@ python scripts/23_tierb_target_pool.py \
 python scripts/24_marida_component_stats.py \
   --model marida_unet_official_holdout
 
-echo "=== Phase 7c: referee-response arms ==="
+echo "=== Phase 7c: supplementary arms (stages 25-28) ==="
 # Stages 25-28 write x10-x13, which the article quotes: the tier-B test charge
 # and target-weight distribution, the MARIDA annotation-confidence split, the
 # triage permutation band, and the sequence-disjoint tier-A arm. They were
-# reachable only through run_referee_response.sh, whose first step rebuilds
+# reachable only through run_supplementary_arms.sh, whose first step rebuilds
 # stage 4 and is not needed on a tree this script has just built.
 python scripts/25_tierb_test_charge.py \
     --model segformer_b2_cityscapes --scheme cityscapes_val_half \

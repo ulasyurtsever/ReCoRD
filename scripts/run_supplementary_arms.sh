@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Everything the referee response needs from a machine that has the caches.
+# Supplementary arms (stages 25-28) after a stage-4 subgrid rebuild, for a
+# machine that has the caches.
 #
 # ORDER MATTERS. Stage 4 must be rebuilt first: the false-positive subgrid was
 # densified (41 -> 80 points) after a review found that the old uniform subgrid
@@ -92,7 +93,7 @@ python scripts/27_triage_permutation_band.py
 
 echo "############ 5. class-conditional LAC and the measured pixel FNR"
 # The published LAC row calibrates on an all-class pixel-coverage target and is
-# then scored on three rare classes, which a referee called unfair. The
+# then scored on three rare classes, which is an unfair comparison. The
 # class-conditional variant is the fair version. --measure-pixel-fnr records
 # the quantity pixel CRC is said to control, which was asserted and never
 # measured.
@@ -152,7 +153,7 @@ python scripts/18_audit.py
 cat <<'NOTE'
 
 STILL OPEN after this run, and deliberately so:
-  * The tail-refined lambda grid for Mask2Former (referee item 17). That means
+  * The tail-refined lambda grid for Mask2Former. That means
     changing LAMBDA_GRID and rebuilding every table, which would move every
     marked-area number in the article. The text now scopes the Mask2Former
     claim to the family of masks the present grid generates; the experiment is

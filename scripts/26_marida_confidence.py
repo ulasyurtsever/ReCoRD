@@ -46,7 +46,7 @@ at least one High-confidence pixel), which is the decision-relevant reading: a
 mixed component has at least one pixel an annotator was willing to stand behind.
 Both the ``any_high`` subset and its complement are reported, since the
 complement -- components with no High-confidence pixel at all -- is where the
-referee's concern actually lives.
+annotation-confidence concern lies.
 
 Encoding assumption
 -------------------

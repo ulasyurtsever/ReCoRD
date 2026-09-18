@@ -203,8 +203,8 @@ def build_lac_class_curves(model_key, dataset_key, stride):
     WHY this exists. The marginal curve pools all classes, and the pool is
     dominated by road, building and vegetation, which the model covers almost
     everywhere. A threshold calibrated on it is therefore chosen by the easy
-    classes and then scored on the critical classes' region loss, which is the
-    comparison a referee is entitled to call unfair. With one curve per
+    classes and then scored on the critical classes' region loss, which is an
+    unfair comparison. With one curve per
     critical class, stage 5 can calibrate one threshold per class against that
     class's own pixel-coverage target and score it exactly as before, so what
     is left in the comparison is the genuine gap between controlling pixel

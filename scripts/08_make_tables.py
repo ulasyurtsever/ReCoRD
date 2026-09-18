@@ -68,8 +68,8 @@ def table_baselines(df: pd.DataFrame) -> str:
     sub = df[(df.block == "e1") & (df.alpha == 0.20)]
     cells = cell_means(sub, ["model", "method", "rho"])
     # x16 is dilation CRC: the argmax mask dilated by a calibrated radius
-    # (stage 30 tables, run on "<model>__dilation"). It is the fourth panel's
-    # requested geometric baseline and sits under each model's block.
+    # (stage 30 tables, run on "<model>__dilation"). It is the geometric
+    # baseline and sits under each model's block.
     extra = df[df.block.isin(["x4", "x5", "x16"]) & (df.alpha == 0.20)]
     extra_cells = cell_means(extra, ["model", "method", "rho"]) if len(extra) else None
     methods = ["argmax", "heuristic", "pixel_crc", "region_crc"]
@@ -170,7 +170,7 @@ def table_breakdown(df: pd.DataFrame) -> str:
 def table_tier_a(df: pd.DataFrame) -> str:
     """T4: tier-A recovery and applicability vs n_t (Cityscapes->ACDC)."""
     sub = df[(df.block == "e3") & (df.method == "region_crc")]
-    # All four Cityscapes models. The third panel (2026-09-02, M4) had
+    # All four Cityscapes models. An earlier version had
     # restricted the table to the SegFormer variants because Mask2Former's
     # nine cells were the degenerate lambda_max solution on the uniform
     # threshold grid; on the log-tail grid (2026-09-08) the same checkpoint
@@ -217,7 +217,7 @@ def table_tier_a(df: pd.DataFrame) -> str:
 
 
 def table_marida_tier_a(df: pd.DataFrame) -> str:
-    """T12: tier A on the held-out MARIDA spring (fifth referee panel).
+    """T12: tier A on the held-out MARIDA spring.
 
     Rows are the labeled-target budget crossed with the draw scheme: patches
     drawn uniformly from the spring test group, and whole acquisition scenes

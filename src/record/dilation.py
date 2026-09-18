@@ -1,13 +1,13 @@
 """Morphological dilation of the argmax mask as a monotone mask family.
 
 The region-CRC family of the article is the probability-threshold family
-``{p : prob[p] >= 1 - lam}``. A referee asked for the natural alternative:
-keep the argmax mask and dilate it by a radius ``r``. Both families are nested
+``{p : prob[p] >= 1 - lam}``. The natural geometric alternative keeps the
+argmax mask and dilates it by a radius ``r``. Both families are nested
 (a larger radius never removes a pixel), so Lemma 1 applies unchanged and the
 same CRC rule selects a radius instead of a threshold.
 
 This module maps the dilation family onto the canonical lambda grid so that
-stage 4 and stage 5 run on it without modification. The trick is a
+stage 4 and stage 5 run on it without modification. The mapping uses a
 pseudo-probability ``prob = 1 - score`` whose score is the grid value at the
 index that the pixel's distance rounds up to:
 

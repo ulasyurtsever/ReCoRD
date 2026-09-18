@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
-# Fourth-panel batch (2026-09-07): every server experiment the panel asked for,
-# in one run, on top of a full stage-5 re-derivation with the unified capture
-# rule.
+# Stage-5 re-derivation plus the additional experiment arms, in one run, on
+# top of the unified capture rule (2026-09-07).
 #
 # WHAT CHANGED IN THE CODE. The capture rule is now decided at the storage
 # precision of the curves everywhere (05_run_experiments.py had three bare
 # "< rho" comparisons, 26_marida_confidence.py one; audit 960 scans for them).
 # That moves only rho = 0.1 diagnostic columns and the argmax rows at
 # rho = 0.1, so the whole stage-5 tree is rewritten and compared against a
-# backup, as in run_p1_rerun.sh.
+# backup, as in run_stage5_rederive.sh.
 #
 # NEW ARMS (all CPU passes over existing caches; no training):
 #   x13 n_t = 50, 100  sequence-disjoint tier A at the two larger budgets
@@ -33,14 +32,14 @@
 # lambda-hat rose, which the capture-rule change cannot cause.
 #
 # Usage (repository root, conda env `record`):
-#   nohup bash scripts/run_panel4.sh > panel4.log 2>&1 &
-# Dry run: DRY_RUN=1 bash scripts/run_panel4.sh
+#   nohup bash scripts/run_stage5_rederive_arms.sh > stage5_rederive_arms.log 2>&1 &
+# Dry run: DRY_RUN=1 bash scripts/run_stage5_rederive_arms.sh
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
 export PYTHONPATH="src:${PYTHONPATH:-}"
 DRY="${DRY_RUN:-0}"
-BACKUP=results/experiments_pre_panel4
+BACKUP=results/experiments_pre_rederive
 LOGROOT="$PWD/results_loggrid"
 
 run() {
@@ -57,9 +56,9 @@ if [ -d "$BACKUP" ]; then
 else
   run cp -a results/experiments "$BACKUP"
 fi
-mkdir -p _to_delete/panel4
+mkdir -p _to_delete/rederive_arms
 for f in results/experiments/e1_cs_indist_b2*; do
-  [ -e "$f" ] && run mv "$f" _to_delete/panel4/
+  [ -e "$f" ] && run mv "$f" _to_delete/rederive_arms/
 done
 echo "CSV files before: $(ls results/experiments/*.csv 2>/dev/null | wc -l) (225 expected)"
 
@@ -72,7 +71,7 @@ run bash scripts/run_stage5_extras.sh
 run bash scripts/run_stage5_baselines.sh
 run bash scripts/run_stage5_supplementary.sh
 
-step "2. referee-response arms x10-x13 (n_t = 25)"
+step "2. supplementary arms x10-x13 (n_t = 25)"
 run python scripts/25_tierb_test_charge.py \
     --model segformer_b2_cityscapes --scheme cityscapes_val_half \
     --cal-datasets cityscapes_val --embedding dinov2_vitb14 \
@@ -214,7 +213,7 @@ step "5. compare against the backup (new x13/x14/x15/x16/x17 files are 'only in 
 echo "CSV files after: $(ls results/experiments/*.csv 2>/dev/null | wc -l)"
 run python scripts/compare_experiments.py \
     --old "$BACKUP" --new results/experiments \
-    --out results/panel4_diff.csv --strict
+    --out results/rederive_arms_diff.csv --strict
 
 step "6. derived artifacts"
 run python scripts/08_make_tables.py --rho 0.5
@@ -227,12 +226,12 @@ run python scripts/09_make_figures.py
 
 step "7. audit (FAILs on rho = 0.1 argmax cells are expected until the text is updated)"
 if [ "$DRY" = 1 ]; then
-  echo ">>> python scripts/18_audit.py > audit_panel4.txt"
+  echo ">>> python scripts/18_audit.py > audit_rederive_arms.txt"
 else
-  python scripts/18_audit.py > audit_panel4.txt 2>&1 || true
-  grep -E "^\[FAIL\]|SUMMARY" audit_panel4.txt || true
+  python scripts/18_audit.py > audit_rederive_arms.txt 2>&1 || true
+  grep -E "^\[FAIL\]|SUMMARY" audit_rederive_arms.txt || true
 fi
 
 echo
-echo "RESULT: PANEL4 DONE"
+echo "RESULT: REDERIVE ARMS DONE"
 date

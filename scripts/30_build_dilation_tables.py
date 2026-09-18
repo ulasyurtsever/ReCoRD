@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""Stage 30: region tables for the dilation family (referee baseline).
+"""Stage 30: region tables for the dilation family (geometric baseline).
 
 Same output as stage 4 (``components.parquet``, ``coverage_curves.npy``,
 ``image_stats.npz``), written under ``results/raw/<model>__dilation/<dataset>/``,
@@ -13,7 +13,7 @@ rule selecting a dilation radius instead of a probability threshold. Its
 
 Only the cached ``argmax`` channel is read; the probabilities are not used,
 which is the point of the baseline: it asks how much of the region guarantee
-a purely geometric relaxation of the hard prediction buys.
+a purely geometric relaxation of the hard prediction achieves.
 
 Example
 -------

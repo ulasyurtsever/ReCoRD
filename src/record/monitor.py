@@ -58,7 +58,7 @@ def ks_drift_check(
 def image_summary_scores(marked_area_curves: np.ndarray, lam_index: int) -> np.ndarray:
     """Default per-image summary score: marked-area fraction at a threshold.
 
-    Cheap, label-free, and computable from cached statistics for both
+    Inexpensive, label-free, and computable from cached statistics for both
     calibration and incoming target images.
     """
     curves = np.asarray(marked_area_curves)

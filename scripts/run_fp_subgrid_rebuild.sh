@@ -55,7 +55,7 @@ for KEY in segformer_b2_cityscapes segformer_b5_cityscapes \
 done
 
 # The audit is run here when this script is invoked on its own, because then
-# it is the only check there is. It is SKIPPED when the referee-response
+# it is the only check there is. It is SKIPPED when the supplementary-arms
 # driver calls this as its first step: at that point steps 2 to 6 have not
 # run, so the audit is looking at a half-updated results directory, and its
 # non-zero exit would abort the driver before the work that fixes what it is
