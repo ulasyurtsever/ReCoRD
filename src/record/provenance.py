@@ -1,11 +1,11 @@
 """Revision stamp for result sidecars.
 
 The working copy that runs the experiments is not always a git checkout (the
-release lives in a separate git mirror, and the server copy is a plain
+release lives in a separate git checkout, and the server copy is a plain
 directory), so ``git rev-parse`` is tried first and a ``REVISION`` file at the
-repository root second. That file holds the short hash of the mirror commit
+repository root second. That file holds the short hash of the checkout commit
 the copy was taken from and is written by ``scripts/write_revision.sh`` after
-each commit; it is ignored by git so it never goes stale inside the mirror
+each commit; it is ignored by git so it never goes stale inside the checkout
 itself. Its value is suffixed with ``+file`` so a sidecar shows which route
 produced it. Every script that writes a ``.meta.json`` sidecar records this
 value under ``git_revision``.
