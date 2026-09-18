@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Record the mirror's current commit in REVISION so that copies of this tree
+# Record the checkout's current commit in REVISION so that copies of this tree
 # that are not git checkouts (the working copy, the server) still stamp their
 # .meta.json sidecars with a revision instead of "unknown". Run from the git
-# mirror after committing; copy the file along with scripts/ and src/.
+# checkout after committing; copy the file along with scripts/ and src/.
 #
 #   bash scripts/write_revision.sh            # writes ./REVISION
 #   bash scripts/write_revision.sh /path/to/copy   # writes there as well

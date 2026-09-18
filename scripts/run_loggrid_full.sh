@@ -15,7 +15,7 @@
 # BACKUPS (nothing is deleted):
 #   results/raw          -> results/raw_uniform          (stage-4 tables, old grid)
 #   results/experiments  -> results/experiments_pre_loggrid
-#   results/tables, results/figures are versioned in the git mirror.
+#   results/tables, results/figures are versioned in the git checkout.
 #
 # ORDER. Stage 4 for all models (from raw_uniform's directory list), stage 30
 # (dilation tables), then stage 5 exactly as run_stage5_rederive_arms.sh minus the x17 arm,
