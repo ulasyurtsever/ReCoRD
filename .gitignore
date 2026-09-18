@@ -25,8 +25,13 @@ results/experiments/*.npz
 *.log
 *.out
 
-# Locally trained checkpoints (large; never committed)
-checkpoints/
+# Locally trained checkpoints (large; never committed). The per-model
+# config.json (architecture, normalisation, split digests) is committed so
+# that the provenance checks of the audit can run without the weights.
+checkpoints/*
+!checkpoints/*/
+checkpoints/*/*
+!checkpoints/*/config.json
 
 # Run logs and the machine-specific environment snapshot
 *.log
