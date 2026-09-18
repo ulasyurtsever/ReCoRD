@@ -49,6 +49,6 @@
  },
  "scheme_file": "acdc_rain_targetcal50_seqdisjoint.json",
  "n_records": 5400,
- "git_revision": "010198e+file",
- "completed_utc": "2026-09-08T01:34:02.370871+00:00"
+ "git_revision": "8e43d21+file",
+ "completed_utc": "2026-09-09T00:18:49.389865+00:00"
 }

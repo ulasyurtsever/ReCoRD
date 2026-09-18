@@ -1,0 +1,15 @@
+{
+ "model_key": "segformer_b2_cityscapes",
+ "dataset_key": "cityscapes_val",
+ "temperature": 1.6,
+ "nll": 0.22374142994546517,
+ "cal_scheme": "cityscapes_val_half",
+ "cal_seed": "0",
+ "n_cal_images": 250,
+ "temperature_grid": [
+  0.5,
+  5.0,
+  0.05
+ ],
+ "completed_utc": "2026-09-08T20:01:18.787080+00:00"
+}

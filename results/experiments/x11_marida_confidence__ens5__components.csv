@@ -1117,7 +1117,7 @@ S2_12-12-20_16PCC_15,1029,marine_debris,1,2,0,12,251,13,253,1.0,1114,marida_test
 S2_12-12-20_16PCC_16,1030,marine_debris,1,2,0,134,139,136,141,1.0,1115,marida_test,0,2,0,all_moderate,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_12-12-20_16PCC_16,1030,marine_debris,2,1,0,202,98,203,99,1.0,1116,marida_test,0,0,1,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_12-12-20_16PCC_16,1030,marine_debris,3,2,0,245,50,247,52,1.0,1117,marida_test,0,0,2,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
-S2_12-12-20_16PCC_17,1031,marine_debris,1,1,0,0,4,1,5,1.0,1118,marida_test,0,1,0,all_moderate,False,0.0,0.0,1.0,0.0,0.0,1.0,test
+S2_12-12-20_16PCC_17,1031,marine_debris,1,1,0,0,4,1,5,1.0,1118,marida_test,0,1,0,all_moderate,False,0.0,0.0,1.0,0.0,0.0,0.0,test
 S2_12-12-20_16PCC_18,1032,marine_debris,1,1,0,161,2,162,3,1.0,1119,marida_test,0,1,0,all_moderate,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_12-12-20_16PCC_18,1032,marine_debris,2,1,0,179,0,180,1,1.0,1120,marida_test,0,1,0,all_moderate,False,0.0,0.0,1.0,0.0,0.0,1.0,test
 S2_12-12-20_16PCC_22,1037,marine_debris,1,2,0,253,1,255,2,1.0,1121,marida_test,2,0,0,all_high,True,0.0,0.0,0.0,0.0,0.0,0.0,test
@@ -1318,10 +1318,10 @@ S2_4-3-18_50LLR_22,1370,marine_debris,1,3,0,83,170,85,172,1.0,1315,marida_test,0
 S2_4-3-18_50LLR_25,1373,marine_debris,1,1,0,53,230,54,231,1.0,1316,marida_test,0,0,1,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_4-3-18_50LLR_3,1374,marine_debris,1,1,0,72,230,73,231,0.0,1317,marida_test,0,0,1,all_low,False,0.0,0.0,1.0,0.0,0.0,1.0,test
 S2_4-3-18_50LLR_4,1375,marine_debris,1,1,0,145,163,146,164,1.0,1318,marida_test,0,0,1,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
-S2_4-3-18_50LLR_4,1375,marine_debris,2,2,0,180,181,182,182,1.0,1319,marida_test,0,0,2,all_low,False,0.0,0.0,1.0,0.0,0.0,0.0,test
-S2_4-3-18_50LLR_5,1376,marine_debris,1,1,0,169,23,170,24,1.0,1320,marida_test,0,0,1,all_low,False,0.0,0.0,1.0,0.0,0.0,1.0,test
+S2_4-3-18_50LLR_4,1375,marine_debris,2,2,0,180,181,182,182,1.0,1319,marida_test,0,0,2,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
+S2_4-3-18_50LLR_5,1376,marine_debris,1,1,0,169,23,170,24,1.0,1320,marida_test,0,0,1,all_low,False,0.0,0.0,1.0,0.0,0.0,0.0,test
 S2_4-3-18_50LLR_5,1376,marine_debris,2,3,0,173,39,175,41,1.0,1321,marida_test,0,0,3,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
-S2_4-3-18_50LLR_7,1378,marine_debris,1,3,0,171,160,173,162,0.0,1322,marida_test,0,0,3,all_low,False,0.0,0.0,1.0,0.0,0.0,0.0,test
+S2_4-3-18_50LLR_7,1378,marine_debris,1,3,0,171,160,173,162,0.0,1322,marida_test,0,0,3,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_4-3-18_50LLR_7,1378,marine_debris,2,2,0,181,171,183,173,1.0,1323,marida_test,0,2,0,all_moderate,False,0.0,0.0,0.0,0.0,0.0,0.0,test
 S2_4-3-18_50LLR_7,1378,marine_debris,3,1,0,189,169,190,170,0.0,1324,marida_test,0,1,0,all_moderate,False,0.0,0.0,1.0,0.0,0.0,1.0,test
 S2_4-3-18_50LLR_7,1378,marine_debris,4,2,0,198,178,200,179,0.0,1325,marida_test,0,0,2,all_low,False,0.0,0.0,0.0,0.0,0.0,0.0,test

@@ -49,6 +49,6 @@
  },
  "scheme_file": "acdc_rain_targetcal100.json",
  "n_records": 5400,
- "git_revision": "010198e+file",
- "completed_utc": "2026-09-07T18:09:50.820033+00:00"
+ "git_revision": "8e43d21+file",
+ "completed_utc": "2026-09-08T17:01:09.963058+00:00"
 }

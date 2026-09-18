@@ -49,6 +49,6 @@
  },
  "scheme_file": "acdc_snow_targetcal25_seqdisjoint.json",
  "n_records": 5400,
- "git_revision": "010198e+file",
- "completed_utc": "2026-09-08T00:48:09.115194+00:00"
+ "git_revision": "8e43d21+file",
+ "completed_utc": "2026-09-09T00:18:14.054719+00:00"
 }

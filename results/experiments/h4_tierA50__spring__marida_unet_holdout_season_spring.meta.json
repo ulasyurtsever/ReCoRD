@@ -1,16 +1,18 @@
 {
- "name": "x17_loggrid__e3_tierA50__fog__mask2former_swinb_cityscapes",
+ "name": "h4_tierA50__spring__marida_unet_holdout_season_spring",
  "argv": {
-  "name": "x17_loggrid__e3_tierA50__fog__mask2former_swinb_cityscapes",
-  "model": "mask2former_swinb_cityscapes",
-  "scheme": "acdc_fog_targetcal50",
+  "name": "h4_tierA50__spring__marida_unet_holdout_season_spring",
+  "model": "marida_unet_holdout_season_spring",
+  "scheme": "marida_spring_targetcal50",
   "cal_datasets": [
-   "acdc_fog_train",
-   "acdc_fog_val"
+   "marida_train",
+   "marida_val",
+   "marida_test"
   ],
   "test_datasets": [
-   "acdc_fog_train",
-   "acdc_fog_val"
+   "marida_train",
+   "marida_val",
+   "marida_test"
   ],
   "methods": [
    "region_crc",
@@ -41,14 +43,14 @@
   "weight_estimator": "logistic",
   "weight_clip_min": 0.05,
   "weight_clip_max": 20.0,
-  "cal_split": null,
+  "cal_split": "target_calibration",
   "test_split": "test",
   "bootstrap_clusters": null,
   "bootstrap_ci": 0,
   "max_seeds": null
  },
- "scheme_file": "acdc_fog_targetcal50.json",
- "n_records": 5400,
- "git_revision": "010198e+file",
- "completed_utc": "2026-09-08T04:20:18.259428+00:00"
+ "scheme_file": "marida_spring_targetcal50.json",
+ "n_records": 1800,
+ "git_revision": "4376ac8+file",
+ "completed_utc": "2026-09-16T17:35:05.050640+00:00"
 }

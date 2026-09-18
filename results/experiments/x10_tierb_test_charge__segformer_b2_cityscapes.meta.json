@@ -59,7 +59,7 @@
    "kappa": 2.0,
    "reference": "c1_clip2__fog__segformer_b2_cityscapes__dinov2_vitb14",
    "n_rows": 450,
-   "worst_rel_dev": 4.884592236695322e-15
+   "worst_rel_dev": 8.148019698118029e-15
   },
   {
    "condition": "fog",
@@ -80,7 +80,7 @@
    "kappa": 2.0,
    "reference": "c1_clip2__night__segformer_b2_cityscapes__dinov2_vitb14",
    "n_rows": 450,
-   "worst_rel_dev": 2.0193252369688435e-15
+   "worst_rel_dev": 8.738669510233241e-15
   },
   {
    "condition": "night",
@@ -101,7 +101,7 @@
    "kappa": 2.0,
    "reference": "c1_clip2__rain__segformer_b2_cityscapes__dinov2_vitb14",
    "n_rows": 450,
-   "worst_rel_dev": 2.1578594045264504e-15
+   "worst_rel_dev": 2.8148018739890357e-15
   },
   {
    "condition": "rain",
@@ -122,7 +122,7 @@
    "kappa": 2.0,
    "reference": "c1_clip2__snow__segformer_b2_cityscapes__dinov2_vitb14",
    "n_rows": 450,
-   "worst_rel_dev": 7.249226344835749e-16
+   "worst_rel_dev": 2.8380144171034938e-15
   },
   {
    "condition": "snow",
@@ -140,5 +140,5 @@
   }
  ],
  "clips_without_reference": [],
- "completed_utc": "2026-09-08T00:38:17.454444+00:00"
+ "completed_utc": "2026-09-09T00:09:13.659910+00:00"
 }
