@@ -26,21 +26,23 @@ splits/           Committed calibration/test split definitions (JSON)
 tests/            Unit and integration tests (pytest)
 ```
 
-The pipeline also writes:
+The pipeline also writes the following. Generated directories are not in
+version control and are rebuilt from the datasets; committed directories are
+what the reported numbers are derived from.
 
 ```
-cache/                Per-image posterior caches and embeddings
-checkpoints/          Locally trained model weights (LoveDA, MARIDA)
-results/raw/          Per-region sufficient-statistic tables
-results/experiments/  Experiment CSVs with .meta.json sidecars
-results/tables/       LaTeX tables
-results/figures/      PDF figures
+cache/                Per-image posterior caches and embeddings      (generated)
+checkpoints/          Locally trained model weights (LoveDA, MARIDA)  (generated; the
+                      per-model config.json provenance records are committed)
+results/raw/          Per-region sufficient-statistic tables          (generated)
+results/experiments/  Experiment CSVs with .meta.json sidecars        (committed)
+results/tables/       LaTeX tables                                    (committed)
+results/figures/      PDF figures                                     (committed)
 ```
 
-The first three are large and are excluded from version control; they are
-rebuilt by the pipeline from the datasets. The experiment CSVs and the tables
-and figures derived from them are committed, so every reported number can be
-regenerated without repeating inference.
+Because the experiment CSVs and the tables and figures derived from them are
+committed, every reported number can be regenerated without repeating
+inference.
 
 ## Storage roots
 
@@ -157,7 +159,7 @@ restarts from scratch and overwrites its checkpoints.
 | 30 | `30_build_dilation_tables.py` | CPU | Stage-4 tables for the dilation family: the argmax mask dilated by a radius, mapped onto the lambda grid through an EDT pseudo-probability (`record.dilation`); stage 5 on `<model>__dilation` is then dilation CRC (`x16`) |
 | 31 | `31_marida_target_schemes.py` | CPU | Tier-A target-calibration schemes on held-out MARIDA spring: `marida_spring_targetcal{25,50}` (patches drawn from the spring group) and `..._scenedisjoint` (whole scenes to the calibration side); stage 5 on the spring model with `--cal-split target_calibration` gives the `h4_*` runs and Table `marida_tier_a` |
 | -- | `compare_experiments.py` | CPU | Row-aligned comparison of two `results/experiments/` trees, per file and capture level; `--strict` fails on a moved quantity that cannot move, on a file that cannot be aligned, and on a sidecar whose recorded arguments differ from the reference run |
-| -- | `write_revision.sh` | -- | Writes `REVISION` (the mirror's short commit hash) for copies of the tree that are not git checkouts |
+| -- | `write_revision.sh` | -- | Writes `REVISION` (the short commit hash) for copies of the tree that are not git checkouts |
 
 Orchestrators: `run_all.sh` (every phase in dependency order; this is the
 only script a reproducer needs to run),
@@ -176,9 +178,10 @@ per region and season, then caching, tables and experiments),
 the cross-fitted weights, the tier-B holdout controls and the MARIDA
 in-distribution control: the `p1`--`p7` blocks under
 `results/experiments/`),
-`run_supplementary_arms.sh` (stages 25--28 preceded by a stage-4 rebuild on the
-densified false-positive subgrid; `run_all.sh` reaches the same stages as
-phase 7c without the rebuild),
+`run_fp_subgrid_rebuild.sh` (stage 4 rebuilt on the densified false-positive
+subgrid),
+`run_supplementary_arms.sh` (that rebuild followed by stages 25--28;
+`run_all.sh` reaches the same stages as phase 7c without the rebuild),
 `run_stage5_rederive.sh` and `run_union_area_redo.sh` (stage 5 re-derived in full from
 existing caches, with the comparison and the audit; the second redoes the
 union-area block alone),
@@ -192,11 +195,10 @@ The threshold grid is selected at import time by `RECORD_GRID`. The default,
 `logtail`, has 1001 points with the cutoff $1-\lambda$ spaced over six
 decades, so thresholds within $10^{-3}$ of $\lambda = 1$, where confident
 models calibrate, are resolved; `uniform` is the earlier equally spaced grid,
-kept for reproducing the numbers released before 2026-09-08. Tables and
-experiments built under one grid must never be read under another;
-`run_loggrid_full.sh` rebuilds every stage-4 table and re-derives every
-result on the default grid, parking the uniform-grid tables under
-`results/raw_uniform`.
+kept for comparison. Tables and experiments built under one grid must never
+be read under another; `run_loggrid_full.sh` rebuilds every stage-4 table and
+re-derives every result on the default grid, parking the uniform-grid tables
+under `results/raw_uniform` (generated, not committed).
 
 ## Tests and audit
 
@@ -277,7 +279,7 @@ experiment references splits by file, never by re-sampling. Each result file
 is accompanied by a `.meta.json` sidecar recording the producing script,
 configuration, and git revision. Copies of the tree that are not git checkouts
 record the revision from a `REVISION` file at the repository root, written by
-`scripts/write_revision.sh` from the mirror after each commit and suffixed
+`scripts/write_revision.sh` from a git checkout after each commit and suffixed
 `+file` in the sidecar; without it the field reads `unknown`.
 
 ## License
