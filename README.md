@@ -254,10 +254,10 @@ and fails if a single test or calibration patch appears among them. Run it
 after any change to the split generation or the training scripts.
 
 Run against a fresh clone, the suite recomputes the numeric quantities in
-full and records as notes the checks that need artifacts excluded from version
-control: the checkpoint-provenance checks need `checkpoints/`, and the
-component-size checks need `results/raw/`. Both become active once the
-pipeline has produced them.
+full. The checkpoint-provenance checks read the committed
+`checkpoints/*/config.json` records and run without the weights; the
+component-size checks need `results/raw/`, which is excluded from version
+control, and are recorded as notes until the pipeline has produced it.
 
 The scene is also the resampling unit for the reported intervals. A held-out
 tile can contain as few as three acquisition scenes, and the patches of one
