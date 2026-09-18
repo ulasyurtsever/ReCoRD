@@ -35,7 +35,7 @@ keywords:
   - remote sensing
   - marine debris
 preferred-citation:
-  type: article
+  type: unpublished
   title: >-
     Region-Level Conformal Risk Control for Semantic Segmentation under
     Distribution Shift
@@ -43,5 +43,5 @@ preferred-citation:
     - family-names: Yurtsever
       given-names: Ulaş
       orcid: https://orcid.org/0000-0003-3438-6872
-  journal: IEEE Transactions on Geoscience and Remote Sensing
   year: 2026
+  notes: Manuscript under review.

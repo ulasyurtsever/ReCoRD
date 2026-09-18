@@ -30,7 +30,7 @@ echo "=== Step 2: x4 LAC baseline ==="
 # class-conditional variant is the fair version, and --measure-pixel-fnr
 # records the quantity pixel CRC is calibrated on, so that the reduction of
 # class-conditional LAC to the pixel baseline is measured rather than asserted.
-# Table II prints both LAC rows and Section V quotes the two gaps, so a run
+# The baselines table prints both LAC rows and the text quotes the two gaps, so a run
 # that omits them silently removes published content: this invocation must stay
 # identical to the one in run_supplementary_arms.sh.
 for MODEL in segformer_b2_cityscapes segformer_b5_cityscapes; do
