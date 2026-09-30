@@ -203,14 +203,15 @@ def latex_table(body: str, caption: str, label: str, colspec: str,
 
     ``star=True`` emits ``table*`` for tables wider than one column. ``size``
     and ``colsep`` control the font size and inter-column padding. The
-    caption and label follow the tabular, as the target journal's guide for
-    authors asks for submitted manuscripts (caption directly below the
-    table).
+    caption and label precede the tabular (table captions are printed above
+    the table).
     """
     env = "table*" if star else "table"
     return "\n".join([
         rf"\begin{{{env}}}[t]",
         r"\centering",
+        rf"\caption{{{caption}}}",
+        rf"\label{{{label}}}",
         rf"\{size}",
         rf"\setlength{{\tabcolsep}}{{{colsep}}}",
         rf"\begin{{tabular}}{{{colspec}}}",
@@ -220,8 +221,6 @@ def latex_table(body: str, caption: str, label: str, colspec: str,
         body,
         r"\bottomrule",
         r"\end{tabular}",
-        rf"\caption{{{caption}}}",
-        rf"\label{{{label}}}",
         rf"\end{{{env}}}",
         "",
     ])
